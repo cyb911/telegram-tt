@@ -57,7 +57,6 @@ import CustomEmojiSetsModal from '../common/CustomEmojiSetsModal.async';
 import DeleteMessageModal from '../common/DeleteMessageModal.async';
 import StickerSetModal from '../common/StickerSetModal.async';
 import UnreadCount from '../common/UnreadCounter';
-import MediaViewer from '../mediaViewer/MediaViewer.async';
 import ReactionPicker from '../middle/message/reactions/ReactionPicker.async';
 import MessageListHistoryHandler from '../middle/MessageListHistoryHandler';
 import MiddleColumn from '../middle/MiddleColumn';
@@ -553,7 +552,6 @@ const Main = ({
     <div ref={containerRef} id="Main" className={className}>
       <MiddleColumn leftColumnRef={leftColumnRef} isMobile={isMobile} />
       <RightColumn isMobile={isMobile} />
-      <MediaViewer isOpen={isMediaViewerOpen} />
       <StoryViewer isOpen={isStoryViewerOpen} />
       <ForwardRecipientPicker isOpen={isForwardModalOpen} />
       <DraftRecipientPicker requestedDraft={requestedDraft} />
