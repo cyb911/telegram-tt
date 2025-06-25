@@ -53,10 +53,6 @@ import useBackgroundMode from '../../hooks/window/useBackgroundMode';
 import useBeforeUnload from '../../hooks/window/useBeforeUnload';
 import { useFullscreenStatus } from '../../hooks/window/useFullscreen';
 
-import ActiveCallHeader from '../calls/ActiveCallHeader.async';
-import GroupCall from '../calls/group/GroupCall.async';
-import PhoneCall from '../calls/phone/PhoneCall.async';
-import RatePhoneCallModal from '../calls/phone/RatePhoneCallModal.async';
 import CustomEmojiSetsModal from '../common/CustomEmojiSetsModal.async';
 import DeleteMessageModal from '../common/DeleteMessageModal.async';
 import StickerSetModal from '../common/StickerSetModal.async';
@@ -578,8 +574,6 @@ const Main = ({
         customEmojiSetIds={openedCustomEmojiSetIds}
         onClose={handleCustomEmojiSetsModalClose}
       />
-      {activeGroupCallId && <GroupCall groupCallId={activeGroupCallId} />}
-      <ActiveCallHeader isActive={Boolean(activeGroupCallId || isPhoneCallActive)} />
       <NewContactModal
         isOpen={Boolean(newContactUserId || newContactByPhoneNumber)}
         userId={newContactUserId}
@@ -590,9 +584,7 @@ const Main = ({
       <ConfettiContainer />
       {IS_WAVE_TRANSFORM_SUPPORTED && <WaveContainer />}
       <SnapEffectContainer />
-      <PhoneCall isActive={isPhoneCallActive} />
       <UnreadCount isForAppBadge />
-      <RatePhoneCallModal isOpen={isRatePhoneCallModalOpen} />
       <BotTrustModal
         bot={botTrustRequestBot}
         type={botTrustRequest?.type}

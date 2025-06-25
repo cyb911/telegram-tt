@@ -37,7 +37,6 @@ import useOldLang from '../../../hooks/useOldLang';
 import usePreviousDeprecated from '../../../hooks/usePreviousDeprecated';
 import useOrderDiff from './hooks/useOrderDiff';
 
-import GroupCallTopPane from '../../calls/group/GroupCallTopPane';
 import GroupChatInfo from '../../common/GroupChatInfo';
 import Icon from '../../common/icons/Icon';
 import HeaderActions from '../../middle/HeaderActions';
@@ -257,8 +256,6 @@ const ForumPanel: FC<OwnProps & StateProps> = ({
             />
           )}
       </div>
-
-      {chat && <GroupCallTopPane chatId={chat.id} />}
 
       <div className={styles.notch} />
 

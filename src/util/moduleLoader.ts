@@ -2,7 +2,6 @@ import { DEBUG } from '../config';
 import { createCallbackManager } from './callbacks';
 
 export enum Bundles {
-  Auth,
   Main,
   Extra,
   Calls,
@@ -10,7 +9,6 @@ export enum Bundles {
 }
 
 interface ImportedBundles {
-  [Bundles.Auth]: typeof import('../bundles/auth');
   [Bundles.Main]: typeof import('../bundles/main');
   [Bundles.Extra]: typeof import('../bundles/extra');
   [Bundles.Calls]: typeof import('../bundles/calls');
@@ -31,9 +29,6 @@ const { addCallback, runCallbacks } = createCallbackManager();
 export async function loadBundle<B extends Bundles>(bundleName: B) {
   if (!LOAD_PROMISES[bundleName]) {
     switch (bundleName) {
-      case Bundles.Auth:
-        LOAD_PROMISES[Bundles.Auth] = import(/* webpackChunkName: "BundleAuth" */ '../bundles/auth');
-        break;
       case Bundles.Main:
         if (DEBUG) {
           // eslint-disable-next-line no-console

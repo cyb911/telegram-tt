@@ -22,11 +22,13 @@ import { MULTITAB_STORAGE_KEY } from './util/multiaccount';
 import { checkAndAssignPermanentWebVersion } from './util/permanentWebVersion';
 import { onBeforeUnload } from './util/schedulers';
 import updateWebmanifest from './util/updateWebmanifest';
+import './global/actions/all';
 
 import App from './components/App';
 
 import './assets/fonts/roboto.css';
 import './styles/index.scss';
+import PremiumModalApp from "./components/PremiumModalApp.tsx";
 
 if (STRICTERDOM_ENABLED) {
   enableStrict();
@@ -82,11 +84,13 @@ async function init() {
     updateWebmanifest();
 
     TeactDOM.render(
-      <App />,
+      <PremiumModalApp />,
       document.getElementById('root')!,
     );
 
     betterView();
+
+    getActions().openPremiumModal();
   });
 
   if (DEBUG) {
