@@ -22,7 +22,6 @@ export { default as DeleteAccountModal } from '../components/modals/deleteAccoun
 export { default as ChatlistModal } from '../components/modals/chatlist/ChatlistModal';
 export { default as ChatInviteModal } from '../components/modals/chatInvite/ChatInviteModal';
 
-export { default as AboutAdsModal } from '../components/modals/aboutAds/AboutAdsModal';
 export { default as AboutMonetizationModal } from '../components/common/AboutMonetizationModal';
 export { default as VerificationMonetizationModal } from '../components/common/VerificationMonetizationModal';
 export { default as EmojiStatusAccessModal } from '../components/modals/emojiStatusAccess/EmojiStatusAccessModal';
