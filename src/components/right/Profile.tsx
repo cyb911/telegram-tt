@@ -67,7 +67,6 @@ import { captureEvents, SwipeDirection } from '../../util/captureEvents';
 import { isUserId } from '../../util/entities/ids';
 import { LOCAL_TGS_URLS } from '../common/helpers/animatedAssets';
 import renderText from '../common/helpers/renderText';
-import { getSenderName } from '../left/search/helpers/getSenderName';
 
 import { useViewTransition } from '../../hooks/animations/useViewTransition';
 import usePeerStoriesPolling from '../../hooks/polling/usePeerStoriesPolling';
@@ -96,7 +95,6 @@ import PrivateChatInfo from '../common/PrivateChatInfo';
 import ChatExtra from '../common/profile/ChatExtra';
 import ProfileInfo from '../common/ProfileInfo';
 import WebLink from '../common/WebLink';
-import ChatList from '../left/main/ChatList';
 import MediaStory from '../story/MediaStory';
 import Button from '../ui/Button';
 import FloatingActionButton from '../ui/FloatingActionButton';
@@ -583,12 +581,6 @@ const Profile: FC<OwnProps & StateProps> = ({
   }
 
   function renderContent() {
-    if (resultType === 'dialogs') {
-      return (
-        <ChatList className="saved-dialogs" folderType="saved" isActive />
-      );
-    }
-
     if ((!viewportIds && !botPreviewMedia) || !canRenderContent || !messagesById) {
       const noSpinner = isFirstTab && !canRenderContent;
       const forceRenderHiddenMembers = Boolean(resultType === 'members' && areMembersHidden);
@@ -723,7 +715,6 @@ const Profile: FC<OwnProps & StateProps> = ({
                 key={id}
                 theme={theme}
                 message={messagesById[id]}
-                senderTitle={getSenderName(oldLang, messagesById[id], chatsById, usersById)}
                 origin={AudioOrigin.SharedMedia}
                 date={messagesById[id].date}
                 className="scroll-item"

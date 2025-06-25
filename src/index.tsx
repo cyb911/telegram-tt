@@ -1,6 +1,7 @@
 import './util/handleError';
 import './util/setupServiceWorker';
 import './global/init';
+import './global/actions/all';
 
 import TeactDOM from './lib/teact/teact-dom';
 import {
@@ -22,13 +23,11 @@ import { MULTITAB_STORAGE_KEY } from './util/multiaccount';
 import { checkAndAssignPermanentWebVersion } from './util/permanentWebVersion';
 import { onBeforeUnload } from './util/schedulers';
 import updateWebmanifest from './util/updateWebmanifest';
-import './global/actions/all';
 
-import App from './components/App';
+import PremiumModalApp from './components/PremiumModalApp.tsx';
 
 import './assets/fonts/roboto.css';
 import './styles/index.scss';
-import PremiumModalApp from "./components/PremiumModalApp.tsx";
 
 if (STRICTERDOM_ENABLED) {
   enableStrict();

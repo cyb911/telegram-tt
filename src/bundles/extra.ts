@@ -12,14 +12,12 @@ export { default as UrlAuthModal } from '../components/modals/urlAuth/UrlAuthMod
 export { default as HistoryCalendar } from '../components/main/HistoryCalendar';
 export { default as NewContactModal } from '../components/main/NewContactModal';
 export { default as WebAppModal } from '../components/modals/webApp/WebAppModal';
-export { default as MinimizedWebAppModal } from '../components/modals/webApp/MinimizedWebAppModal';
 export { default as BotTrustModal } from '../components/main/BotTrustModal';
 export { default as AttachBotInstallModal } from '../components/modals/attachBotInstall/AttachBotInstallModal';
 export { default as DeleteFolderDialog } from '../components/main/DeleteFolderDialog';
 export { default as PremiumMainModal } from '../components/main/premium/PremiumMainModal';
 export { default as GiveawayModal } from '../components/main/premium/GiveawayModal';
 export { default as PremiumLimitReachedModal } from '../components/main/premium/common/PremiumLimitReachedModal';
-export { default as StatusPickerMenu } from '../components/left/main/StatusPickerMenu';
 export { default as SuggestedStatusModal } from '../components/modals/suggestedStatus/SuggestedStatusModal';
 export { default as BoostModal } from '../components/modals/boost/BoostModal';
 export { default as GiftCodeModal } from '../components/modals/giftcode/GiftCodeModal';
@@ -49,14 +47,6 @@ export { default as ReactorListModal } from '../components/middle/ReactorListMod
 export { default as EmojiInteractionAnimation } from '../components/middle/EmojiInteractionAnimation';
 export { default as ChatLanguageModal } from '../components/middle/ChatLanguageModal';
 export { default as CollectibleInfoModal } from '../components/modals/collectible/CollectibleInfoModal';
-
-export { default as LeftSearch } from '../components/left/search/LeftSearch';
-export { default as Settings } from '../components/left/settings/Settings';
-export { default as ContactList } from '../components/left/main/ContactList';
-export { default as NewChat } from '../components/left/newChat/NewChat';
-export { default as ArchivedChats } from '../components/left/ArchivedChats';
-export { default as ChatFolderModal } from '../components/left/ChatFolderModal';
-export { default as MuteChatModal } from '../components/left/MuteChatModal';
 
 export { default as ContextMenuContainer } from '../components/middle/message/ContextMenuContainer';
 export { default as SponsoredContextMenuContainer } from '../components/middle/message/SponsoredContextMenuContainer';

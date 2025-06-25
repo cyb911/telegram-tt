@@ -46,7 +46,6 @@ import { isUserId } from '../../util/entities/ids';
 import { disableScrolling } from '../../util/scrollLock';
 
 import useAppLayout from '../../hooks/useAppLayout';
-import useFlag from '../../hooks/useFlag';
 import useLang from '../../hooks/useLang';
 import useLastCallback from '../../hooks/useLastCallback';
 import useOldLang from '../../hooks/useOldLang';
@@ -54,7 +53,6 @@ import usePrevDuringAnimation from '../../hooks/usePrevDuringAnimation';
 import useShowTransitionDeprecated from '../../hooks/useShowTransitionDeprecated';
 
 import DeleteChatModal from '../common/DeleteChatModal';
-import MuteChatModal from '../left/MuteChatModal.async';
 import Menu from '../ui/Menu';
 import MenuItem from '../ui/MenuItem';
 import MenuSeparator from '../ui/MenuSeparator';
@@ -225,8 +223,6 @@ const HeaderMenuContainer: FC<OwnProps & StateProps> = ({
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [shouldCloseFast, setShouldCloseFast] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isMuteModalOpen, setIsMuteModalOpen] = useState(false);
-  const [shouldRenderMuteModal, markRenderMuteModal, unmarkRenderMuteModal] = useFlag();
   const { x, y } = anchor;
 
   useShowTransitionDeprecated(isOpen, onCloseAnimationEnd, undefined, false);
@@ -240,12 +236,6 @@ const HeaderMenuContainer: FC<OwnProps & StateProps> = ({
     }
     return Object.values(disallowedGifts).every(Boolean);
   }, [disallowedGifts]);
-
-  const closeMuteModal = useLastCallback(() => {
-    setIsMuteModalOpen(false);
-    onClose();
-  });
-
   const handleReport = useLastCallback(() => {
     if (isAccountFrozen) {
       openFrozenAccountModal();
@@ -311,9 +301,6 @@ const HeaderMenuContainer: FC<OwnProps & StateProps> = ({
     if (isAccountFrozen) {
       openFrozenAccountModal();
       closeMenu();
-    } else {
-      markRenderMuteModal();
-      setIsMuteModalOpen(true);
     }
     setIsMenuOpen(false);
   });
@@ -824,14 +811,6 @@ const HeaderMenuContainer: FC<OwnProps & StateProps> = ({
             onClose={closeDeleteModal}
             chat={savedDialog || chat}
             isSavedDialog={Boolean(savedDialog)}
-          />
-        )}
-        {canMute && shouldRenderMuteModal && chat?.id && (
-          <MuteChatModal
-            isOpen={isMuteModalOpen}
-            onClose={closeMuteModal}
-            onCloseAnimationEnd={unmarkRenderMuteModal}
-            chatId={chat.id}
           />
         )}
       </div>

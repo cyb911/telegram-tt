@@ -39,7 +39,6 @@ import { copyTextToClipboard } from '../../../util/clipboard';
 import { formatPhoneNumberWithCode } from '../../../util/phoneNumber';
 import stopEvent from '../../../util/stopEvent';
 import { extractCurrentThemeParams } from '../../../util/themeStyle';
-import { ChatAnimationTypes } from '../../left/main/hooks';
 import formatUsername from '../helpers/formatUsername';
 import renderText from '../helpers/renderText';
 
@@ -50,7 +49,6 @@ import useMedia from '../../../hooks/useMedia';
 import useOldLang from '../../../hooks/useOldLang';
 import useDevicePixelRatio from '../../../hooks/window/useDevicePixelRatio';
 
-import Chat from '../../left/main/Chat';
 import Button from '../../ui/Button';
 import ListItem from '../../ui/ListItem';
 import Skeleton from '../../ui/placeholder/Skeleton';
@@ -139,7 +137,6 @@ const ChatExtra: FC<OwnProps & StateProps> = ({
   const {
     businessLocation,
     businessWorkHours,
-    personalChannelMessageId,
     birthday,
   } = userFullInfo || {};
   const oldLang = useOldLang();
@@ -340,14 +337,6 @@ const ChatExtra: FC<OwnProps & StateProps> = ({
           <span className={styles.personalChannelSubscribers}>
             {oldLang('Subscribers', personalChannel.membersCount, 'i')}
           </span>
-          <Chat
-            chatId={personalChannel.id}
-            orderDiff={0}
-            animationType={ChatAnimationTypes.None}
-            isPreview
-            previewMessageId={personalChannelMessageId}
-            className={styles.personalChannelItem}
-          />
         </div>
       )}
       {Boolean(formattedNumber?.length) && (
