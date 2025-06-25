@@ -9,7 +9,6 @@ import { pick } from '../../util/iteratees';
 
 import VerificationMonetizationModal from '../common/VerificationMonetizationModal.async';
 import WebAppsCloseConfirmationModal from '../main/WebAppsCloseConfirmationModal.async';
-import AttachBotInstallModal from './attachBotInstall/AttachBotInstallModal.async';
 import BoostModal from './boost/BoostModal.async';
 import ChatInviteModal from './chatInvite/ChatInviteModal.async';
 import ChatlistModal from './chatlist/ChatlistModal.async';
@@ -106,7 +105,6 @@ const MODALS: ModalRegistry = {
   urlAuth: UrlAuthModal,
   oneTimeMediaModal: OneTimeMediaModal,
   inviteViaLinkModal: InviteViaLinkModal,
-  requestedAttachBotInstall: AttachBotInstallModal,
   reportAdModal: ReportAdModal,
   reportModal: ReportModal,
   webApps: WebAppModal,

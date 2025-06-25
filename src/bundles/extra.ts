@@ -10,7 +10,6 @@ export { default as HistoryCalendar } from '../components/main/HistoryCalendar';
 export { default as NewContactModal } from '../components/main/NewContactModal';
 export { default as WebAppModal } from '../components/modals/webApp/WebAppModal';
 export { default as BotTrustModal } from '../components/main/BotTrustModal';
-export { default as AttachBotInstallModal } from '../components/modals/attachBotInstall/AttachBotInstallModal';
 export { default as DeleteFolderDialog } from '../components/main/DeleteFolderDialog';
 export { default as PremiumMainModal } from '../components/main/premium/PremiumMainModal';
 export { default as GiveawayModal } from '../components/main/premium/GiveawayModal';
