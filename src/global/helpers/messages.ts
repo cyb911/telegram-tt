@@ -39,10 +39,6 @@ export function getMessageHtmlId(messageId: number, index?: number) {
   return parts.join('-');
 }
 
-export function getMessageOriginalId(message: ApiMessage) {
-  return message.previousLocalId || message.id;
-}
-
 export function getMessageTranscription(message: ApiMessage) {
   const { transcriptionId } = message;
   const global = getGlobal();
@@ -86,49 +82,6 @@ export function groupStatefulContent({
 
 export function getMessageText(message: MediaContainer) {
   return hasMessageText(message) ? message.content.text || { text: CONTENT_NOT_SUPPORTED } : undefined;
-}
-
-export function getMessageCustomShape(message: ApiMessage): boolean {
-  const {
-    text, sticker, photo, video, audio, voice,
-    document, pollId, webPage, contact, action,
-    game, invoice, location, storyData,
-  } = message.content;
-
-  if (sticker || (video?.isRound)) {
-    return true;
-  }
-
-  if (!text || photo || video || audio || voice || document || pollId || webPage || contact || action || game || invoice
-    || location || storyData) {
-    return false;
-  }
-
-  const hasOtherFormatting = text?.entities?.some((entity) => entity.type !== ApiMessageEntityTypes.CustomEmoji);
-
-  return Boolean(message.emojiOnlyCount && !hasOtherFormatting);
-}
-
-export function getMessageSingleRegularEmoji(message: ApiMessage) {
-  const { text } = message.content;
-
-  if (text?.entities?.length || message.emojiOnlyCount !== 1) {
-    return undefined;
-  }
-
-  return text!.text;
-}
-
-export function getMessageSingleCustomEmoji(message: ApiMessage): string | undefined {
-  const { text } = message.content;
-
-  if (text?.entities?.length !== 1
-    || text.entities[0].type !== ApiMessageEntityTypes.CustomEmoji
-    || message.emojiOnlyCount !== 1) {
-    return undefined;
-  }
-
-  return text.entities[0].documentId;
 }
 
 export function getFirstLinkInMessage(message: ApiMessage) {
@@ -184,10 +137,6 @@ export function isOwnMessage(message: ApiMessage) {
   return message.isOutgoing;
 }
 
-export function isReplyToMessage(message: ApiMessage) {
-  return Boolean(message.replyInfo?.type === 'message');
-}
-
 export function isForwardedMessage(message: ApiMessage) {
   return Boolean(message.forwardInfo || message.content.storyData);
 }
@@ -222,12 +171,6 @@ export function isMessageFailed(message: ApiMessage) {
 
 export function isHistoryClearMessage(message: ApiMessage) {
   return message.content.action && message.content.action.type === 'historyClear';
-}
-
-export function isGeoLiveExpired(message: ApiMessage) {
-  const { location } = message.content;
-  if (location?.mediaType !== 'geoLive') return false;
-  return getServerTime() - (message.date || 0) >= location.period;
 }
 
 export function isMessageTranslatable(message: ApiMessage, allowOutgoing?: boolean) {

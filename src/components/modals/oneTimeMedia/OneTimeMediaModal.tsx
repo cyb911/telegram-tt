@@ -2,7 +2,6 @@ import { memo } from '../../../lib/teact/teact';
 import { getActions, getGlobal } from '../../../global';
 
 import type { TabState } from '../../../global/types';
-import { AudioOrigin } from '../../../types';
 
 import { isOwnMessage } from '../../../global/helpers';
 import { selectTheme } from '../../../global/selectors';
@@ -13,7 +12,6 @@ import useLastCallback from '../../../hooks/useLastCallback';
 import useOldLang from '../../../hooks/useOldLang';
 import useShowTransitionDeprecated from '../../../hooks/useShowTransitionDeprecated';
 
-import Audio from '../../common/Audio';
 import Button from '../../ui/Button';
 
 import styles from './OneTimeMediaModal.module.scss';
@@ -37,9 +35,6 @@ const OneTimeMediaModal = ({
     transitionClassNames,
   } = useShowTransitionDeprecated(Boolean(modal));
 
-  const handlePlayVoice = useLastCallback(() => {
-    return undefined;
-  });
 
   const handleClose = useLastCallback(() => {
     closeOneTimeMediaModal();
@@ -56,20 +51,6 @@ const OneTimeMediaModal = ({
   function renderMedia() {
     if (!message?.content) {
       return undefined;
-    }
-    const { voice } = message.content;
-    if (voice) {
-      return (
-        <Audio
-          className={styles.voice}
-          theme={theme}
-          message={message}
-          origin={AudioOrigin.OneTimeModal}
-          autoPlay
-          onPlay={handlePlayVoice}
-          onPause={handleClose}
-        />
-      );
     }
     return undefined;
   }
