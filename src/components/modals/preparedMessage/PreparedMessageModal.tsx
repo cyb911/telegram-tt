@@ -7,9 +7,7 @@ import { getActions, withGlobal } from '../../../global';
 import type { ApiUser } from '../../../api/types';
 import type { TabState } from '../../../global/types';
 import type { ThemeKey } from '../../../types';
-import { MAIN_THREAD_ID } from '../../../api/types';
 
-import { getMockPreparedMessageFromResult, getUserFullName } from '../../../global/helpers';
 import { selectTheme, selectThemeValues, selectUser } from '../../../global/selectors';
 import buildClassName from '../../../util/buildClassName';
 import buildStyle from '../../../util/buildStyle';
@@ -19,7 +17,6 @@ import useLang from '../../../hooks/useLang';
 import useLastCallback from '../../../hooks/useLastCallback';
 
 import Icon from '../../common/icons/Icon';
-import Message from '../../middle/message/Message';
 import Button from '../../ui/Button';
 import Modal from '../../ui/Modal';
 
@@ -105,11 +102,6 @@ const PreparedMessageModal: FC<OwnProps & StateProps> = ({
     );
   }, [lang, modal]);
 
-  const localMessage = useMemo(() => {
-    if (!botId || !message || !webAppKey) return undefined;
-    return getMockPreparedMessageFromResult(botId, message);
-  }, [botId, message, webAppKey]);
-
   const bgClassName = buildClassName(
     styles.background,
     styles.withTransition,
@@ -140,28 +132,8 @@ const PreparedMessageModal: FC<OwnProps & StateProps> = ({
           className={bgClassName}
           style={customBackgroundValue ? `--custom-background: ${customBackgroundValue}` : undefined}
         />
-        {localMessage && (
-          <Message
-            key={botId}
-            message={localMessage}
-            threadId={MAIN_THREAD_ID}
-            messageListType="thread"
-            noComments
-            noReplies
-            appearanceOrder={0}
-            isJustAdded={false}
-            isFirstInGroup
-            isLastInGroup
-            isLastInList={false}
-            isFirstInDocumentGroup={false}
-            isLastInDocumentGroup={false}
-          />
-        )}
       </div>
       <div className={styles.container}>
-        <p className={styles.info}>
-          {lang('WebAppShareMessageInfo', { user: getUserFullName(bot) })}
-        </p>
         <Button
           size="smaller"
           onClick={handleOpenClick}

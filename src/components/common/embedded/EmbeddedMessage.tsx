@@ -17,7 +17,6 @@ import {
   getMessageRoundVideo,
   isChatChannel,
   isChatGroup,
-  isMessageTranslatable,
 } from '../../../global/helpers';
 import { getMediaContentTypeDescription } from '../../../global/helpers/messageSummary';
 import { getPeerTitle } from '../../../global/helpers/peers';
@@ -34,7 +33,6 @@ import useLang from '../../../hooks/useLang';
 import useMedia from '../../../hooks/useMedia';
 import useOldLang from '../../../hooks/useOldLang';
 import useThumbnail from '../../../hooks/useThumbnail';
-import useMessageTranslation from '../../middle/message/hooks/useMessageTranslation';
 
 import RippleEffect from '../../ui/RippleEffect';
 import Icon from '../icons/Icon';
@@ -112,12 +110,6 @@ const EmbeddedMessage: FC<OwnProps> = ({
   const isSpoiler = Boolean(containedMedia && getMessageIsSpoiler(containedMedia));
   const isQuote = Boolean(replyInfo?.type === 'message' && replyInfo.isQuote);
   const replyForwardInfo = replyInfo?.type === 'message' ? replyInfo.replyFrom : undefined;
-
-  const shouldTranslate = message && isMessageTranslatable(message);
-  const { translatedText } = useMessageTranslation(
-    chatTranslations, message?.chatId, shouldTranslate ? message?.id : undefined, requestedChatTranslationLanguage,
-  );
-
   const oldLang = useOldLang();
   const lang = useLang();
 
@@ -156,7 +148,6 @@ const EmbeddedMessage: FC<OwnProps> = ({
       <MessageSummary
         message={message}
         noEmoji={Boolean(mediaThumbnail)}
-        translatedText={translatedText}
         observeIntersectionForLoading={observeIntersectionForLoading}
         observeIntersectionForPlaying={observeIntersectionForPlaying}
         emojiSize={EMOJI_SIZE}

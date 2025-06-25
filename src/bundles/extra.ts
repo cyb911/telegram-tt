@@ -1,5 +1,3 @@
-export { default as StoryViewer } from '../components/story/StoryViewer';
-
 export { default as ForwardRecipientPicker } from '../components/main/ForwardRecipientPicker';
 export { default as DraftRecipientPicker } from '../components/main/DraftRecipientPicker';
 export { default as AttachBotRecipientPicker } from '../components/main/AttachBotRecipientPicker';
@@ -47,13 +45,10 @@ export { default as EmojiInteractionAnimation } from '../components/middle/Emoji
 export { default as ChatLanguageModal } from '../components/middle/ChatLanguageModal';
 export { default as CollectibleInfoModal } from '../components/modals/collectible/CollectibleInfoModal';
 
-export { default as ContextMenuContainer } from '../components/middle/message/ContextMenuContainer';
-export { default as SponsoredContextMenuContainer } from '../components/middle/message/SponsoredContextMenuContainer';
 export { default as StickerSetModal } from '../components/common/StickerSetModal';
 export { default as CustomEmojiSetsModal } from '../components/common/CustomEmojiSetsModal';
 export { default as HeaderMenuContainer } from '../components/middle/HeaderMenuContainer';
 export { default as MiddleSearch } from '../components/middle/search/MiddleSearch';
-export { default as ReactionPicker } from '../components/middle/message/reactions/ReactionPicker';
 
 export { default as AttachmentModal } from '../components/middle/composer/AttachmentModal';
 export { default as PollModal } from '../components/middle/composer/PollModal';
@@ -63,23 +58,11 @@ export { default as BotCommandMenu } from '../components/middle/composer/BotComm
 export { default as MentionTooltip } from '../components/middle/composer/MentionTooltip';
 export { default as StickerTooltip } from '../components/middle/composer/StickerTooltip';
 export { default as CustomEmojiTooltip } from '../components/middle/composer/CustomEmojiTooltip';
-export { default as CustomSendMenu } from '../components/middle/composer/CustomSendMenu';
 export { default as DropArea } from '../components/middle/composer/DropArea';
 export { default as TextFormatter } from '../components/middle/composer/TextFormatter';
 export { default as EmojiTooltip } from '../components/middle/composer/EmojiTooltip';
 export { default as InlineBotTooltip } from '../components/middle/composer/InlineBotTooltip';
 export { default as SendAsMenu } from '../components/middle/composer/SendAsMenu';
-
-export { default as StickerSearch } from '../components/right/StickerSearch';
-export { default as GifSearch } from '../components/right/GifSearch';
-export { default as Statistics } from '../components/right/statistics/Statistics';
-export { default as MessageStatistics } from '../components/right/statistics/MessageStatistics';
-export { default as StoryStatistics } from '../components/right/statistics/StoryStatistics';
-export { default as PollResults } from '../components/right/PollResults';
-export { default as CreateTopic } from '../components/right/CreateTopic';
-export { default as EditTopic } from '../components/right/EditTopic';
-
-export { default as Management } from '../components/right/management/Management';
 
 export { default as PaymentModal } from '../components/payment/PaymentModal';
 export { default as ReceiptModal } from '../components/payment/ReceiptModal';

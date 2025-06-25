@@ -6,7 +6,6 @@ import useBuffering from '../../hooks/useBuffering';
 import useLastCallback from '../../hooks/useLastCallback';
 import useSyncEffect from '../../hooks/useSyncEffect';
 import useVideoCleanup from '../../hooks/useVideoCleanup';
-import useVideoAutoPause from '../middle/message/hooks/useVideoAutoPause';
 
 type VideoProps = React.DetailedHTMLProps<React.VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement>;
 
@@ -35,9 +34,6 @@ function OptimizedVideo({
   if (!ref) {
     ref = localRef;
   }
-
-  const { handlePlaying: handlePlayingForAutoPause } = useVideoAutoPause(ref, canPlay, isPriority);
-
   const isReadyRef = useRef(false);
   const handleReady = useLastCallback(() => {
     if (!isReadyRef.current) {
@@ -58,7 +54,6 @@ function OptimizedVideo({
   }, [isBuffered, handleReady]);
 
   const handlePlaying = useLastCallback((e) => {
-    handlePlayingForAutoPause();
     handlePlayingForBuffering(e);
     handleReady();
     restProps.onPlaying?.(e);

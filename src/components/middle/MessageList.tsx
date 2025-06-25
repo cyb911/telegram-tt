@@ -80,13 +80,6 @@ import { isBackgroundModeActive } from '../../hooks/window/useBackgroundMode';
 import useContainerHeight from './hooks/useContainerHeight';
 import useStickyDates from './hooks/useStickyDates';
 
-import Loading from '../ui/Loading';
-import ContactGreeting from './ContactGreeting';
-import MessageListAccountInfo from './MessageListAccountInfo';
-import MessageListContent from './MessageListContent';
-import NoMessages from './NoMessages';
-import RequirementToContactMessage from './RequirementToContactMessage';
-
 import './MessageList.scss';
 
 type OwnProps = {
@@ -670,23 +663,6 @@ const MessageList: FC<OwnProps & StateProps> = ({
   }, [isSelectModeActive]);
 
   const noAvatars = Boolean(!withUsers || (isChannelChat && !isChannelWithAvatars));
-  const shouldRenderGreeting = isUserId(chatId) && !isChatWithSelf && !isBot && !isAnonymousForwards
-    && type === 'thread'
-    && (
-      (
-        !messageGroups && !lastMessage && messageIds
-        // Used to avoid flickering when deleting a greeting that has just been sent
-        && (!listItemElementsRef.current || listItemElementsRef.current.length === 0)
-      )
-      || (messageIds?.length === 1 && messagesById?.[messageIds[0]]?.content.action?.type === 'contactSignUp')
-      || (lastMessage?.content?.action?.type === 'contactSignUp')
-    );
-
-  const isGroupChatJustCreated = isGroupChat && isCreator
-    && messageIds?.length === 1 && messagesById?.[messageIds[0]]?.content.action?.type === 'chatCreate';
-  const isEmptyTopic = messageIds?.length === 1
-    && messagesById?.[messageIds[0]]?.content.action?.type === 'topicCreate';
-
   const className = buildClassName(
     'MessageList custom-scroll',
     noAvatars && 'no-avatars',
@@ -716,65 +692,6 @@ const MessageList: FC<OwnProps & StateProps> = ({
       onScroll={handleScroll}
       onMouseDown={preventMessageInputBlur}
     >
-      {isRestricted ? (
-        <div className="empty">
-          <span>
-            {restrictionReason ? restrictionReason.text : `This is a private ${isChannelChat ? 'channel' : 'chat'}`}
-          </span>
-        </div>
-      ) : paidMessagesStars && !hasMessages && !hasCustomGreeting ? (
-        <RequirementToContactMessage paidMessagesStars={paidMessagesStars} peerId={monoforumChannelId || chatId} />
-      ) : isContactRequirePremium && !hasMessages ? (
-        <RequirementToContactMessage peerId={chatId} />
-      ) : (isBot || isNonContact) && !hasMessages ? (
-        <MessageListAccountInfo chatId={chatId} hasMessages={hasMessages} />
-      ) : shouldRenderGreeting ? (
-        <ContactGreeting key={chatId} userId={chatId} />
-      ) : messageIds && (!messageGroups || isGroupChatJustCreated || isEmptyTopic) ? (
-        <NoMessages
-          chatId={chatId}
-          topic={topic}
-          type={type}
-          isChatWithSelf={isChatWithSelf}
-          isGroupChatJustCreated={isGroupChatJustCreated}
-        />
-      ) : hasMessages ? (
-        <MessageListContent
-          canShowAds={areAdsEnabled && isChannelChat}
-          chatId={chatId}
-          isComments={isComments}
-          isChannelChat={isChannelChat}
-          isChatMonoforum={isChatMonoforum}
-          isSavedDialog={isSavedDialog}
-          messageIds={messageIds || [lastMessage!.id]}
-          messageGroups={messageGroups || groupMessages([lastMessage!])}
-          getContainerHeight={getContainerHeight}
-          isViewportNewest={Boolean(isViewportNewest)}
-          isUnread={Boolean(firstUnreadId)}
-          isEmptyThread={isEmptyThread}
-          withUsers={withUsers}
-          noAvatars={noAvatars}
-          containerRef={containerRef}
-          anchorIdRef={anchorIdRef}
-          memoUnreadDividerBeforeIdRef={memoUnreadDividerBeforeIdRef}
-          memoFirstUnreadIdRef={memoFirstUnreadIdRef}
-          threadId={threadId}
-          type={type}
-          isReady={isReady}
-          hasLinkedChat={hasLinkedChat}
-          isSchedule={messageGroups ? type === 'scheduled' : false}
-          shouldRenderAccountInfo={isBot || isNonContact}
-          nameChangeDate={nameChangeDate}
-          photoChangeDate={photoChangeDate}
-          noAppearanceAnimation={!messageGroups || !shouldAnimateAppearanceRef.current}
-          onScrollDownToggle={onScrollDownToggle}
-          onNotchToggle={onNotchToggle}
-          onIntersectPinnedMessage={onIntersectPinnedMessage}
-          canPost={canPost}
-        />
-      ) : (
-        <Loading color="white" backgroundColor="dark" />
-      )}
     </div>
   );
 };

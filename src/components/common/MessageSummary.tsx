@@ -24,7 +24,6 @@ import renderText from './helpers/renderText';
 
 import useOldLang from '../../hooks/useOldLang';
 
-import ActionMessageText from '../middle/message/ActionMessageText';
 import MessageText from './MessageText';
 
 type OwnProps = {
@@ -83,9 +82,7 @@ function MessageSummary({
   }
 
   function renderMessageText() {
-    if (isAction) {
-      return <ActionMessageText message={message} asPreview />;
-    }
+
 
     return (
       <MessageText

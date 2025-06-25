@@ -24,7 +24,6 @@ import useLang from '../../../hooks/useLang';
 import useLastCallback from '../../../hooks/useLastCallback';
 
 import PremiumProgress from '../../common/PremiumProgress';
-import ActionMessage from '../../middle/message/ActionMessage';
 import Button from '../../ui/Button';
 import Link from '../../ui/Link';
 import ListItem from '../../ui/ListItem';
@@ -381,12 +380,6 @@ function GiftComposer({
         <div
           className={bgClassName}
           style={customBackgroundValue ? `--custom-background: ${customBackgroundValue}` : undefined}
-        />
-        <ActionMessage
-          key={isStarGift ? gift.id : isPremiumGift ? gift.months : undefined}
-          message={localMessage}
-          threadId={MAIN_THREAD_ID}
-          appearanceOrder={0}
         />
       </div>
       {renderOptionsSection()}

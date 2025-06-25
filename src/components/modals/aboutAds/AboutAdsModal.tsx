@@ -14,7 +14,6 @@ import useOldLang from '../../../hooks/useOldLang';
 
 import Icon from '../../common/icons/Icon';
 import SafeLink from '../../common/SafeLink';
-import SponsoredMessageContextMenuContainer from '../../middle/message/SponsoredContextMenuContainer';
 import Button from '../../ui/Button';
 import Modal from '../../ui/Modal';
 import TableAboutModal from '../common/TableAboutModal';
@@ -38,7 +37,7 @@ const AboutAdsModal = ({ modal, minLevelToRestrictAds }: OwnProps & StateProps) 
   const isOpen = Boolean(modal);
   const renderingModal = useCurrentOrPrev(modal);
   const {
-    canReport, randomId, additionalInfo, sponsorInfo,
+    canReport,
   } = renderingModal || {};
   const isMonetizationSharing = canReport;
 
@@ -65,7 +64,6 @@ const AboutAdsModal = ({ modal, minLevelToRestrictAds }: OwnProps & StateProps) 
   }, [oldLang]);
 
   const {
-    isContextMenuOpen, contextMenuAnchor,
     handleContextMenu, handleContextMenuClose, handleContextMenuHide,
   } = useContextMenuHandlers(moreMenuRef, !renderingIsNewDesign);
 
@@ -139,21 +137,6 @@ const AboutAdsModal = ({ modal, minLevelToRestrictAds }: OwnProps & StateProps) 
           buttonText={oldLang('RevenueSharingAdsUnderstood')}
           onClose={handleClose}
         />
-        {contextMenuAnchor && randomId && (
-          <SponsoredMessageContextMenuContainer
-            isOpen={isContextMenuOpen}
-            anchor={contextMenuAnchor}
-            triggerRef={moreMenuRef}
-            randomId={randomId}
-            additionalInfo={additionalInfo}
-            canReport={canReport}
-            sponsorInfo={sponsorInfo}
-            shouldSkipAbout
-            onItemClick={handleClose}
-            onClose={handleContextMenuClose}
-            onCloseAnimationEnd={handleContextMenuHide}
-          />
-        )}
       </>
     );
   }

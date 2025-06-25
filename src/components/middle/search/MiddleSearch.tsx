@@ -16,7 +16,7 @@ import type {
 import { ANONYMOUS_USER_ID } from '../../../config';
 import { requestMeasure, requestMutation, requestNextMutation } from '../../../lib/fasterdom/fasterdom';
 import {
-  getIsSavedDialog, getReactionKey, isSameReaction, isSystemBot,
+  getIsSavedDialog, isSystemBot,
 } from '../../../global/helpers';
 import {
   selectChat,
@@ -56,7 +56,6 @@ import PeerChip from '../../common/PeerChip';
 import Button from '../../ui/Button';
 import InfiniteScroll from '../../ui/InfiniteScroll';
 import SearchInput from '../../ui/SearchInput';
-import SavedTagButton from '../message/reactions/SavedTagButton';
 import MiddleSearchResult from './MiddleSearchResult';
 
 import styles from './MiddleSearch.module.scss';
@@ -108,7 +107,6 @@ const MiddleSearch: FC<StateProps> = ({
   lastSearchQuery,
   foundIds,
   isHistoryCalendarOpen,
-  isCurrentUserPremium,
   isSavedMessages,
   fetchingQuery,
   isHashtagQuery,
@@ -122,7 +120,6 @@ const MiddleSearch: FC<StateProps> = ({
     focusMessage,
     closeMiddleSearch,
     openHistoryCalendar,
-    openPremiumModal,
     loadSavedReactionTags,
   } = getActions();
 
@@ -294,7 +291,6 @@ const MiddleSearch: FC<StateProps> = ({
   }, [savedTags]);
 
   const hasSavedTags = Boolean(savedTagsArray?.length);
-  const areSavedTagsDisabled = hasSavedTags && !isCurrentUserPremium;
 
   useEffect(() => {
     if (isSavedMessages && isActive) loadSavedReactionTags();
@@ -458,18 +454,6 @@ const MiddleSearch: FC<StateProps> = ({
 
     handleSearch();
   });
-
-  const activateSearchTag = useLastCallback((tag: ApiReaction) => {
-    if (areSavedTagsDisabled) {
-      openPremiumModal({
-        initialSection: 'saved_tags',
-      });
-      return;
-    }
-
-    updateSearchParams({ savedTag: tag });
-  });
-
   const removeSearchSavedTag = useLastCallback(() => {
     updateSearchParams({ savedTag: undefined });
   });
@@ -564,21 +548,6 @@ const MiddleSearch: FC<StateProps> = ({
               'no-scrollbar',
             )}
           >
-            {savedTagsArray.map((tag) => {
-              const isChosen = isSameReaction(tag.reaction, savedTag);
-              return (
-                <SavedTagButton
-                  containerId="local-search"
-                  key={getReactionKey(tag.reaction)}
-                  reaction={tag.reaction}
-                  tag={tag}
-                  withCount
-                  isDisabled={areSavedTagsDisabled}
-                  isChosen={isChosen}
-                  onClick={isChosen ? removeSearchSavedTag : activateSearchTag}
-                />
-              );
-            })}
           </div>
         )}
         {isHashtagQuery && (
@@ -678,15 +647,6 @@ const MiddleSearch: FC<StateProps> = ({
           onDownClick={canFocusNewer ? handleFocusNewer : undefined}
         >
           <div className={styles.searchTags}>
-            {savedTag && (
-              <SavedTagButton
-                containerId="local-search-tags"
-                className={styles.savedSearchTag}
-                reaction={savedTag}
-                tag={savedTags![getReactionKey(savedTag)]}
-                onClick={removeSearchSavedTag}
-              />
-            )}
             {isHashtagQuery && <div className={styles.hash}>#</div>}
           </div>
           {!isMobile && renderDropdown()}

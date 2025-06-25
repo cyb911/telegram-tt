@@ -14,7 +14,6 @@ import useOldLang from '../../../hooks/useOldLang';
 import useShowTransitionDeprecated from '../../../hooks/useShowTransitionDeprecated';
 
 import Audio from '../../common/Audio';
-import RoundVideo from '../../middle/message/RoundVideo';
 import Button from '../../ui/Button';
 
 import styles from './OneTimeMediaModal.module.scss';
@@ -58,7 +57,7 @@ const OneTimeMediaModal = ({
     if (!message?.content) {
       return undefined;
     }
-    const { voice, video } = message.content;
+    const { voice } = message.content;
     if (voice) {
       return (
         <Audio
@@ -69,15 +68,6 @@ const OneTimeMediaModal = ({
           autoPlay
           onPlay={handlePlayVoice}
           onPause={handleClose}
-        />
-      );
-    } else if (video?.isRound) {
-      return (
-        <RoundVideo
-          className={styles.video}
-          message={message}
-          origin="oneTimeModal"
-          onStop={handleClose}
         />
       );
     }

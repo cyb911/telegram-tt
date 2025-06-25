@@ -30,7 +30,6 @@ import Icon from '../../common/icons/Icon';
 import Button from '../../ui/Button';
 import Menu from '../../ui/Menu';
 import MenuItem from '../../ui/MenuItem';
-import WebPage from '../message/WebPage';
 
 import './WebPagePreview.scss';
 
@@ -222,13 +221,6 @@ const WebPagePreview: FC<OwnProps & StateProps> = ({
         <div className="WebPagePreview-left-icon" onClick={handlePreviewClick}>
           <Icon name="link" />
         </div>
-        <WebPage
-          message={messageStub}
-          inPreview
-          theme={theme}
-          onContainerClick={handlePreviewClick}
-          isEditing={isEditing}
-        />
         <Button
           className="WebPagePreview-clear"
           round

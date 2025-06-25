@@ -14,7 +14,6 @@ import { oldTranslate } from '../../../util/oldLangProvider';
 import { buildCustomEmojiHtmlFromEntity } from '../../middle/composer/helpers/customEmoji';
 import renderText from './renderText';
 
-import MentionLink from '../../middle/message/MentionLink';
 import Blockquote from '../Blockquote';
 import CodeBlock from '../code/CodeBlock';
 import CustomEmoji from '../CustomEmoji';
@@ -583,18 +582,6 @@ function processEntity({
       );
     case ApiMessageEntityTypes.Italic:
       return <em data-entity-type={entity.type}>{renderNestedMessagePart()}</em>;
-    case ApiMessageEntityTypes.MentionName:
-      return (
-        <MentionLink userId={entity.userId}>
-          {renderNestedMessagePart()}
-        </MentionLink>
-      );
-    case ApiMessageEntityTypes.Mention:
-      return (
-        <MentionLink username={entityText}>
-          {renderNestedMessagePart()}
-        </MentionLink>
-      );
     case ApiMessageEntityTypes.Phone:
       return (
         <a

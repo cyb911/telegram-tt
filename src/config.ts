@@ -18,8 +18,6 @@ export const ACCOUNT_QUERY = 'account';
 
 export const IS_MOCKED_CLIENT = process.env.APP_MOCKED_CLIENT === '1';
 export const IS_TEST = process.env.APP_ENV === 'test';
-export const IS_PERF = process.env.APP_ENV === 'perf';
-export const IS_BETA = process.env.APP_ENV === 'staging';
 export const IS_PACKAGED_ELECTRON = process.env.IS_PACKAGED_ELECTRON;
 
 export const ELECTRON_WINDOW_DRAG_EVENT_START = 'tt-electron-window-drag-start';
@@ -32,7 +30,6 @@ export const DEBUG_LOG_FILENAME = 'tt-log.json';
 export const STRICTERDOM_ENABLED = DEBUG;
 export const BOT_VERIFICATION_PEERS_LIMIT = 20;
 
-export const BETA_CHANGELOG_URL = 'https://telegra.ph/WebA-Beta-03-20';
 export const ELECTRON_HOST_URL = process.env.ELECTRON_HOST_URL!;
 
 export const DEBUG_ALERT_MSG = 'Shoot!\nSomething went wrong, please see the error details in Dev Tools Console.';
@@ -67,7 +64,6 @@ export const MEDIA_CACHE_MAX_BYTES = 512 * 1024; // 512 KB
 export const CUSTOM_BG_CACHE_NAME = 'tt-custom-bg';
 export const LANG_CACHE_NAME = 'tt-lang-packs-v49';
 export const ASSET_CACHE_NAME = 'tt-assets';
-export const AUTODOWNLOAD_FILESIZE_MB_LIMITS = [1, 5, 10, 50, 100, 500];
 export const DATA_BROADCAST_CHANNEL_PREFIX = 'tt-global';
 export const ESTABLISH_BROADCAST_CHANNEL_PREFIX = 'tt-establish';
 export const MULTITAB_LOCALSTORAGE_KEY_PREFIX = 'tt-multitab';
@@ -83,11 +79,8 @@ export const MIN_PASSWORD_LENGTH = 1;
 export const MESSAGE_LIST_SLICE = isBigScreen ? 60 : 40;
 export const MESSAGE_LIST_VIEWPORT_LIMIT = MESSAGE_LIST_SLICE * 2;
 
-export const ARCHIVE_MINIMIZED_HEIGHT = 36;
 export const CHAT_HEIGHT_PX = 72;
-export const TOPIC_HEIGHT_PX = 65;
 export const PEER_PICKER_ITEM_HEIGHT_PX = 56;
-export const CHAT_LIST_SLICE = isBigScreen ? 30 : 25;
 export const CHAT_LIST_LOAD_SLICE = 100;
 export const SHARED_MEDIA_SLICE = 42;
 export const CHAT_MEDIA_SLICE = 42;
@@ -95,23 +88,14 @@ export const MESSAGE_SEARCH_SLICE = 42;
 export const GLOBAL_SEARCH_SLICE = 20;
 export const GLOBAL_TOPIC_SEARCH_SLICE = 5;
 export const GLOBAL_SEARCH_CONTACTS_LIMIT = 20;
-export const MEMBERS_SLICE = 30;
 export const MEMBERS_LOAD_SLICE = 200;
 export const PINNED_MESSAGES_LIMIT = 50;
 export const BLOCKED_LIST_LIMIT = 100;
-export const PROFILE_SENSITIVE_AREA = 500;
-export const TOPIC_LIST_SENSITIVE_AREA = 600;
 export const GROUP_CALL_PARTICIPANTS_LIMIT = 100;
 export const STORY_LIST_LIMIT = 100;
 export const API_GENERAL_ID_LIMIT = 100;
 export const STATISTICS_PUBLIC_FORWARDS_LIMIT = 50;
 export const RESALE_GIFTS_LIMIT = 50;
-
-export const STORY_VIEWS_MIN_SEARCH = 15;
-export const STORY_MIN_REACTIONS_SORT = 10;
-export const STORY_VIEWS_MIN_CONTACTS_FILTER = 20;
-
-export const MEDIA_TIMESTAMP_SAVE_MINIMUM_DURATION = 30; // 30s
 
 export const GLOBAL_SUGGESTED_CHANNELS_ID = 'global';
 
@@ -132,7 +116,6 @@ export const TOP_CHAT_MESSAGES_PRELOAD_LIMIT = 20;
 
 export const SPONSORED_MESSAGE_CACHE_MS = 300000; // 5 min
 
-export const DEFAULT_CHARGE_FOR_MESSAGES = 250;
 export const MINIMUM_CHARGE_FOR_MESSAGES = 1;
 export const DEFAULT_MAXIMUM_CHARGE_FOR_MESSAGES = 10000;
 
@@ -140,17 +123,12 @@ export const DEFAULT_VOLUME = 1;
 export const DEFAULT_PLAYBACK_RATE = 1;
 export const PLAYBACK_RATE_FOR_AUDIO_MIN_DURATION = 20 * 60; // 20 min
 
-export const ANIMATION_LEVEL_CUSTOM = -1;
-export const ANIMATION_LEVEL_MIN = 0;
-export const ANIMATION_LEVEL_MED = 1;
 export const ANIMATION_LEVEL_MAX = 2;
 export const ANIMATION_LEVEL_DEFAULT = ANIMATION_LEVEL_MAX;
 
 export const DEFAULT_MESSAGE_TEXT_SIZE_PX = 16;
 export const IOS_DEFAULT_MESSAGE_TEXT_SIZE_PX = 17;
 export const MACOS_DEFAULT_MESSAGE_TEXT_SIZE_PX = 15;
-
-export const PREVIEW_AVATAR_COUNT = 3;
 
 export const DRAFT_DEBOUNCE = 10000; // 10s
 export const SEND_MESSAGE_ACTION_INTERVAL = 3000; // 3s
@@ -166,9 +144,7 @@ export const EDITABLE_INPUT_CSS_SELECTOR = `.messages-layout .Transition_slide-a
 export const EDITABLE_INPUT_MODAL_CSS_SELECTOR = `#${EDITABLE_INPUT_MODAL_ID}`;
 export const EDITABLE_STORY_INPUT_CSS_SELECTOR = `#${EDITABLE_STORY_INPUT_ID}`;
 
-export const CUSTOM_APPENDIX_ATTRIBUTE = 'data-has-custom-appendix';
 export const MESSAGE_CONTENT_CLASS_NAME = 'message-content';
-export const MESSAGE_CONTENT_SELECTOR = '.message-content';
 export const VIEW_TRANSITION_CLASS_NAME = 'active-view-transition';
 
 export const RESIZE_HANDLE_CLASS_NAME = 'resizeHandle';
@@ -191,8 +167,6 @@ export const TMP_CHAT_ID = '0';
 
 export const ANIMATION_END_DELAY = 100;
 export const ANIMATION_WAVE_MIN_INTERVAL = 200;
-export const MESSAGE_APPEARANCE_DELAY = 10;
-export const PAID_SEND_DELAY = 5000;
 
 export const SCROLL_MIN_DURATION = 300;
 export const SCROLL_MAX_DURATION = 600;
@@ -222,16 +196,10 @@ export const COMPOSER_EMOJI_SIZE_PICKER = 32;
 export const STICKER_SIZE_GENERAL_SETTINGS = 40;
 export const STICKER_SIZE_PICKER_HEADER = 32;
 export const STICKER_PICKER_MAX_SHARED_COVERS = 20;
-export const STICKER_SIZE_SEARCH = 72;
 export const STICKER_SIZE_MODAL = 72;
 export const EMOJI_SIZE_MODAL = 36;
 export const STICKER_SIZE_TWO_FA = 160;
-export const STICKER_SIZE_PASSCODE = 160;
-export const STICKER_SIZE_DISCUSSION_GROUPS = 140;
-export const STICKER_SIZE_FOLDER_SETTINGS = 100;
 export const STICKER_SIZE_INLINE_BOT_RESULT = 100;
-export const STICKER_SIZE_JOIN_REQUESTS = 140;
-export const STICKER_SIZE_INVITES = 140;
 export const RECENT_STICKERS_LIMIT = 20;
 export const RECENT_STATUS_LIMIT = 20;
 export const EMOJI_STATUS_LOOP_LIMIT = 2;
@@ -250,7 +218,6 @@ export const EMOJI_IMG_REGEX = /<img[^>]+alt="([^"]+)"(?![^>]*data-document-id)[
 
 export const BASE_EMOJI_KEYWORD_LANG = 'en';
 
-export const MENU_TRANSITION_DURATION = 200;
 export const SLIDE_TRANSITION_DURATION = 450;
 
 export const BIRTHDAY_NUMBERS_SET = 'FestiveFontEmoji';
@@ -321,7 +288,6 @@ export const TME_LINK_PREFIX = 'https://t.me/';
 export const BOT_FATHER_USERNAME = 'botfather';
 export const USERNAME_PURCHASE_ERROR = 'USERNAME_PURCHASE_AVAILABLE';
 export const MESSAGE_ID_REQUIRED_ERROR = 'MESSAGE_ID_REQUIRED';
-export const PURCHASE_USERNAME = 'auction';
 export const ACCEPTABLE_USERNAME_ERRORS = new Set([USERNAME_PURCHASE_ERROR, 'USERNAME_INVALID']);
 export const TME_WEB_DOMAINS = new Set(['t.me', 'web.t.me', 'a.t.me', 'k.t.me', 'z.t.me']);
 export const WEB_APP_PLATFORM = 'weba';
@@ -353,25 +319,17 @@ export const MAX_MEDIA_FILES_FOR_ALBUM = 10;
 export const MAX_ACTIVE_PINNED_CHATS = 5;
 export const SCHEDULED_WHEN_ONLINE = 0x7FFFFFFE;
 export const LANG_PACKS = ['android', 'ios', 'tdesktop', 'macos'] as const;
-export const FEEDBACK_URL = 'https://bugs.telegram.org/?tag_ids=41&sort=time';
-export const FAQ_URL = 'https://telegram.org/faq';
-export const PRIVACY_URL = 'https://telegram.org/privacy';
 export const MINI_APP_TOS_URL = 'https://telegram.org/tos/mini-apps';
-export const FRAGMENT_ADS_URL = 'https://fragment.com/ads';
 export const GENERAL_TOPIC_ID = 1;
 export const STORY_EXPIRE_PERIOD = 86400; // 1 day
 export const STORY_VIEWERS_EXPIRE_PERIOD = 86400; // 1 day
-export const FRESH_AUTH_PERIOD = 86400; // 1 day
 export const GIVEAWAY_BOOST_PER_PREMIUM = 4;
 export const GIVEAWAY_MAX_ADDITIONAL_CHANNELS = 10;
 export const GIVEAWAY_MAX_ADDITIONAL_USERS = 10;
 export const GIVEAWAY_MAX_ADDITIONAL_COUNTRIES = 10;
-export const BOOST_PER_SENT_GIFT = 3;
 export const FRAGMENT_PHONE_CODE = '888';
 export const FRAGMENT_PHONE_LENGTH = 11;
 
-export const LIGHT_THEME_BG_COLOR = '#99BA92';
-export const DARK_THEME_BG_COLOR = '#0F0F0F';
 export const DEFAULT_PATTERN_COLOR = '#4A8E3A8C';
 export const DARK_THEME_PATTERN_COLOR = '#0A0A0A8C';
 export const PEER_COLOR_BG_OPACITY = '1a';
@@ -386,7 +344,6 @@ export const IGNORE_UNHANDLED_ERRORS = new Set([
 
 // Group calls
 export const GROUP_CALL_VOLUME_MULTIPLIER = 100;
-export const GROUP_CALL_DEFAULT_VOLUME = 100 * GROUP_CALL_VOLUME_MULTIPLIER;
 
 export const DEFAULT_LIMITS: Record<ApiLimitType, readonly [number, number]> = {
   uploadMaxFileparts: [4000, 8000],

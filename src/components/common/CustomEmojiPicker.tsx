@@ -35,19 +35,15 @@ import buildClassName from '../../util/buildClassName';
 import { pickTruthy, unique, uniqueByField } from '../../util/iteratees';
 import { REM } from './helpers/mediaDimensions';
 
-import useAppLayout from '../../hooks/useAppLayout';
-import useHorizontalScroll from '../../hooks/useHorizontalScroll';
 import useLang from '../../hooks/useLang';
 import useLastCallback from '../../hooks/useLastCallback';
 import useOldLang from '../../hooks/useOldLang';
 import usePrevDuringAnimation from '../../hooks/usePrevDuringAnimation';
 import useScrolledState from '../../hooks/useScrolledState';
-import useAsyncRendering from '../right/hooks/useAsyncRendering';
 import { useStickerPickerObservers } from './hooks/useStickerPickerObservers';
 
 import StickerSetCover from '../middle/composer/StickerSetCover';
 import Button from '../ui/Button';
-import Loading from '../ui/Loading';
 import Icon from './icons/Icon';
 import StickerButton from './StickerButton';
 import StickerSet from './StickerSet';
@@ -149,8 +145,6 @@ const CustomEmojiPicker: FC<OwnProps & StateProps> = ({
   const headerRef = useRef<HTMLDivElement>();
   const sharedCanvasRef = useRef<HTMLCanvasElement>();
   const sharedCanvasHqRef = useRef<HTMLCanvasElement>();
-
-  const { isMobile } = useAppLayout();
   const {
     handleScroll: handleContentScroll,
     isAtBeginning: shouldHideTopBorder,
@@ -302,17 +296,6 @@ const CustomEmojiPicker: FC<OwnProps & StateProps> = ({
     defaultStatusIconsId, defaultTopicIconsId, isSavedMessages, defaultTagReactions, chatEmojiSetId,
     isWithPaidReaction, collectibleStatusEmojis, lang,
   ]);
-
-  const noPopulatedSets = useMemo(() => (
-    areAddedLoaded
-    && allSets.filter((set) => set.stickers?.length).length === 0
-  ), [allSets, areAddedLoaded]);
-
-  const canRenderContent = useAsyncRendering([], SLIDE_TRANSITION_DURATION);
-  const shouldRenderContent = areAddedLoaded && canRenderContent && !noPopulatedSets;
-
-  useHorizontalScroll(headerRef, isMobile || !shouldRenderContent);
-
   // Scroll container and header when active set changes
   useEffect(() => {
     if (!areAddedLoaded) {
@@ -397,18 +380,6 @@ const CustomEmojiPicker: FC<OwnProps & StateProps> = ({
   }
 
   const fullClassName = buildClassName('StickerPicker', styles.root, className);
-
-  if (!shouldRenderContent) {
-    return (
-      <div className={fullClassName}>
-        {noPopulatedSets ? (
-          <div className={pickerStyles.pickerDisabled}>{oldLang('NoStickers')}</div>
-        ) : (
-          <Loading />
-        )}
-      </div>
-    );
-  }
 
   const headerClassName = buildClassName(
     pickerStyles.header,

@@ -14,7 +14,6 @@ import {
   EFFECT_STICKERS_SET_ID,
   FAVORITE_SYMBOL_SET_ID,
   RECENT_SYMBOL_SET_ID,
-  SLIDE_TRANSITION_DURATION,
   STICKER_PICKER_MAX_SHARED_COVERS,
   STICKER_SIZE_PICKER_HEADER,
 } from '../../../config';
@@ -29,20 +28,17 @@ import { pickTruthy } from '../../../util/iteratees';
 import { MEMO_EMPTY_ARRAY } from '../../../util/memo';
 import { REM } from '../../common/helpers/mediaDimensions';
 
-import useHorizontalScroll from '../../../hooks/useHorizontalScroll';
 import useLastCallback from '../../../hooks/useLastCallback';
 import useOldLang from '../../../hooks/useOldLang';
 import useScrolledState from '../../../hooks/useScrolledState';
 import useSendMessageAction from '../../../hooks/useSendMessageAction';
 import { useStickerPickerObservers } from '../../common/hooks/useStickerPickerObservers';
-import useAsyncRendering from '../../right/hooks/useAsyncRendering';
 
 import Avatar from '../../common/Avatar';
 import Icon from '../../common/icons/Icon';
 import StickerButton from '../../common/StickerButton';
 import StickerSet from '../../common/StickerSet';
 import Button from '../../ui/Button';
-import Loading from '../../ui/Loading';
 import StickerSetCover from './StickerSetCover';
 
 import styles from './StickerPicker.module.scss';
@@ -209,23 +205,12 @@ const StickerPicker: FC<OwnProps & StateProps> = ({
     effectEmojis,
   ]);
 
-  const noPopulatedSets = useMemo(() => (
-    areAddedLoaded
-    && allSets.filter((set) => set.stickers?.length).length === 0
-  ), [allSets, areAddedLoaded]);
-
   useEffect(() => {
     if (!loadAndPlay) return;
     loadRecentStickers();
     if (!canSendStickers) return;
     sendMessageAction({ type: 'chooseSticker' });
   }, [canSendStickers, loadAndPlay, loadRecentStickers, sendMessageAction]);
-
-  const canRenderContents = useAsyncRendering([], SLIDE_TRANSITION_DURATION);
-  const shouldRenderContents = areAddedLoaded && canRenderContents
-    && !noPopulatedSets && (canSendStickers || isForEffects);
-
-  useHorizontalScroll(headerRef, !shouldRenderContents || !headerRef.current);
 
   // Scroll container and header when active set changes
   useEffect(() => {
@@ -329,20 +314,6 @@ const StickerPicker: FC<OwnProps & StateProps> = ({
   }
 
   const fullClassName = buildClassName(styles.root, className);
-
-  if (!shouldRenderContents) {
-    return (
-      <div className={fullClassName}>
-        {!canSendStickers && !isForEffects ? (
-          <div className={styles.pickerDisabled}>{lang('ErrorSendRestrictedStickersAll')}</div>
-        ) : noPopulatedSets ? (
-          <div className={styles.pickerDisabled}>{lang('NoStickers')}</div>
-        ) : (
-          <Loading />
-        )}
-      </div>
-    );
-  }
 
   const headerClassName = buildClassName(
     styles.header,

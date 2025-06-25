@@ -18,7 +18,6 @@ import useHeaderPane, { type PaneState } from '../hooks/useHeaderPane';
 
 import Avatar from '../../common/Avatar';
 import BadgeButton from '../../common/BadgeButton';
-import SponsoredMessageContextMenuContainer from '../message/SponsoredContextMenuContainer';
 
 import styles from './BotAdPane.module.scss';
 
@@ -60,9 +59,7 @@ const BotAdPane = ({
   });
 
   const {
-    isContextMenuOpen, contextMenuAnchor,
     handleBeforeContextMenu, handleContextMenu,
-    handleContextMenuClose, handleContextMenuHide,
   } = useContextMenuHandlers(ref, !shouldRender, true);
 
   const handleClick = useLastCallback(() => {
@@ -95,10 +92,6 @@ const BotAdPane = ({
   if (!shouldRender || !renderingSponsoredMessage) {
     return undefined;
   }
-
-  const {
-    randomId, canReport, additionalInfo, sponsorInfo,
-  } = renderingSponsoredMessage;
 
   const {
     peerColor,
@@ -141,19 +134,6 @@ const BotAdPane = ({
           />
         )}
       </div>
-      {contextMenuAnchor && (
-        <SponsoredMessageContextMenuContainer
-          isOpen={isContextMenuOpen}
-          anchor={contextMenuAnchor}
-          triggerRef={ref}
-          randomId={randomId}
-          additionalInfo={additionalInfo}
-          canReport={canReport}
-          sponsorInfo={sponsorInfo}
-          onClose={handleContextMenuClose}
-          onCloseAnimationEnd={handleContextMenuHide}
-        />
-      )}
     </>
   );
 };

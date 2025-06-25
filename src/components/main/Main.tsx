@@ -57,15 +57,12 @@ import CustomEmojiSetsModal from '../common/CustomEmojiSetsModal.async';
 import DeleteMessageModal from '../common/DeleteMessageModal.async';
 import StickerSetModal from '../common/StickerSetModal.async';
 import UnreadCount from '../common/UnreadCounter';
-import ReactionPicker from '../middle/message/reactions/ReactionPicker.async';
 import MessageListHistoryHandler from '../middle/MessageListHistoryHandler';
 import MiddleColumn from '../middle/MiddleColumn';
 import AudioPlayer from '../middle/panes/AudioPlayer';
 import ModalContainer from '../modals/ModalContainer';
 import PaymentModal from '../payment/PaymentModal.async';
 import ReceiptModal from '../payment/ReceiptModal.async';
-import RightColumn from '../right/RightColumn';
-import StoryViewer from '../story/StoryViewer.async';
 import AttachBotRecipientPicker from './AttachBotRecipientPicker.async';
 import BotTrustModal from './BotTrustModal.async';
 import DeleteFolderDialog from './DeleteFolderDialog.async';
@@ -551,8 +548,6 @@ const Main = ({
   return (
     <div ref={containerRef} id="Main" className={className}>
       <MiddleColumn leftColumnRef={leftColumnRef} isMobile={isMobile} />
-      <RightColumn isMobile={isMobile} />
-      <StoryViewer isOpen={isStoryViewerOpen} />
       <ForwardRecipientPicker isOpen={isForwardModalOpen} />
       <DraftRecipientPicker requestedDraft={requestedDraft} />
       <Notifications isOpen={hasNotifications} />
@@ -595,7 +590,6 @@ const Main = ({
       <PaymentModal isOpen={isPaymentModalOpen} onClose={closePaymentModal} />
       <ReceiptModal isOpen={isReceiptModalOpen} onClose={clearReceipt} />
       <DeleteFolderDialog folder={deleteFolderDialog} />
-      <ReactionPicker isOpen={isReactionPickerOpen} />
       <DeleteMessageModal isOpen={isDeleteMessageModalOpen} />
     </div>
   );

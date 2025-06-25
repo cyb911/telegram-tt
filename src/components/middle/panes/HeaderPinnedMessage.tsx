@@ -40,7 +40,6 @@ import useLastCallback from '../../../hooks/useLastCallback';
 import useMedia from '../../../hooks/useMedia';
 import useShowTransition from '../../../hooks/useShowTransition';
 import useThumbnail from '../../../hooks/useThumbnail';
-import useAsyncRendering from '../../right/hooks/useAsyncRendering';
 import useHeaderPane, { type PaneState } from '../hooks/useHeaderPane';
 
 import AnimatedCounter from '../../common/AnimatedCounter';
@@ -50,14 +49,12 @@ import MessageSummary from '../../common/MessageSummary';
 import Button from '../../ui/Button';
 import ConfirmDialog from '../../ui/ConfirmDialog';
 import RippleEffect from '../../ui/RippleEffect';
-import Spinner from '../../ui/Spinner';
 import Transition from '../../ui/Transition';
 import PinnedMessageNavigation from '../PinnedMessageNavigation';
 
 import styles from './HeaderPinnedMessage.module.scss';
 
 const MAX_LENGTH = 256;
-const SHOW_LOADER_DELAY = 450;
 const EMOJI_SIZE = 1.125 * REM;
 
 type OwnProps = {
@@ -101,7 +98,7 @@ const HeaderPinnedMessage = ({
   onFocusPinnedMessage,
 }: OwnProps & StateProps) => {
   const {
-    clickBotInlineButton, focusMessage, openThread, pinMessage, loadPinnedMessages,
+    clickBotInlineButton, focusMessage, pinMessage, loadPinnedMessages,
   } = getActions();
   const lang = useLang();
 
@@ -122,10 +119,6 @@ const HeaderPinnedMessage = ({
   const mediaHash = pinnedMessage && getMessageMediaHash(pinnedMessage, isVideoThumbnail ? 'full' : 'pictogram');
   const mediaBlobUrl = useMedia(mediaHash);
   const isSpoiler = pinnedMessage && getMessageIsSpoiler(pinnedMessage);
-
-  const isLoading = Boolean(useDerivedState(getLoadingPinnedId));
-  const canRenderLoader = useAsyncRendering([isLoading], SHOW_LOADER_DELAY);
-  const shouldShowLoader = canRenderLoader && isLoading;
 
   const renderingPinnedMessage = useCurrentOrPrev(pinnedMessage, true);
 
@@ -166,10 +159,6 @@ const HeaderPinnedMessage = ({
     if (inlineButton) {
       clickBotInlineButton({ chatId: pinnedMessage.chatId, messageId: pinnedMessage.id, button: inlineButton });
     }
-  });
-
-  const handleAllPinnedClick = useLastCallback(() => {
-    openThread({ chatId, threadId, type: 'pinned' });
   });
 
   const handleMessageClick = useLastCallback((e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
@@ -231,30 +220,6 @@ const HeaderPinnedMessage = ({
         'HeaderPinnedMessageWrapper', styles.root, isFullWidth ? styles.fullWidth : styles.mini, className,
       )}
     >
-      {(pinnedMessagesCount > 1 || shouldShowLoader) && (
-        <Button
-          round
-          size="smaller"
-          color="translucent"
-          ariaLabel={lang('EventLogFilterPinnedMessages')}
-          onClick={!shouldShowLoader ? handleAllPinnedClick : undefined}
-        >
-          {isLoading && (
-            <Spinner
-              color="blue"
-              className={buildClassName(
-                styles.loading, styles.pinListIcon, !shouldShowLoader && styles.pinListIconHidden,
-              )}
-            />
-          )}
-          <Icon
-            name="pin-list"
-            className={buildClassName(
-              styles.pinListIcon, shouldShowLoader && styles.pinListIconHidden,
-            )}
-          />
-        </Button>
-      )}
       {canUnpin && (
         <Button
           round

@@ -8,7 +8,6 @@ import {
 import EMOJI_REGEX from '../../../lib/twemojiRegex';
 import { IS_EMOJI_SUPPORTED } from '../../../util/browser/windowEnvironment';
 import buildClassName from '../../../util/buildClassName';
-import { isDeepLink } from '../../../util/deepLinkParser';
 import {
   handleEmojiLoad,
   LOADED_EMOJIS,
@@ -16,9 +15,6 @@ import {
 } from '../../../util/emoji/emoji';
 import fixNonStandardEmoji from '../../../util/emoji/fixNonStandardEmoji';
 import { compact } from '../../../util/iteratees';
-
-import MentionLink from '../../middle/message/MentionLink';
-import SafeLink from '../SafeLink';
 
 export type TextFilter = (
   'escape_html' | 'hq_emoji' | 'emoji' | 'emoji_html' | 'br' | 'br_html' | 'highlight' | 'links' |
@@ -237,25 +233,6 @@ function addLinks(textParts: TextPart[], allowOnlyTgLinks?: boolean): TextPart[]
     while (nextLink) {
       const index = part.indexOf(nextLink, lastIndex);
       content.push(part.substring(lastIndex, index));
-      if (nextLink.startsWith('@')) {
-        content.push(
-          <MentionLink username={nextLink}>
-            {nextLink}
-          </MentionLink>,
-        );
-      } else {
-        if (nextLink.endsWith('?')) {
-          nextLink = nextLink.slice(0, nextLink.length - 1);
-        }
-
-        if (!allowOnlyTgLinks || isDeepLink(nextLink)) {
-          content.push(
-            <SafeLink text={nextLink} url={nextLink} />,
-          );
-        } else {
-          content.push(nextLink);
-        }
-      }
       lastIndex = index + nextLink.length;
       nextLink = links.shift();
     }

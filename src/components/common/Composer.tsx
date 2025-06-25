@@ -19,7 +19,6 @@ import type {
   ApiDraft,
   ApiFormattedText,
   ApiMessage,
-  ApiMessageEntity,
   ApiNewPoll,
   ApiPeer,
   ApiQuickReply,
@@ -35,7 +34,6 @@ import type {
   GlobalState, TabState,
 } from '../../global/types';
 import type {
-  IAnchorPosition,
   InlineBotSettings,
   MessageList,
   MessageListType,
@@ -144,7 +142,6 @@ import useOldLang from '../../hooks/useOldLang';
 import usePreviousDeprecated from '../../hooks/usePreviousDeprecated';
 import useSchedule from '../../hooks/useSchedule';
 import useSendMessageAction from '../../hooks/useSendMessageAction';
-import useShowTransitionDeprecated from '../../hooks/useShowTransitionDeprecated';
 import { useStateRef } from '../../hooks/useStateRef';
 import useSyncEffect from '../../hooks/useSyncEffect';
 import useAttachmentModal from '../middle/composer/hooks/useAttachmentModal';
@@ -179,8 +176,6 @@ import SendAsMenu from '../middle/composer/SendAsMenu.async';
 import StickerTooltip from '../middle/composer/StickerTooltip.async';
 import SymbolMenuButton from '../middle/composer/SymbolMenuButton';
 import WebPagePreview from '../middle/composer/WebPagePreview';
-import MessageEffect from '../middle/message/MessageEffect';
-import ReactionSelector from '../middle/message/reactions/ReactionSelector';
 import Button from '../ui/Button';
 import ResponsiveHoverButton from '../ui/ResponsiveHoverButton';
 import Spinner from '../ui/Spinner';
@@ -442,7 +437,6 @@ const Composer: FC<OwnProps & StateProps> = ({
     callAttachBot,
     addRecentCustomEmoji,
     showNotification,
-    showAllowedMessageTypesNotification,
     openStoryReactionPicker,
     openGiftModal,
     closeReactionPicker,
@@ -451,7 +445,6 @@ const Composer: FC<OwnProps & StateProps> = ({
     updateAttachmentSettings,
     saveEffectInDraft,
     setReactionEffect,
-    hideEffectInComposer,
     updateChatSilentPosting,
     updateInsertingPeerIdMention,
   } = getActions();
@@ -541,7 +534,7 @@ const Composer: FC<OwnProps & StateProps> = ({
 
   const {
     canSendStickers, canSendGifs, canAttachMedia, canAttachPolls, canAttachEmbedLinks,
-    canSendVoices, canSendPlainText, canSendAudios, canSendVideos, canSendPhotos, canSendDocuments,
+    canSendPlainText, canSendAudios, canSendVideos, canSendPhotos, canSendDocuments,
   } = useMemo(
     () => getAllowedAttachmentOptions(chat,
       chatFullInfo,
@@ -1575,9 +1568,6 @@ const Composer: FC<OwnProps & StateProps> = ({
     || isMentionTooltipOpen || isInlineBotTooltipOpen || isBotCommandMenuOpen || isAttachMenuOpen
     || isStickerTooltipOpen || isChatCommandTooltipOpen || isCustomEmojiTooltipOpen || isBotMenuButtonOpen
     || isCustomSendMenuOpen || Boolean(activeVoiceRecording) || attachments.length > 0 || isInputHasFocus;
-  const isReactionSelectorOpen = isComposerHasFocus && !isReactionPickerOpen && isInStoryViewer && !isAttachMenuOpen
-    && !isSymbolMenuOpen;
-
   const placeholder = useMemo(() => {
     if (activeVoiceRecording && windowWidth <= SCREEN_WIDTH_TO_HIDE_PLACEHOLDER) {
       return '';
@@ -1625,13 +1615,6 @@ const Composer: FC<OwnProps & StateProps> = ({
     }
   }, [isComposerHasFocus, onBlur, onFocus]);
 
-  const {
-    shouldRender: shouldRenderReactionSelector,
-    transitionClassNames: reactionSelectorTransitonClassNames,
-  } = useShowTransitionDeprecated(isReactionSelectorOpen);
-  const areVoiceMessagesNotAllowed = mainButtonState === MainButtonState.Record
-    && (!canAttachMedia || !canSendVoiceByPrivacy || !canSendVoices);
-
   const mainButtonHandler = useLastCallback(() => {
     switch (mainButtonState) {
       case MainButtonState.Forward:
@@ -1641,18 +1624,8 @@ const Composer: FC<OwnProps & StateProps> = ({
         handleSendWithConfirmation();
         break;
       case MainButtonState.Record: {
-        if (areVoiceMessagesNotAllowed) {
-          if (!canSendVoiceByPrivacy) {
-            showNotification({
-              message: oldLang('VoiceMessagesRestrictedByPrivacy', chat?.title),
-            });
-          } else if (!canSendVoices) {
-            showAllowedMessageTypesNotification({ chatId, messageListType });
-          }
-        } else {
-          setIsViewOnceEnabled(false);
-          void startRecordingVoice();
-        }
+        setIsViewOnceEnabled(false);
+        void startRecordingVoice();
         break;
       }
       case MainButtonState.Edit:
@@ -1703,48 +1676,11 @@ const Composer: FC<OwnProps & StateProps> = ({
     className,
   );
 
-  const handleToggleReaction = useLastCallback((reaction: ApiReaction) => {
-    let text: string | undefined;
-    let entities: ApiMessageEntity[] | undefined;
-
-    if (reaction.type === 'emoji') {
-      text = reaction.emoticon;
-    }
-
-    if (reaction.type === 'custom') {
-      const sticker = getGlobal().customEmojis.byId[reaction.documentId];
-      if (!sticker) {
-        return;
-      }
-
-      if (!sticker.isFree && !isCurrentUserPremium && !isChatWithSelf) {
-        showCustomEmojiPremiumNotification();
-        return;
-      }
-      const customEmojiMessage = parseHtmlAsFormattedText(buildCustomEmojiHtml(sticker));
-      text = customEmojiMessage.text;
-      entities = customEmojiMessage.entities;
-    }
-
-    handleActionWithPaymentConfirmation(sendMessage, { text, entities, isReaction: true });
-    closeReactionPicker();
-  });
-
   const handleToggleEffectReaction = useLastCallback((reaction: ApiReaction) => {
     setReactionEffect({ chatId, threadId, reaction });
 
     closeReactionPicker();
   });
-
-  const handleReactionPickerOpen = useLastCallback((position: IAnchorPosition) => {
-    openStoryReactionPicker({
-      peerId: chatId,
-      storyId: storyId!,
-      position,
-      sendAsMessage: true,
-    });
-  });
-
   const handleLikeStory = useLastCallback(() => {
     const reaction = sentStoryReaction ? undefined : HEART_REACTION;
     sendStoryReaction({
@@ -1792,10 +1728,6 @@ const Composer: FC<OwnProps & StateProps> = ({
     saveEffectInDraft({ chatId, threadId, effectId: undefined });
   });
 
-  const handleStopEffect = useLastCallback(() => {
-    hideEffectInComposer({ });
-  });
-
   const onSend = useMemo(() => {
     switch (mainButtonState) {
       case MainButtonState.Edit:
@@ -1823,22 +1755,6 @@ const Composer: FC<OwnProps & StateProps> = ({
           onHide={onDropHide!}
           onFileSelect={handleFileSelect}
           editingMessage={editingMessage}
-        />
-      )}
-      {shouldRenderReactionSelector && !isNeedPremium && (
-        <ReactionSelector
-          topReactions={topReactions}
-          allAvailableReactions={availableReactions}
-          onToggleReaction={handleToggleReaction}
-          isPrivate
-          isReady={isReady}
-          canBuyPremium={canBuyPremium}
-          isCurrentUserPremium={isCurrentUserPremium}
-          isInSavedMessages={isChatWithSelf}
-          isInStoryViewer={isInStoryViewer}
-          canPlayAnimatedEmojis={canPlayAnimatedEmojis}
-          onShowMore={handleReactionPickerOpen}
-          className={reactionSelectorTransitonClassNames}
         />
       )}
       <AttachmentModal
@@ -2264,7 +2180,6 @@ const Composer: FC<OwnProps & StateProps> = ({
           !isReady && 'not-ready',
           activeVoiceRecording && 'recording',
         )}
-        disabled={areVoiceMessagesNotAllowed}
         allowDisabledClick
         noFastClick
         ariaLabel={oldLang(sendButtonAriaLabel)}
@@ -2299,13 +2214,6 @@ const Composer: FC<OwnProps & StateProps> = ({
         <span className="effect-icon" onClick={handleRemoveEffect}>
           {renderText(effectEmoji)}
         </span>
-      )}
-      {effect && canPlayEffect && (
-        <MessageEffect
-          shouldPlay={shouldPlayEffect}
-          effect={effect}
-          onStop={handleStopEffect}
-        />
       )}
       {canShowCustomSendMenu && (
         <CustomSendMenu

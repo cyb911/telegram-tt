@@ -39,9 +39,7 @@ import useLang from '../../hooks/useLang';
 import useLastCallback from '../../hooks/useLastCallback';
 import useOldLang from '../../hooks/useOldLang';
 import usePreviousDeprecated from '../../hooks/usePreviousDeprecated';
-import useManagePermissions from '../right/hooks/useManagePermissions';
 
-import PermissionCheckboxList from '../main/PermissionCheckboxList';
 import Button from '../ui/Button';
 import Checkbox from '../ui/Checkbox';
 import CheckboxGroup from '../ui/CheckboxGroup';
@@ -100,10 +98,8 @@ const DeleteMessageModal: FC<OwnProps & StateProps> = ({
     closeDeleteMessageModal,
     deleteMessages,
     reportChannelSpam,
-    deleteChatMember,
     deleteScheduledMessages,
     exitMessageSelectMode,
-    updateChatMemberBannedRights,
     deleteParticipantHistory,
   } = getActions();
 
@@ -111,11 +107,6 @@ const DeleteMessageModal: FC<OwnProps & StateProps> = ({
 
   const oldLang = useOldLang();
   const lang = useLang();
-
-  const {
-    permissions, havePermissionChanged, handlePermissionChange, resetPermissions,
-  } = useManagePermissions(chat?.defaultBannedRights);
-
   const [peerIdsToDeleteAll, setPeerIdsToDeleteAll] = useState<string[]>([]);
   const [peerIdsToBan, setPeerIdsToBan] = useState<string[]>([]);
   const [peerIdsToReportSpam, setPeerIdsToReportSpam] = useState<string[]>([]);
@@ -238,15 +229,6 @@ const DeleteMessageModal: FC<OwnProps & StateProps> = ({
     setIsAdditionalOptionsVisible((prev) => !prev);
   });
 
-  const filterMessageIdByPeerId = useLastCallback((peerIds: string[], selectedMessageIdList: number[]) => {
-    if (!chat) return MEMO_EMPTY_ARRAY;
-    const global = getGlobal();
-    return selectedMessageIdList.filter((msgId) => {
-      const sender = selectSenderFromMessage(global, chat.id, msgId);
-      return sender && peerIds.includes(sender.id);
-    });
-  });
-
   const handleReportSpam = useLastCallback((userMessagesMap: Record<string, number[]>) => {
     Object.entries(userMessagesMap).forEach(([userId, messageIdList]) => {
       if (messageIdList.length) {
@@ -259,30 +241,10 @@ const DeleteMessageModal: FC<OwnProps & StateProps> = ({
     });
   });
 
-  const handleDeleteMessages = useLastCallback((filteredMessageIdList: number[]) => {
-    deleteMessages({ messageIds: filteredMessageIdList, shouldDeleteForAll: true });
-  });
-
   const handleDeleteAllPeerMessages = useLastCallback((peerIdList: string[]) => {
     if (!chat) return;
     peerIdList.forEach((peerId) => {
       deleteParticipantHistory({ peerId, chatId: chat.id });
-    });
-  });
-
-  const handleDeleteMember = useLastCallback((filteredUserIdList: string[]) => {
-    filteredUserIdList.forEach((userId) => {
-      deleteChatMember({ chatId: chat!.id, userId });
-    });
-  });
-
-  const handleUpdateChatMemberBannedRights = useLastCallback((filteredUserIdList: string[]) => {
-    filteredUserIdList.forEach((userId) => {
-      updateChatMemberBannedRights({
-        chatId: chat!.id,
-        userId,
-        bannedRights: permissions,
-      });
     });
   });
 
@@ -315,18 +277,6 @@ const DeleteMessageModal: FC<OwnProps & StateProps> = ({
         handleDeleteAllPeerMessages(peerIdList);
       }
 
-      if (peerIdsToBan?.length && !havePermissionChanged) {
-        const peerIdList = peerIdsToBan.filter((option) => !Number.isNaN(Number(option)));
-        handleDeleteMember(peerIdList);
-        const filteredMessageIdList = filterMessageIdByPeerId(peerIdList, messageIds);
-        handleDeleteMessages(filteredMessageIdList);
-      }
-
-      if (peerIdsToBan?.length && havePermissionChanged) {
-        const peerIdList = peerIdsToBan.filter((option) => !Number.isNaN(Number(option)));
-        handleUpdateChatMemberBannedRights(peerIdList);
-      }
-
       if (!peerIdsToReportSpam?.length || !peerIdsToDeleteAll?.length || !peerIdsToBan?.length) {
         deleteMessages({ messageIds, shouldDeleteForAll });
       }
@@ -350,9 +300,8 @@ const DeleteMessageModal: FC<OwnProps & StateProps> = ({
       setShouldDeleteForAll(true);
       setIsMediaDropdownOpen(false);
       setIsAdditionalOptionsVisible(false);
-      resetPermissions();
     }
-  }, [isOpen, prevIsOpen, resetPermissions]);
+  }, [isOpen, prevIsOpen]);
 
   function renderHeader() {
     return (
@@ -410,18 +359,6 @@ const DeleteMessageModal: FC<OwnProps & StateProps> = ({
         <h3 className={buildClassName(styles.actionTitle, styles.restrictionTitle)}>
           {oldLang('UserRestrictionsCanDoUsers', peerList.length)}
         </h3>
-        <PermissionCheckboxList
-          withCheckbox
-          chatId={chat?.id}
-          isMediaDropdownOpen={isMediaDropdownOpen}
-          setIsMediaDropdownOpen={setIsMediaDropdownOpen}
-          handlePermissionChange={handlePermissionChange}
-          permissions={permissions}
-          className={buildClassName(
-            styles.dropdownList,
-            isMediaDropdownOpen && styles.dropdownListOpen,
-          )}
-        />
       </div>
     );
   }
