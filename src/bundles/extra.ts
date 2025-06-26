@@ -1,4 +1,3 @@
-export { default as MapModal } from '../components/modals/map/MapModal';
 export { default as UrlAuthModal } from '../components/modals/urlAuth/UrlAuthModal';
 export { default as WebAppModal } from '../components/modals/webApp/WebAppModal';
 export { default as PremiumMainModal } from '../components/main/premium/PremiumMainModal';
