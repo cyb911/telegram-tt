@@ -6,7 +6,6 @@ export { default as PremiumLimitReachedModal } from '../components/main/premium/
 export { default as SuggestedStatusModal } from '../components/modals/suggestedStatus/SuggestedStatusModal';
 export { default as BoostModal } from '../components/modals/boost/BoostModal';
 export { default as GiftCodeModal } from '../components/modals/giftcode/GiftCodeModal';
-export { default as ChatInviteModal } from '../components/modals/chatInvite/ChatInviteModal';
 
 export { default as VerificationMonetizationModal } from '../components/common/VerificationMonetizationModal';
 export { default as LocationAccessModal } from '../components/modals/locationAccess/LocationAccessModal';

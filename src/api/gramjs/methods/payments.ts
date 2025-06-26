@@ -216,6 +216,8 @@ export async function fetchPremiumPromo(this: any) {
   let result = undefined;
   if (USE_STATIC_PREMIUM_PROMO) {
     // 使用静态数据
+
+
     result = await invokeRequest(new GramJs.help.GetPremiumPromo());
   } else {
     result = await invokeRequest(new GramJs.help.GetPremiumPromo());
