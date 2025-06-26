@@ -1,11 +1,9 @@
 export { default as ForwardRecipientPicker } from '../components/main/ForwardRecipientPicker';
 export { default as Dialogs } from '../components/main/Dialogs';
-export { default as SafeLinkModal } from '../components/main/SafeLinkModal';
 export { default as MapModal } from '../components/modals/map/MapModal';
 export { default as UrlAuthModal } from '../components/modals/urlAuth/UrlAuthModal';
 export { default as HistoryCalendar } from '../components/main/HistoryCalendar';
 export { default as WebAppModal } from '../components/modals/webApp/WebAppModal';
-export { default as BotTrustModal } from '../components/main/BotTrustModal';
 export { default as DeleteFolderDialog } from '../components/main/DeleteFolderDialog';
 export { default as PremiumMainModal } from '../components/main/premium/PremiumMainModal';
 export { default as GiveawayModal } from '../components/main/premium/GiveawayModal';
@@ -41,5 +39,4 @@ export { default as PaymentModal } from '../components/payment/PaymentModal';
 export { default as ReceiptModal } from '../components/payment/ReceiptModal';
 export { default as InviteViaLinkModal } from '../components/modals/inviteViaLink/InviteViaLinkModal';
 export { default as OneTimeMediaModal } from '../components/modals/oneTimeMedia/OneTimeMediaModal';
-export { default as WebAppsCloseConfirmationModal } from '../components/main/WebAppsCloseConfirmationModal';
 export { default as FrozenAccountModal } from '../components/modals/frozenAccount/FrozenAccountModal';
