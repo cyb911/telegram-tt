@@ -11,7 +11,6 @@ import { removeGroupCall, updateGroupCall, updateGroupCallParticipant } from '..
 import { updateTabState } from '../../reducers/tabs';
 import { selectChat } from '../../selectors';
 import { selectGroupCall, selectPhoneCallUser } from '../../selectors/calls';
-import { checkNavigatorUserMediaPermissions, initializeSounds } from '../ui/calls';
 
 addActionHandler('apiUpdate', (global, actions, update): ActionReturnType => {
   switch (update['@type']) {

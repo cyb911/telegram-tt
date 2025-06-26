@@ -21,7 +21,6 @@ import { selectChat, selectTabState, selectUser } from '../../selectors';
 import {
   selectActiveGroupCall, selectPhoneCallUser,
 } from '../../selectors/calls';
-import { getGroupCallAudioContext, getGroupCallAudioElement, removeGroupCallAudioElement } from '../ui/calls';
 import { loadFullChat } from './chats';
 
 const HANG_UP_UI_DELAY = 500;

@@ -28,7 +28,6 @@ import './ui/users';
 import './ui/settings';
 import './ui/misc';
 import './ui/payments';
-import './ui/calls';
 import './ui/mediaViewer';
 import './ui/passcode';
 import './ui/stars';
