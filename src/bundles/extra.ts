@@ -1,10 +1,6 @@
-export { default as ForwardRecipientPicker } from '../components/main/ForwardRecipientPicker';
-export { default as Dialogs } from '../components/main/Dialogs';
 export { default as MapModal } from '../components/modals/map/MapModal';
 export { default as UrlAuthModal } from '../components/modals/urlAuth/UrlAuthModal';
-export { default as HistoryCalendar } from '../components/main/HistoryCalendar';
 export { default as WebAppModal } from '../components/modals/webApp/WebAppModal';
-export { default as DeleteFolderDialog } from '../components/main/DeleteFolderDialog';
 export { default as PremiumMainModal } from '../components/main/premium/PremiumMainModal';
 export { default as GiveawayModal } from '../components/main/premium/GiveawayModal';
 export { default as PremiumLimitReachedModal } from '../components/main/premium/common/PremiumLimitReachedModal';
