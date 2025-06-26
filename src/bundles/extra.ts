@@ -6,7 +6,6 @@ export { default as PremiumLimitReachedModal } from '../components/main/premium/
 export { default as SuggestedStatusModal } from '../components/modals/suggestedStatus/SuggestedStatusModal';
 export { default as BoostModal } from '../components/modals/boost/BoostModal';
 export { default as GiftCodeModal } from '../components/modals/giftcode/GiftCodeModal';
-export { default as DeleteAccountModal } from '../components/modals/deleteAccount/DeleteAccountModal';
 export { default as ChatInviteModal } from '../components/modals/chatInvite/ChatInviteModal';
 
 export { default as VerificationMonetizationModal } from '../components/common/VerificationMonetizationModal';
@@ -15,7 +14,6 @@ export { default as ReportAdModal } from '../components/modals/reportAd/ReportAd
 export { default as ReportModal } from '../components/modals/reportModal/ReportModal';
 export { default as PreparedMessageModal } from '../components/modals/preparedMessage/PreparedMessageModal';
 export { default as CalendarModal } from '../components/common/CalendarModal';
-export { default as UnpinAllMessagesModal } from '../components/common/UnpinAllMessagesModal';
 export { default as MessageSelectToolbar } from '../components/middle/MessageSelectToolbar';
 export { default as SeenByModal } from '../components/common/SeenByModal';
 export { default as PrivacySettingsNoticeModal } from '../components/common/PrivacySettingsNoticeModal';
