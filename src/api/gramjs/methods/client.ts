@@ -33,19 +33,11 @@ import {
   addStoryToLocalDb, addUserToLocalDb,
 } from '../helpers/localDb';
 import {
-  isResponseUpdate, log,
+  log,
 } from '../helpers/misc';
 import localDb, { clearLocalDb, type RepairInfo } from '../localDb';
 import { sendApiUpdate } from '../updates/apiUpdateEmitter';
 import { processAndUpdateEntities, processMessageAndUpdateThreadInfo } from '../updates/entityProcessor';
-import {
-  getDifference,
-  init as initUpdatesManager,
-  processUpdate,
-  reset as resetUpdatesManager,
-  scheduleGetChannelDifference,
-  updateChannelState,
-} from '../updates/updateManager';
 import {
   onAuthError, onAuthReady, onCurrentUserUpdate, onRequestCode, onRequestPassword, onRequestPhoneNumber,
   onRequestQrCode, onRequestRegistration, onWebAuthTokenFailed,
@@ -118,7 +110,6 @@ export async function init(initialArgs: ApiInitialArgs) {
     }
 
     try {
-      client.setPingCallback(getDifference);
       await client.start({
         phoneNumber: onRequestPhoneNumber,
         phoneCode: onRequestCode,
@@ -157,8 +148,6 @@ export async function init(initialArgs: ApiInitialArgs) {
     onSessionUpdate(session.getSessionData());
     sendApiUpdate({ '@type': 'updateApiReady' });
 
-    initUpdatesManager(invokeRequest);
-
     void fetchCurrentUser();
   } catch (err) {
     if (DEBUG) {
@@ -184,7 +173,6 @@ export async function destroy(noLogOut = false, noClearLocalDb = false) {
 
   if (!noClearLocalDb) {
     clearLocalDb();
-    resetUpdatesManager();
   }
 
   await client.destroy();
@@ -208,8 +196,6 @@ function onSessionUpdate(sessionData?: ApiSessionData) {
 type UpdateConfig = GramJs.UpdateConfig & { _entities?: (GramJs.TypeUser | GramJs.TypeChat)[] };
 
 export function handleGramJsUpdate(update: any) {
-  processUpdate(update);
-
   if (update instanceof GramJs.UpdatesTooLong) {
     void handleTerminatedSession();
   } else {
@@ -252,7 +238,7 @@ export async function invokeRequest<T extends GramJs.AnyRequest>(
   params: InvokeRequestParams & { shouldReturnTrue?: boolean } = {},
 ) {
   const {
-    shouldThrow, shouldIgnoreUpdates, dcId, shouldIgnoreErrors, abortControllerChatId, abortControllerThreadId,
+    shouldThrow, dcId, shouldIgnoreErrors, abortControllerChatId, abortControllerThreadId,
     shouldRetryOnTimeout, abortControllerGroup,
   } = params;
   const shouldReturnTrue = Boolean(params.shouldReturnTrue);
@@ -288,10 +274,6 @@ export async function invokeRequest<T extends GramJs.AnyRequest>(
 
     if (DEBUG) {
       log('RESPONSE', request.className, result);
-    }
-
-    if (!shouldIgnoreUpdates && isResponseUpdate(result)) {
-      processUpdate(result);
     }
 
     return shouldReturnTrue ? result && true : result;
@@ -538,10 +520,6 @@ async function repairMessageMedia(peerId: string, messageId: number) {
 
   if (!result || result instanceof GramJs.messages.MessagesNotModified) return false;
 
-  if (inputChannel && 'pts' in result) {
-    updateChannelState(peerId, result.pts);
-  }
-
   const message = result.messages[0];
   if (message instanceof GramJs.MessageEmpty) return false;
 
@@ -595,8 +573,4 @@ export function setAllowHttpTransport(allowHttpTransport: boolean) {
 
 export function setShouldDebugExportedSenders(value: boolean) {
   client.setShouldDebugExportedSenders(value);
-}
-
-export function requestChannelDifference(channelId: string) {
-  scheduleGetChannelDifference(channelId);
 }

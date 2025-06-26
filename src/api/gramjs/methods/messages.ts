@@ -96,7 +96,6 @@ import {
 } from '../helpers/misc';
 import { sendApiUpdate } from '../updates/apiUpdateEmitter';
 import { processMessageAndUpdateThreadInfo } from '../updates/entityProcessor';
-import { processAffectedHistory, updateChannelState } from '../updates/updateManager';
 import { requestChatUpdate } from './chats';
 import { handleGramJsUpdate, invokeRequest, uploadFile } from './client';
 
@@ -227,10 +226,6 @@ export async function fetchMessage({ chat, messageId }: { chat: ApiChat; message
 
   if (!result || result instanceof GramJs.messages.MessagesNotModified) {
     return undefined;
-  }
-
-  if ('pts' in result) {
-    updateChannelState(chat.id, result.pts);
   }
 
   const mtpMessage = result.messages[0];
@@ -789,8 +784,6 @@ export async function unpinAllMessages({ chat, threadId }: { chat: ApiChat; thre
 
   if (!result) return;
 
-  processAffectedHistory(chat, result);
-
   if (result.offset) {
     await unpinAllMessages({ chat, threadId });
   }
@@ -819,8 +812,6 @@ export async function deleteMessages({
     return;
   }
 
-  processAffectedHistory(chat, result);
-
   sendApiUpdate({
     '@type': 'deleteMessages',
     ids: messageIds,
@@ -843,8 +834,6 @@ export async function deleteParticipantHistory({
   if (!result) {
     return;
   }
-
-  processAffectedHistory(chat, result);
 
   if (!isRepeat) {
     sendApiUpdate({
@@ -893,8 +882,6 @@ export async function deleteHistory({
   }
 
   if ('offset' in result) {
-    processAffectedHistory(chat, result);
-
     if (result.offset) {
       await deleteHistory({ chat, shouldDeleteForAll });
       return;
@@ -919,8 +906,6 @@ export async function deleteSavedHistory({
   if (!result) {
     return;
   }
-
-  processAffectedHistory(chat, result);
 
   if (result.offset) {
     await deleteSavedHistory({ chat });
@@ -1026,15 +1011,6 @@ export async function markMessageListRead({
       msgId: Number(threadId),
       readMaxId: fixedMaxId,
     }));
-  } else {
-    const result = await invokeRequest(new GramJs.messages.ReadHistory({
-      peer: buildInputPeer(chat.id, chat.accessHash),
-      maxId: fixedMaxId,
-    }));
-
-    if (result) {
-      processAffectedHistory(chat, result);
-    }
   }
 
   if (threadId === MAIN_THREAD_ID) {
@@ -1069,11 +1045,6 @@ export async function markMessagesRead({
   if (!result) {
     return;
   }
-
-  if (result !== true) {
-    processAffectedHistory(chat, result);
-  }
-
   sendApiUpdate({
     ...(isChannel ? {
       '@type': 'updateChannelMessages',
@@ -1842,8 +1813,6 @@ export async function readAllMentions({
 
   if (!result) return;
 
-  processAffectedHistory(chat, result);
-
   if (result.offset) {
     await readAllMentions({ chat, threadId });
   }
@@ -1862,9 +1831,6 @@ export async function readAllReactions({
   }));
 
   if (!result) return;
-
-  processAffectedHistory(chat, result);
-
   if (result.offset) {
     await readAllReactions({ chat, threadId });
   }

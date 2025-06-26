@@ -79,9 +79,6 @@ import {
 import { isChatFolder } from '../helpers/misc';
 import { scheduleMutedChatUpdate } from '../scheduleUnmute';
 import { sendApiUpdate } from '../updates/apiUpdateEmitter';
-import {
-  applyState, processAffectedHistory, updateChannelState,
-} from '../updates/updateManager';
 import { handleGramJsUpdate, invokeRequest, uploadFile } from './client';
 
 type FullChatData = {
@@ -177,10 +174,6 @@ export async function fetchChats({
     const peerEntity = peersByKey[getPeerKey(dialog.peer)];
     const chat = buildApiChatFromDialog(dialog, peerEntity);
     lastMessageByChatId[chat.id] = dialog.topMessage;
-
-    if (dialog.pts) {
-      updateChannelState(chat.id, dialog.pts);
-    }
 
     if (
       chat.id === SERVICE_NOTIFICATIONS_USER_ID
@@ -504,8 +497,6 @@ export async function requestChatUpdate({
     });
   }
 
-  applyState(result.state);
-
   const notifySettings = buildApiPeerNotifySettings(dialog.notifySettings);
 
   scheduleMutedChatUpdate(chatUpdate.id, notifySettings.mutedUntil, sendApiUpdate);
@@ -688,10 +679,6 @@ async function getFullChannelInfo(
         chat: linkedChat,
       });
     }
-  }
-
-  if (result.fullChat.pts) {
-    updateChannelState(chat.id, result.fullChat.pts);
   }
 
   const statusesById = {
@@ -1836,8 +1823,6 @@ export async function deleteTopic({
   }));
 
   if (!result) return;
-
-  processAffectedHistory(chat, result);
 
   if (result.offset) {
     await deleteTopic({ chat, topicId });
