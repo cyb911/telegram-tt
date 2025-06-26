@@ -104,7 +104,6 @@ import MessageSelectToolbar from './MessageSelectToolbar.async';
 import MiddleHeader from './MiddleHeader';
 import PremiumRequiredPlaceholder from './PremiumRequiredPlaceholder';
 import ReactorListModal from './ReactorListModal.async';
-import MiddleSearch from './search/MiddleSearch.async';
 
 import './MiddleColumn.scss';
 import styles from './MiddleColumn.module.scss';
@@ -701,7 +700,6 @@ function MiddleColumn({
               withExtraShift={withExtraShift}
             />
           </div>
-          <MiddleSearch isActive={Boolean(hasActiveMiddleSearch)} />
         </>
       )}
       {chatId && (

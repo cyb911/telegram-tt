@@ -46,7 +46,6 @@ export { default as CollectibleInfoModal } from '../components/modals/collectibl
 export { default as StickerSetModal } from '../components/common/StickerSetModal';
 export { default as CustomEmojiSetsModal } from '../components/common/CustomEmojiSetsModal';
 export { default as HeaderMenuContainer } from '../components/middle/HeaderMenuContainer';
-export { default as MiddleSearch } from '../components/middle/search/MiddleSearch';
 
 export { default as AttachmentModal } from '../components/middle/composer/AttachmentModal';
 export { default as PollModal } from '../components/middle/composer/PollModal';
