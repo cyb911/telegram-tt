@@ -291,7 +291,11 @@ let previousGlobal: GlobalState | undefined;
 // RAF can be unreliable when device goes into sleep mode, so sync logic is handled outside any component
 addCallback((global: GlobalState) => {
   const { connectionState, authState, isSynced } = global;
-  const { isMasterTab } = selectTabState(global);
+  const isMasterTab = selectTabState(global)?.isMasterTab;
+  if (isMasterTab === undefined) {
+    previousGlobal = global;
+    return;
+  }
   if (!isMasterTab || isSynced || (previousGlobal?.connectionState === connectionState
     && previousGlobal?.authState === authState)) {
     previousGlobal = global;
