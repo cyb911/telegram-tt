@@ -1,6 +1,5 @@
 export { default as ForwardRecipientPicker } from '../components/main/ForwardRecipientPicker';
 export { default as DraftRecipientPicker } from '../components/main/DraftRecipientPicker';
-export { default as AttachBotRecipientPicker } from '../components/main/AttachBotRecipientPicker';
 export { default as Dialogs } from '../components/main/Dialogs';
 export { default as Notifications } from '../components/main/Notifications';
 export { default as SafeLinkModal } from '../components/main/SafeLinkModal';
@@ -18,7 +17,6 @@ export { default as SuggestedStatusModal } from '../components/modals/suggestedS
 export { default as BoostModal } from '../components/modals/boost/BoostModal';
 export { default as GiftCodeModal } from '../components/modals/giftcode/GiftCodeModal';
 export { default as DeleteAccountModal } from '../components/modals/deleteAccount/DeleteAccountModal';
-export { default as ChatlistModal } from '../components/modals/chatlist/ChatlistModal';
 export { default as ChatInviteModal } from '../components/modals/chatInvite/ChatInviteModal';
 
 export { default as AboutMonetizationModal } from '../components/common/AboutMonetizationModal';
