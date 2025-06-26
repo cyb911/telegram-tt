@@ -1,12 +1,10 @@
 export { default as ForwardRecipientPicker } from '../components/main/ForwardRecipientPicker';
-export { default as DraftRecipientPicker } from '../components/main/DraftRecipientPicker';
 export { default as Dialogs } from '../components/main/Dialogs';
 export { default as Notifications } from '../components/main/Notifications';
 export { default as SafeLinkModal } from '../components/main/SafeLinkModal';
 export { default as MapModal } from '../components/modals/map/MapModal';
 export { default as UrlAuthModal } from '../components/modals/urlAuth/UrlAuthModal';
 export { default as HistoryCalendar } from '../components/main/HistoryCalendar';
-export { default as NewContactModal } from '../components/main/NewContactModal';
 export { default as WebAppModal } from '../components/modals/webApp/WebAppModal';
 export { default as BotTrustModal } from '../components/main/BotTrustModal';
 export { default as DeleteFolderDialog } from '../components/main/DeleteFolderDialog';
