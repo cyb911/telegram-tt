@@ -13,7 +13,3 @@ const interval = window.setInterval(() => {
     clearInterval(interval);
   }
 }, INTERVAL);
-
-export function addActiveTabChangeListener(_callback: NoneToVoidFunction) {
-  callback = _callback;
-}
