@@ -1,0 +1,30 @@
+{
+    "videoSections": ["faster_download"],
+    "videos": [
+        {
+            "mediaType": "document",
+            "id": "1",
+            "fileName": "promo.mp4",
+            "size": 123,
+            "mimeType": "video/mp4",
+            "thumbnail": { "width": 200, "height": 200, "dataUri": "" }
+        }
+    ],
+    "statusText": "Premium is awesome!",
+    "statusEntities": [],
+    "options": [
+        {
+            "months": 1,
+            "currency": "USD",
+            "amount": 499,
+            "botUrl": "https://t.me/premiumbot?start=premium",
+            "isCurrent": true
+        },
+        {
+            "months": 12,
+            "currency": "USD",
+            "amount": 4999,
+            "botUrl": "https://t.me/premiumbot?start=premium12"
+        }
+    ]
+}

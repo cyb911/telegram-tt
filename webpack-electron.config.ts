@@ -35,6 +35,7 @@ export default {
     new EnvironmentPlugin({
       APP_ENV,
       BASE_URL,
+      USE_STATIC_PREMIUM_PROMO: false,
       IS_PREVIEW: false,
     }),
     new CopyWebpackPlugin({

@@ -19,6 +19,7 @@ export const ACCOUNT_QUERY = 'account';
 export const IS_MOCKED_CLIENT = process.env.APP_MOCKED_CLIENT === '1';
 export const IS_TEST = process.env.APP_ENV === 'test';
 export const IS_PACKAGED_ELECTRON = process.env.IS_PACKAGED_ELECTRON;
+export const USE_STATIC_PREMIUM_PROMO = process.env.USE_STATIC_PREMIUM_PROMO === '1';
 
 export const ELECTRON_WINDOW_DRAG_EVENT_START = 'tt-electron-window-drag-start';
 export const ELECTRON_WINDOW_DRAG_EVENT_END = 'tt-electron-window-drag-end';

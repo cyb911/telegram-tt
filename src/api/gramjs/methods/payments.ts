@@ -10,7 +10,8 @@ import type {
   ApiThemeParameters,
 } from '../../types';
 
-import { DEBUG } from '../../../config';
+import { DEBUG, USE_STATIC_PREMIUM_PROMO } from '../../../config';
+import staticPromo from '../../mockData/premiumPromo.json';
 import {
   buildApiBoost,
   buildApiBoostsStatus,
@@ -211,8 +212,13 @@ export async function getReceipt(chat: ApiChat, msgId: number) {
   };
 }
 
-export async function fetchPremiumPromo() {
+export async function fetchPremiumPromo(this: any) {
+  // if (USE_STATIC_PREMIUM_PROMO) {
+  //   return { promo: staticPromo };
+  // }
   const result = await invokeRequest(new GramJs.help.GetPremiumPromo());
+  // eslint-disable-next-line no-console
+  console.log('GetPremiumPromo result:', result);
   if (!result) return undefined;
 
   result.videos.forEach((video) => {
