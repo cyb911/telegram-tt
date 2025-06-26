@@ -32,7 +32,7 @@ import {
   selectUser,
 } from '../../global/selectors';
 import { selectSharedSettings } from '../../global/selectors/sharedState';
-import { IS_ANDROID, IS_ELECTRON, IS_WAVE_TRANSFORM_SUPPORTED } from '../../util/browser/windowEnvironment';
+import { IS_ANDROID, IS_ELECTRON } from '../../util/browser/windowEnvironment';
 import buildClassName from '../../util/buildClassName';
 import { waitForTransitionEnd } from '../../util/cssAnimationEndListeners';
 import { processDeepLink } from '../../util/deeplink';
@@ -52,33 +52,7 @@ import useSyncEffect from '../../hooks/useSyncEffect';
 import useBackgroundMode from '../../hooks/window/useBackgroundMode';
 import useBeforeUnload from '../../hooks/window/useBeforeUnload';
 import { useFullscreenStatus } from '../../hooks/window/useFullscreen';
-
-import CustomEmojiSetsModal from '../common/CustomEmojiSetsModal.async';
-import DeleteMessageModal from '../common/DeleteMessageModal.async';
-import StickerSetModal from '../common/StickerSetModal.async';
-import UnreadCount from '../common/UnreadCounter';
-import MessageListHistoryHandler from '../middle/MessageListHistoryHandler';
-import MiddleColumn from '../middle/MiddleColumn';
-import AudioPlayer from '../middle/panes/AudioPlayer';
-import ModalContainer from '../modals/ModalContainer';
-import PaymentModal from '../payment/PaymentModal.async';
-import ReceiptModal from '../payment/ReceiptModal.async';
-import AttachBotRecipientPicker from './AttachBotRecipientPicker.async';
-import BotTrustModal from './BotTrustModal.async';
-import DeleteFolderDialog from './DeleteFolderDialog.async';
-import Dialogs from './Dialogs.async';
-import DownloadManager from './DownloadManager';
-import DraftRecipientPicker from './DraftRecipientPicker.async';
-import ForwardRecipientPicker from './ForwardRecipientPicker.async';
-import GameModal from './GameModal';
-import HistoryCalendar from './HistoryCalendar.async';
-import NewContactModal from './NewContactModal.async';
-import Notifications from './Notifications.async';
-import PremiumLimitReachedModal from './premium/common/PremiumLimitReachedModal.async';
-import GiveawayModal from './premium/GiveawayModal.async';
 import PremiumMainModal from './premium/PremiumMainModal.async';
-import StarsGiftingPickerModal from './premium/StarsGiftingPickerModal.async';
-import SafeLinkModal from './SafeLinkModal.async';
 
 import './Main.scss';
 
@@ -146,40 +120,14 @@ const Main = ({
   isRightColumnOpen,
   isMediaViewerOpen,
   isStoryViewerOpen,
-  isForwardModalOpen,
-  hasNotifications,
-  hasDialogs,
-  activeGroupCallId,
-  safeLinkModalUrl,
-  isHistoryCalendarOpen,
   shouldSkipHistoryAnimations,
-  limitReached,
-  openedStickerSetShortName,
-  openedCustomEmojiSetIds,
   isServiceChatReady,
   withInterfaceAnimations,
   wasTimeFormatSetManually,
   addedSetIds,
   addedCustomEmojiIds,
-  isPhoneCallActive,
-  newContactUserId,
-  newContactByPhoneNumber,
-  openedGame,
-  gameTitle,
-  isRatePhoneCallModalOpen,
-  botTrustRequest,
-  botTrustRequestBot,
-  requestedAttachBotInChat,
-  requestedDraft,
   isPremiumModalOpen,
-  isGiveawayModalOpen,
-  isDeleteMessageModalOpen,
-  isStarsGiftingPickerModal,
-  isPaymentModalOpen,
-  isReceiptModalOpen,
-  isReactionPickerOpen,
   isCurrentUserPremium,
-  deleteFolderDialog,
   isMasterTab,
   noRightColumnAnimation,
   isSynced,
@@ -208,8 +156,6 @@ const Main = ({
     loadFavoriteStickers,
     loadDefaultStatusIcons,
     ensureTimeFormat,
-    closeStickerSetModal,
-    closeCustomEmojiSets,
     checkVersionNotification,
     loadConfig,
     loadAppConfig,
@@ -217,8 +163,6 @@ const Main = ({
     loadContactList,
     loadCustomEmojis,
     loadGenericEmojiEffects,
-    closePaymentModal,
-    clearReceipt,
     checkAppVersion,
     openThread,
     toggleLeftColumn,
@@ -260,7 +204,6 @@ const Main = ({
   }, CALL_BUNDLE_LOADING_DELAY_MS);
 
   const containerRef = useRef<HTMLDivElement>();
-  const leftColumnRef = useRef<HTMLDivElement>();
 
   const { isDesktop } = useAppLayout();
   useEffect(() => {
@@ -529,14 +472,6 @@ const Main = ({
     updateIcon(false);
   });
 
-  const handleStickerSetModalClose = useLastCallback(() => {
-    closeStickerSetModal();
-  });
-
-  const handleCustomEmojiSetsModalClose = useLastCallback(() => {
-    closeCustomEmojiSets();
-  });
-
   // Online status and browser tab indicators
   useBackgroundMode(handleBlur, handleFocus, Boolean(IS_ELECTRON));
   useBeforeUnload(handleBlur);
@@ -544,47 +479,7 @@ const Main = ({
 
   return (
     <div ref={containerRef} id="Main" className={className}>
-      <MiddleColumn leftColumnRef={leftColumnRef} isMobile={isMobile} />
-      <ForwardRecipientPicker isOpen={isForwardModalOpen} />
-      <DraftRecipientPicker requestedDraft={requestedDraft} />
-      <Notifications isOpen={hasNotifications} />
-      <Dialogs isOpen={hasDialogs} />
-      <AudioPlayer noUi />
-      <ModalContainer />
-      <SafeLinkModal url={safeLinkModalUrl} />
-      <HistoryCalendar isOpen={isHistoryCalendarOpen} />
-      <StickerSetModal
-        isOpen={Boolean(openedStickerSetShortName)}
-        onClose={handleStickerSetModalClose}
-        stickerSetShortName={openedStickerSetShortName}
-      />
-      <CustomEmojiSetsModal
-        customEmojiSetIds={openedCustomEmojiSetIds}
-        onClose={handleCustomEmojiSetsModalClose}
-      />
-      <NewContactModal
-        isOpen={Boolean(newContactUserId || newContactByPhoneNumber)}
-        userId={newContactUserId}
-        isByPhoneNumber={newContactByPhoneNumber}
-      />
-      <GameModal openedGame={openedGame} gameTitle={gameTitle} />
-      <DownloadManager />
-      <UnreadCount isForAppBadge />
-      <BotTrustModal
-        bot={botTrustRequestBot}
-        type={botTrustRequest?.type}
-        shouldRequestWriteAccess={botTrustRequest?.shouldRequestWriteAccess}
-      />
-      <AttachBotRecipientPicker requestedAttachBotInChat={requestedAttachBotInChat} />
-      <MessageListHistoryHandler />
       <PremiumMainModal isOpen={isPremiumModalOpen} />
-      <GiveawayModal isOpen={isGiveawayModalOpen} />
-      <StarsGiftingPickerModal isOpen={isStarsGiftingPickerModal} />
-      <PremiumLimitReachedModal limit={limitReached} />
-      <PaymentModal isOpen={isPaymentModalOpen} onClose={closePaymentModal} />
-      <ReceiptModal isOpen={isReceiptModalOpen} onClose={clearReceipt} />
-      <DeleteFolderDialog folder={deleteFolderDialog} />
-      <DeleteMessageModal isOpen={isDeleteMessageModalOpen} />
     </div>
   );
 };
