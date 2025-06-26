@@ -25,8 +25,6 @@ export { default as LocationAccessModal } from '../components/modals/locationAcc
 export { default as ReportAdModal } from '../components/modals/reportAd/ReportAdModal';
 export { default as ReportModal } from '../components/modals/reportModal/ReportModal';
 export { default as PreparedMessageModal } from '../components/modals/preparedMessage/PreparedMessageModal';
-export { default as SharePreparedMessageModal }
-  from '../components/modals/sharePreparedMessage/SharePreparedMessageModal';
 export { default as CalendarModal } from '../components/common/CalendarModal';
 export { default as DeleteMessageModal } from '../components/common/DeleteMessageModal';
 export { default as PinMessageModal } from '../components/common/PinMessageModal';
