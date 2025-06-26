@@ -11,7 +11,7 @@ import type {
 } from '../../types';
 
 import { DEBUG, USE_STATIC_PREMIUM_PROMO } from '../../../config';
-import staticPromo from '../../mockData/premiumPromo.json';
+import staticPremiumPromo from '../../mockData/premiumPromo.json';
 import {
   buildApiBoost,
   buildApiBoostsStatus,
