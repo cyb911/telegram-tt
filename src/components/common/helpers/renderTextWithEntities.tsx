@@ -14,7 +14,6 @@ import { oldTranslate } from '../../../util/oldLangProvider';
 import renderText from './renderText';
 
 import Blockquote from '../Blockquote';
-import CodeBlock from '../code/CodeBlock';
 import CustomEmoji from '../CustomEmoji';
 import SafeLink from '../SafeLink';
 import Spoiler from '../spoiler/Spoiler';
@@ -592,8 +591,6 @@ function processEntity({
           {renderNestedMessagePart()}
         </a>
       );
-    case ApiMessageEntityTypes.Pre:
-      return <CodeBlock text={entityText} language={entity.language} noCopy={isProtected} />;
     case ApiMessageEntityTypes.Strike:
       return <del data-entity-type={entity.type}>{renderNestedMessagePart()}</del>;
     case ApiMessageEntityTypes.TextUrl:
@@ -704,8 +701,6 @@ function processEntityAsHtml(
         class="spoiler"
         data-entity-type="${ApiMessageEntityTypes.Spoiler}"
         >${renderedContent}</span>`;
-    case ApiMessageEntityTypes.CustomEmoji:
-      return buildCustomEmojiHtmlFromEntity(rawEntityText, entity);
     case ApiMessageEntityTypes.Blockquote:
       return `<blockquote
         class="blockquote"
