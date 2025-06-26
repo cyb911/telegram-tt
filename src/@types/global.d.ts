@@ -3,32 +3,8 @@ declare const process: NodeJS.Process;
 declare module '*.module.scss';
 
 declare const APP_VERSION: string;
-declare const APP_REVISION: string;
 
 declare namespace React {
-  interface HTMLAttributes {
-    // Optimization for DOM nodes prepends and inserts
-    teactFastList?: boolean;
-    teactExperimentControlled?: boolean;
-  }
-
-  // Teact features
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-wrapper-object-types
-  interface CSSProperties extends String {}
-
-  interface ClassAttributes<T> extends RefAttributes<T> {
-    ref?: ((instance: T | undefined) => void) | React.RefObject<T | undefined> | undefined; // Teact ref
-  }
-
-  interface Attributes {
-    // Optimization for DOM nodes reordering. Requires `teactFastList` for parent
-    teactOrderKey?: number;
-  }
-
-  interface VideoHTMLAttributes {
-    srcObject?: MediaStream;
-    defaultMuted?: boolean;
-  }
 
   interface MouseEvent {
     offsetX: number;
@@ -60,10 +36,6 @@ type Emoji = {
   image: string;
   skin?: number;
 };
-
-type EmojiWithSkins = Record<number, Emoji>;
-
-type AllEmojis = Record<string, Emoji | EmojiWithSkins>;
 
 // Declare supported formats as modules
 declare module '*.png' {
@@ -122,11 +94,6 @@ interface TEncodedImage {
   height: number;
 }
 
-interface IWebpWorker extends Worker {
-  wasmReady?: boolean;
-  requests: Map<string, (value: PromiseLike<TEncodedImage>) => void>;
-}
-
 interface Document {
   mozFullScreenElement: HTMLElement;
   webkitFullscreenElement: HTMLElement;
@@ -139,11 +106,6 @@ interface HTMLElement {
   mozRequestFullScreen?: () => Promise<void>;
   webkitEnterFullscreen?: () => Promise<void>;
   webkitRequestFullscreen?: () => Promise<void>;
-}
-
-interface Navigator {
-  // PWA badging extensions https://w3c.github.io/badging/
-  setAppBadge?(count: number): Promise<void>;
 }
 
 type Undefined<T> = {
