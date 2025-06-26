@@ -26,7 +26,6 @@ export const PAID_MESSAGES_PURPOSE = 'paid_messages';
 
 export const DEBUG = process.env.APP_ENV !== 'production';
 export const DEBUG_MORE = false;
-export const DEBUG_LOG_FILENAME = 'tt-log.json';
 export const STRICTERDOM_ENABLED = DEBUG;
 export const BOT_VERIFICATION_PEERS_LIMIT = 20;
 
@@ -130,7 +129,6 @@ export const DEFAULT_MESSAGE_TEXT_SIZE_PX = 16;
 export const IOS_DEFAULT_MESSAGE_TEXT_SIZE_PX = 17;
 export const MACOS_DEFAULT_MESSAGE_TEXT_SIZE_PX = 15;
 
-export const DRAFT_DEBOUNCE = 10000; // 10s
 export const SEND_MESSAGE_ACTION_INTERVAL = 3000; // 3s
 // 10000s from https://corefork.telegram.org/api/url-authorization#automatic-authorization
 export const APP_CONFIG_REFETCH_INTERVAL = 10000 * 1000;
@@ -141,17 +139,12 @@ export const EDITABLE_INPUT_MODAL_ID = 'editable-message-text-modal';
 export const EDITABLE_STORY_INPUT_ID = 'editable-story-input-text';
 // eslint-disable-next-line @stylistic/max-len
 export const EDITABLE_INPUT_CSS_SELECTOR = `.messages-layout .Transition_slide-active #${EDITABLE_INPUT_ID}, .messages-layout .Transition > .Transition_slide-to #${EDITABLE_INPUT_ID}`;
-export const EDITABLE_INPUT_MODAL_CSS_SELECTOR = `#${EDITABLE_INPUT_MODAL_ID}`;
-export const EDITABLE_STORY_INPUT_CSS_SELECTOR = `#${EDITABLE_STORY_INPUT_ID}`;
 
 export const MESSAGE_CONTENT_CLASS_NAME = 'message-content';
 export const VIEW_TRANSITION_CLASS_NAME = 'active-view-transition';
 
 export const RESIZE_HANDLE_CLASS_NAME = 'resizeHandle';
 export const RESIZE_HANDLE_SELECTOR = `.${RESIZE_HANDLE_CLASS_NAME}`;
-
-export const SNAP_EFFECT_CONTAINER_ID = 'snap-effect-container';
-export const SNAP_EFFECT_ID = 'snap-effect';
 
 export const STARS_ICON_PLACEHOLDER = '⭐';
 export const STARS_CURRENCY_CODE = 'XTR';
@@ -192,18 +185,14 @@ export const STICKER_SIZE_AUTH = 160;
 export const STICKER_SIZE_AUTH_MOBILE = 120;
 export const STICKER_SIZE_PICKER = 72;
 export const EMOJI_SIZE_PICKER = 36;
-export const COMPOSER_EMOJI_SIZE_PICKER = 32;
-export const STICKER_SIZE_GENERAL_SETTINGS = 40;
 export const STICKER_SIZE_PICKER_HEADER = 32;
 export const STICKER_PICKER_MAX_SHARED_COVERS = 20;
 export const STICKER_SIZE_MODAL = 72;
 export const EMOJI_SIZE_MODAL = 36;
 export const STICKER_SIZE_TWO_FA = 160;
-export const STICKER_SIZE_INLINE_BOT_RESULT = 100;
 export const RECENT_STICKERS_LIMIT = 20;
 export const RECENT_STATUS_LIMIT = 20;
 export const EMOJI_STATUS_LOOP_LIMIT = 2;
-export const EMOJI_SIZES = 7;
 export const TOP_SYMBOL_SET_ID = 'top';
 export const POPULAR_SYMBOL_SET_ID = 'popular';
 export const RECENT_SYMBOL_SET_ID = 'recent';
@@ -211,10 +200,8 @@ export const COLLECTIBLE_STATUS_SET_ID = 'collectibleStatus';
 export const FAVORITE_SYMBOL_SET_ID = 'favorite';
 export const EFFECT_STICKERS_SET_ID = 'effectStickers';
 export const EFFECT_EMOJIS_SET_ID = 'effectEmojis';
-export const CHAT_STICKER_SET_ID = 'chatStickers';
 export const DEFAULT_TOPIC_ICON_STICKER_ID = 'topic-default-icon';
 export const DEFAULT_STATUS_ICON_ID = 'status-default-icon';
-export const EMOJI_IMG_REGEX = /<img[^>]+alt="([^"]+)"(?![^>]*data-document-id)[^>]*>/gm;
 
 export const BASE_EMOJI_KEYWORD_LANG = 'en';
 
@@ -319,7 +306,6 @@ export const MAX_MEDIA_FILES_FOR_ALBUM = 10;
 export const MAX_ACTIVE_PINNED_CHATS = 5;
 export const SCHEDULED_WHEN_ONLINE = 0x7FFFFFFE;
 export const LANG_PACKS = ['android', 'ios', 'tdesktop', 'macos'] as const;
-export const MINI_APP_TOS_URL = 'https://telegram.org/tos/mini-apps';
 export const GENERAL_TOPIC_ID = 1;
 export const STORY_EXPIRE_PERIOD = 86400; // 1 day
 export const STORY_VIEWERS_EXPIRE_PERIOD = 86400; // 1 day

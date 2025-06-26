@@ -44,20 +44,6 @@ export { default as StickerSetModal } from '../components/common/StickerSetModal
 export { default as CustomEmojiSetsModal } from '../components/common/CustomEmojiSetsModal';
 export { default as HeaderMenuContainer } from '../components/middle/HeaderMenuContainer';
 
-export { default as AttachmentModal } from '../components/middle/composer/AttachmentModal';
-export { default as PollModal } from '../components/middle/composer/PollModal';
-export { default as SymbolMenu } from '../components/middle/composer/SymbolMenu';
-export { default as ChatCommandTooltip } from '../components/middle/composer/ChatCommandTooltip';
-export { default as BotCommandMenu } from '../components/middle/composer/BotCommandMenu';
-export { default as MentionTooltip } from '../components/middle/composer/MentionTooltip';
-export { default as StickerTooltip } from '../components/middle/composer/StickerTooltip';
-export { default as CustomEmojiTooltip } from '../components/middle/composer/CustomEmojiTooltip';
-export { default as DropArea } from '../components/middle/composer/DropArea';
-export { default as TextFormatter } from '../components/middle/composer/TextFormatter';
-export { default as EmojiTooltip } from '../components/middle/composer/EmojiTooltip';
-export { default as InlineBotTooltip } from '../components/middle/composer/InlineBotTooltip';
-export { default as SendAsMenu } from '../components/middle/composer/SendAsMenu';
-
 export { default as PaymentModal } from '../components/payment/PaymentModal';
 export { default as ReceiptModal } from '../components/payment/ReceiptModal';
 export { default as InviteViaLinkModal } from '../components/modals/inviteViaLink/InviteViaLinkModal';

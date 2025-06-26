@@ -20,7 +20,6 @@ import {
 import useFlag from '../../../hooks/useFlag';
 import useLastCallback from '../../../hooks/useLastCallback';
 import useOldLang from '../../../hooks/useOldLang';
-import usePaidMessageConfirmation from '../../middle/composer/hooks/usePaidMessageConfirmation';
 
 import PaymentMessageConfirmDialog from '../../common/PaymentMessageConfirmDialog';
 import RecipientPicker from '../../common/RecipientPicker';

@@ -11,7 +11,6 @@ import { ApiMessageEntityTypes } from '../../../api/types';
 import buildClassName from '../../../util/buildClassName';
 import { copyTextToClipboard } from '../../../util/clipboard';
 import { oldTranslate } from '../../../util/oldLangProvider';
-import { buildCustomEmojiHtmlFromEntity } from '../../middle/composer/helpers/customEmoji';
 import renderText from './renderText';
 
 import Blockquote from '../Blockquote';
