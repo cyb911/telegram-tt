@@ -3,7 +3,7 @@ import { Api as GramJs } from '../../../lib/gramjs';
 
 import type { JoinGroupCallPayload } from '../../../lib/secret-sauce';
 import type {
-  ApiChat, ApiGroupCall, ApiPhoneCall, ApiUser,
+  ApiGroupCall, ApiPhoneCall, ApiUser,
 } from '../../types';
 
 import {
@@ -95,29 +95,6 @@ export async function joinGroupCall({
     if (!(update instanceof GramJs.UpdateGroupCall)) return undefined;
 
     return buildApiGroupCall(update.call);
-  }
-
-  return undefined;
-}
-
-export async function createGroupCall({
-  peer,
-}: {
-  peer: ApiChat;
-}) {
-  const randomId = generateRandomInt();
-  const result = await invokeRequest(new GramJs.phone.CreateGroupCall({
-    peer: buildInputPeer(peer.id, peer.accessHash),
-    randomId,
-  }));
-
-  if (!result) return undefined;
-
-  if (result instanceof GramJs.Updates) {
-    const update = result.updates[0];
-    if (update instanceof GramJs.UpdateGroupCall) {
-      return buildApiGroupCall(update.call);
-    }
   }
 
   return undefined;

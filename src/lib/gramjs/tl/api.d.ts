@@ -1934,36 +1934,23 @@ namespace Api {
   }> {
     // flags: Api.Type;
     canViewParticipants?: true;
-    canSetUsername?: true;
-    canSetStickers?: true;
     hiddenPrehistory?: true;
-    canSetLocation?: true;
     hasScheduled?: true;
     canViewStats?: true;
     blocked?: true;
     // flags2: Api.Type;
-    canDeleteChannel?: true;
-    antispam?: true;
     participantsHidden?: true;
     translationsDisabled?: true;
     storiesPinnedAvailable?: true;
     viewForumAsMessages?: true;
-    restrictedSponsored?: true;
     canViewRevenue?: true;
-    paidMediaAllowed?: true;
-    canViewStarsRevenue?: true;
     paidReactionsAvailable?: true;
     stargiftsAvailable?: true;
     paidMessagesAvailable?: true;
     id: long;
     about: string;
     participantsCount?: int;
-    adminsCount?: int;
-    kickedCount?: int;
-    bannedCount?: int;
     onlineCount?: int;
-    readInboxMaxId: int;
-    readOutboxMaxId: int;
     unreadCount: int;
     chatPhoto: Api.TypePhoto;
     notifySettings: Api.TypePeerNotifySettings;
@@ -1971,9 +1958,7 @@ namespace Api {
     botInfo: Api.TypeBotInfo[];
     migratedFromChatId?: long;
     migratedFromMaxId?: int;
-    pinnedMsgId?: int;
     stickerset?: Api.TypeStickerSet;
-    availableMinId?: int;
     folderId?: int;
     linkedChatId?: long;
     location?: Api.TypeChannelLocation;
@@ -1982,10 +1967,6 @@ namespace Api {
     statsDc?: int;
     pts: int;
     call?: Api.TypeInputGroupCall;
-    ttlPeriod?: int;
-    pendingSuggestions?: string[];
-    groupcallDefaultJoinAs?: Api.TypePeer;
-    themeEmoticon?: string;
     requestsPending?: int;
     recentRequesters?: long[];
     defaultSendAs?: Api.TypePeer;
@@ -2049,7 +2030,6 @@ namespace Api {
   }> {
     // flags: Api.Type;
     chatId: long;
-    selfParticipant?: Api.TypeChatParticipant;
     CONSTRUCTOR_ID: 2271466465;
     SUBCLASS_OF_ID: 531142001;
     className: 'ChatParticipantsForbidden';
@@ -18843,7 +18823,6 @@ namespace Api {
       scores: Api.TypeHighScore[];
       users: Api.TypeUser[];
     }> {
-      scores: Api.TypeHighScore[];
       users: Api.TypeUser[];
       CONSTRUCTOR_ID: 2587622809;
       SUBCLASS_OF_ID: 1825412605;
@@ -19105,7 +19084,6 @@ namespace Api {
       users: Api.TypeUser[];
     }> {
       // flags: Api.Type;
-      postsBetween?: int;
       messages: Api.TypeSponsoredMessage[];
       chats: Api.TypeChat[];
       users: Api.TypeUser[];
@@ -19135,12 +19113,7 @@ namespace Api {
       users: Api.TypeUser[];
     }> {
       // flags: Api.Type;
-      inexact?: true;
       count: int;
-      minDate: int;
-      minMsgId: int;
-      offsetIdOffset?: int;
-      periods: Api.TypeSearchResultsCalendarPeriod[];
       messages: Api.TypeMessage[];
       chats: Api.TypeChat[];
       users: Api.TypeUser[];
@@ -19155,7 +19128,6 @@ namespace Api {
       positions: Api.TypeSearchResultsPosition[];
     }> {
       count: int;
-      positions: Api.TypeSearchResultsPosition[];
       CONSTRUCTOR_ID: 1404185519;
       SUBCLASS_OF_ID: 3647172749;
       className: 'SearchResultsPositions';
@@ -19227,8 +19199,6 @@ namespace Api {
       pending?: true;
       transcriptionId: long;
       text: string;
-      trialRemainsNum?: int;
-      trialRemainsUntilDate?: int;
       CONSTRUCTOR_ID: 3485063511;
       SUBCLASS_OF_ID: 565332278;
       className: 'TranscribedAudio';
@@ -19317,7 +19287,6 @@ namespace Api {
       // flags: Api.Type;
       inactive?: true;
       requestWriteAccess?: true;
-      hasSettings?: true;
       app: Api.TypeBotApp;
       CONSTRUCTOR_ID: 3947933173;
       SUBCLASS_OF_ID: 2406630311;
@@ -19431,7 +19400,6 @@ namespace Api {
       filters: Api.TypeDialogFilter[];
     }> {
       // flags: Api.Type;
-      tagsEnabled?: true;
       filters: Api.TypeDialogFilter[];
       CONSTRUCTOR_ID: 718878489;
       SUBCLASS_OF_ID: 2785014199;
@@ -19765,10 +19733,6 @@ namespace Api {
       fileHashes: Api.TypeFileHash[];
     }> {
       dcId: int;
-      fileToken: bytes;
-      encryptionKey: bytes;
-      encryptionIv: bytes;
-      fileHashes: Api.TypeFileHash[];
       CONSTRUCTOR_ID: 4052539972;
       SUBCLASS_OF_ID: 1822152488;
       className: 'FileCdnRedirect';
@@ -19796,7 +19760,6 @@ namespace Api {
     export class CdnFileReuploadNeeded extends VirtualClass<{
       requestToken: bytes;
     }> {
-      requestToken: bytes;
       CONSTRUCTOR_ID: 4004045934;
       SUBCLASS_OF_ID: 4123851048;
       className: 'CdnFileReuploadNeeded';
@@ -19828,7 +19791,6 @@ namespace Api {
       sticker?: Api.TypeDocument;
     }> {
       // flags: Api.Type;
-      canNotSkip?: true;
       id: int;
       version: string;
       text: string;
@@ -19884,7 +19846,6 @@ namespace Api {
       id: Api.TypeDataJSON;
       text: string;
       entities: Api.TypeMessageEntity[];
-      minAgeConfirm?: int;
       CONSTRUCTOR_ID: 2013922064;
       SUBCLASS_OF_ID: 552502034;
       className: 'TermsOfService';
@@ -19920,7 +19881,6 @@ namespace Api {
       termsOfService: help.TypeTermsOfService;
     }> {
       expires: int;
-      termsOfService: help.TypeTermsOfService;
       CONSTRUCTOR_ID: 686618977;
       SUBCLASS_OF_ID: 691808631;
       className: 'TermsOfServiceUpdate';
@@ -19941,7 +19901,6 @@ namespace Api {
       entities?: Api.TypeMessageEntity[];
     }> {
       // flags: Api.Type;
-      updateApp?: true;
       message: string;
       entities?: Api.TypeMessageEntity[];
       CONSTRUCTOR_ID: 1783556146;
@@ -19962,7 +19921,6 @@ namespace Api {
       countriesLangs: Api.TypeDataJSON;
     }> {
       hash: int;
-      countriesLangs: Api.TypeDataJSON;
       CONSTRUCTOR_ID: 2694370991;
       SUBCLASS_OF_ID: 3328622765;
       className: 'PassportConfig';
@@ -20029,11 +19987,6 @@ namespace Api {
       proxy?: true;
       expires: int;
       peer?: Api.TypePeer;
-      psaType?: string;
-      psaMessage?: string;
-      pendingSuggestions: string[];
-      dismissedSuggestions: string[];
-      customPendingSuggestion?: Api.TypePendingSuggestion;
       chats: Api.TypeChat[];
       users: Api.TypeUser[];
       CONSTRUCTOR_ID: 145021050;
@@ -20049,9 +20002,6 @@ namespace Api {
       patterns?: string[];
     }> {
       // flags: Api.Type;
-      countryCode: string;
-      prefixes?: string[];
-      patterns?: string[];
       CONSTRUCTOR_ID: 1107543535;
       SUBCLASS_OF_ID: 1995654757;
       className: 'CountryCode';
