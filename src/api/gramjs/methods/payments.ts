@@ -213,15 +213,11 @@ export async function getReceipt(chat: ApiChat, msgId: number) {
 }
 
 export async function fetchPremiumPromo(this: any) {
-  let result = undefined;
   if (USE_STATIC_PREMIUM_PROMO) {
     // 使用静态数据
-
-
-    result = await invokeRequest(new GramJs.help.GetPremiumPromo());
-  } else {
-    result = await invokeRequest(new GramJs.help.GetPremiumPromo());
+    return { promo: staticPremiumPromo };
   }
+  const result = await invokeRequest(new GramJs.help.GetPremiumPromo());
   // eslint-disable-next-line no-console
   console.log('GetPremiumPromo result:', result);
   if (!result) return undefined;
