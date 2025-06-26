@@ -131,7 +131,8 @@ export function init() {
   addActionHandler('reset', reset);
 
   const global = getGlobal();
-  if (!selectTabState(global).isMasterTab) {
+  const isMasterTab = selectTabState(global)?.isMasterTab;
+  if (!isMasterTab) {
     updateFolders(global, true, true, true, true);
   }
   updateFolderManager(global);
@@ -141,12 +142,6 @@ export function getOrderedIds(folderId: number) {
   if (!inited) init();
 
   return results.orderedIdsByFolderId[folderId];
-}
-
-export function getPinnedChatsCount(folderId: number) {
-  if (!inited) init();
-
-  return results.pinnedCountByFolderId[folderId] || 0;
 }
 
 export function getChatsCount() {
