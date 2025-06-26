@@ -33,7 +33,6 @@ export { default as CountryPickerModal } from '../components/common/CountryPicke
 export { default as ReactorListModal } from '../components/middle/ReactorListModal';
 export { default as EmojiInteractionAnimation } from '../components/middle/EmojiInteractionAnimation';
 export { default as ChatLanguageModal } from '../components/middle/ChatLanguageModal';
-export { default as CollectibleInfoModal } from '../components/modals/collectible/CollectibleInfoModal';
 
 export { default as StickerSetModal } from '../components/common/StickerSetModal';
 export { default as CustomEmojiSetsModal } from '../components/common/CustomEmojiSetsModal';
