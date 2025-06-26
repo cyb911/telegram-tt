@@ -27,6 +27,5 @@ export { default as HeaderMenuContainer } from '../components/middle/HeaderMenuC
 
 export { default as PaymentModal } from '../components/payment/PaymentModal';
 export { default as ReceiptModal } from '../components/payment/ReceiptModal';
-export { default as InviteViaLinkModal } from '../components/modals/inviteViaLink/InviteViaLinkModal';
 export { default as OneTimeMediaModal } from '../components/modals/oneTimeMedia/OneTimeMediaModal';
 export { default as FrozenAccountModal } from '../components/modals/frozenAccount/FrozenAccountModal';

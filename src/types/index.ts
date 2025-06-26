@@ -157,34 +157,6 @@ export interface AccountSettings {
   shouldPaidMessageAutoApprove: boolean;
 }
 
-export interface SharedSettings {
-  shouldUseSystemTheme: boolean;
-  theme: ThemeKey;
-  themes: Partial<Record<ThemeKey, IThemeSettings>>;
-  language: string;
-  languages?: ApiLanguage[];
-  performance: PerformanceType;
-  messageTextSize: number;
-  animationLevel: AnimationLevel;
-  messageSendKeyCombo: 'enter' | 'ctrl-enter';
-  miniAppsCachedPosition?: Point;
-  miniAppsCachedSize?: Size;
-  timeFormat: TimeFormat;
-  wasTimeFormatSetManually: boolean;
-  isConnectionStatusMinimized: boolean;
-  canDisplayChatInTitle: boolean;
-  shouldForceHttpTransport?: boolean;
-  shouldAllowHttpTransport?: boolean;
-  shouldCollectDebugLogs?: boolean;
-  shouldDebugExportedSenders?: boolean;
-  shouldWarnAboutSvg?: boolean;
-  shouldSkipWebAppCloseConfirmation: boolean;
-  hasContactJoinedNotifications?: boolean;
-  hasWebNotifications: boolean;
-  hasPushNotifications: boolean;
-  notificationSoundVolume: number;
-}
-
 export type IAnchorPosition = {
   x: number;
   y: number;
@@ -201,91 +173,17 @@ export enum SettingsScreens {
   Main,
   EditProfile,
   Notifications,
-  DataStorage,
   Language,
   ActiveSessions,
   General,
-  GeneralChatBackground,
-  GeneralChatBackgroundColor,
   Privacy,
-  PrivacyPhoneNumber,
-  PrivacyAddByPhone,
-  PrivacyLastSeen,
-  PrivacyProfilePhoto,
-  PrivacyBio,
-  PrivacyBirthday,
-  PrivacyGifts,
-  PrivacyPhoneCall,
-  PrivacyPhoneP2P,
-  PrivacyForwarding,
-  PrivacyVoiceMessages,
-  PrivacyMessages,
-  PrivacyGroupChats,
-  PrivacyPhoneNumberAllowedContacts,
-  PrivacyPhoneNumberDeniedContacts,
-  PrivacyLastSeenAllowedContacts,
-  PrivacyLastSeenDeniedContacts,
-  PrivacyProfilePhotoAllowedContacts,
-  PrivacyProfilePhotoDeniedContacts,
-  PrivacyBioAllowedContacts,
-  PrivacyBioDeniedContacts,
-  PrivacyBirthdayAllowedContacts,
-  PrivacyBirthdayDeniedContacts,
-  PrivacyGiftsAllowedContacts,
-  PrivacyGiftsDeniedContacts,
-  PrivacyPhoneCallAllowedContacts,
-  PrivacyPhoneCallDeniedContacts,
-  PrivacyPhoneP2PAllowedContacts,
-  PrivacyPhoneP2PDeniedContacts,
-  PrivacyForwardingAllowedContacts,
-  PrivacyForwardingDeniedContacts,
-  PrivacyVoiceMessagesAllowedContacts,
-  PrivacyVoiceMessagesDeniedContacts,
-  PrivacyGroupChatsAllowedContacts,
-  PrivacyGroupChatsDeniedContacts,
-  PrivacyBlockedUsers,
-  PrivacyNoPaidMessages,
-  Performance,
   Folders,
-  FoldersCreateFolder,
-  FoldersEditFolder,
   FoldersEditFolderFromChatList,
   FoldersEditFolderInvites,
-  FoldersIncludedChats,
-  FoldersIncludedChatsFromChatList,
-  FoldersExcludedChats,
-  FoldersExcludedChatsFromChatList,
   TwoFaDisabled,
-  TwoFaNewPassword,
-  TwoFaNewPasswordConfirm,
-  TwoFaNewPasswordHint,
-  TwoFaNewPasswordEmail,
-  TwoFaNewPasswordEmailCode,
-  TwoFaEnabled,
-  TwoFaChangePasswordCurrent,
-  TwoFaChangePasswordNew,
-  TwoFaChangePasswordConfirm,
-  TwoFaChangePasswordHint,
-  TwoFaTurnOff,
-  TwoFaRecoveryEmailCurrentPassword,
-  TwoFaRecoveryEmail,
-  TwoFaRecoveryEmailCode,
-  TwoFaCongratulations,
-  ActiveWebsites,
   PasscodeDisabled,
-  PasscodeNewPasscode,
-  PasscodeNewPasscodeConfirm,
-  PasscodeEnabled,
-  PasscodeChangePasscodeCurrent,
-  PasscodeChangePasscodeNew,
-  PasscodeChangePasscodeConfirm,
-  PasscodeTurnOff,
-  PasscodeCongratulations,
-  Experimental,
   Stickers,
-  QuickReaction,
   CustomEmoji,
-  DoNotTranslate,
   FoldersShare,
 }
 
@@ -296,19 +194,12 @@ export type StickerSetOrReactionsSetOrRecent = Pick<ApiStickerSet, (
 
 export enum LeftColumnContent {
   ChatList,
-  GlobalSearch,
   Settings,
   Contacts,
   Archived,
-  NewChannelStep1,
-  NewChannelStep2,
-  NewGroupStep1,
-  NewGroupStep2,
 }
 
 export enum GlobalSearchContent {
-  ChatList,
-  ChannelList,
   BotApps,
   Media,
   Links,
@@ -331,44 +222,30 @@ export enum RightColumnContent {
   CreateTopic,
   EditTopic,
   MonetizationStatistics,
-  NewGroup,
 }
 
 export type MediaViewerMedia = ApiPhoto | ApiVideo | ApiDocument;
 
 export enum MediaViewerOrigin {
   Inline,
-  ScheduledInline,
-  SharedMedia,
   ProfileAvatar,
   SettingsAvatar,
   MiddleHeaderAvatar,
   Album,
-  ScheduledAlbum,
-  SearchResult,
-  ChannelAvatar,
-  SuggestedAvatar,
   StarsTransaction,
-  PreviewMedia,
   SponsoredMessage,
 }
 
 export enum StoryViewerOrigin {
-  StoryRibbon,
   MiddleHeaderAvatar,
-  ChatList,
-  SearchResult,
 }
 
 export enum AudioOrigin {
   Inline,
-  SharedMedia,
   Search,
-  OneTimeModal,
 }
 
 export enum ChatCreationProgress {
-  Idle,
   InProgress,
   Complete,
   Error,
@@ -382,7 +259,6 @@ export enum ProfileEditProgress {
 }
 
 export enum ManagementProgress {
-  Idle,
   InProgress,
   Complete,
   Error,
@@ -406,7 +282,6 @@ export interface ManagementState {
 
 export enum NewChatMembersProgress {
   Closed,
-  InProgress,
   Loading,
 }
 
@@ -461,11 +336,6 @@ export interface ChatMediaSearchParams {
 }
 
 export enum ProfileState {
-  Profile,
-  SharedMedia,
-  MemberList,
-  GiftList,
-  StoryList,
   SavedDialogs,
 }
 
@@ -483,30 +353,11 @@ export const UPLOADING_WALLPAPER_SLUG = 'UPLOADING_WALLPAPER_SLUG';
 
 export enum ManagementScreens {
   Initial,
-  ChatPrivacyType,
   Discussion,
-  ChannelSubscribers,
-  GroupType,
-  GroupPermissions,
-  GroupRemovedUsers,
-  ChannelRemovedUsers,
-  GroupUserPermissionsCreate,
-  GroupUserPermissions,
-  ChatAdministrators,
-  GroupRecentActions,
   ChatAdminRights,
-  ChatNewAdminRights,
-  GroupMembers,
-  GroupAddAdmins,
-  Invites,
-  EditInvite,
   Reactions,
-  InviteInfo,
   JoinRequests,
-  NewDiscussionGroup,
 }
-
-export type ManagementType = 'user' | 'group' | 'channel' | 'bot';
 
 export type EmojiKeywords = {
   isLoading?: boolean;
