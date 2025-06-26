@@ -6,10 +6,9 @@ import type {
   ApiChat, ApiGroupCall, ApiPhoneCall, ApiUser,
 } from '../../types';
 
-import { GROUP_CALL_PARTICIPANTS_LIMIT } from '../../../config';
 import {
   buildApiGroupCall,
-  buildApiGroupCallParticipant, buildCallProtocol,
+  buildCallProtocol,
   buildPhoneCall,
 } from '../apiBuilders/calls';
 import {
@@ -17,24 +16,6 @@ import {
 } from '../gramjsBuilders';
 import { sendApiUpdate } from '../updates/apiUpdateEmitter';
 import { invokeRequest, invokeRequestBeacon } from './client';
-
-export async function getGroupCall({
-  call,
-}: {
-  call: Partial<ApiGroupCall>;
-}) {
-  const result = await invokeRequest(new GramJs.phone.GetGroupCall({
-    call: buildInputGroupCall(call),
-  }));
-
-  if (!result) {
-    return undefined;
-  }
-
-  return {
-    groupCall: buildApiGroupCall(result.call),
-  };
-}
 
 export function discardGroupCall({
   call,
@@ -66,61 +47,6 @@ export function editGroupCallParticipant({
     ...(volume !== undefined && { volume }),
   }), {
     shouldReturnTrue: true,
-  });
-}
-
-export function editGroupCallTitle({
-  groupCall, title,
-}: {
-  groupCall: ApiGroupCall; title: string;
-}) {
-  return invokeRequest(new GramJs.phone.EditGroupCallTitle({
-    title,
-    call: buildInputGroupCall(groupCall),
-  }), {
-    shouldReturnTrue: true,
-  });
-}
-
-export async function exportGroupCallInvite({
-  call, canSelfUnmute,
-}: {
-  call: ApiGroupCall; canSelfUnmute: boolean;
-}) {
-  const result = await invokeRequest(new GramJs.phone.ExportGroupCallInvite({
-    canSelfUnmute: canSelfUnmute || undefined,
-    call: buildInputGroupCall(call),
-  }));
-
-  if (!result) {
-    return undefined;
-  }
-
-  return result.link;
-}
-
-export async function fetchGroupCallParticipants({
-  call, offset,
-}: {
-  call: ApiGroupCall; offset?: string;
-}) {
-  const result = await invokeRequest(new GramJs.phone.GetGroupParticipants({
-    call: buildInputGroupCall(call),
-    ids: [],
-    sources: [],
-    offset: offset || '',
-    limit: GROUP_CALL_PARTICIPANTS_LIMIT,
-  }));
-
-  if (!result) {
-    return;
-  }
-
-  sendApiUpdate({
-    '@type': 'updateGroupCallParticipants',
-    groupCallId: call.id,
-    participants: result.participants.map(buildApiGroupCallParticipant),
-    nextOffset: result.nextOffset,
   });
 }
 
@@ -209,20 +135,6 @@ export function joinGroupCallPresentation({
     }),
   }), {
     shouldReturnTrue: true,
-  });
-}
-
-export function toggleGroupCallStartSubscription({
-  call, subscribed,
-}: {
-  call: ApiGroupCall; subscribed: boolean;
-}) {
-  return invokeRequest(new GramJs.phone.ToggleGroupCallStartSubscription({
-    call: buildInputGroupCall(call),
-    subscribed,
-  }), {
-    shouldReturnTrue: true,
-    shouldIgnoreErrors: true,
   });
 }
 
