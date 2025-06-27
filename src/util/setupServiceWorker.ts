@@ -4,7 +4,6 @@ import { DEBUG, DEBUG_MORE, IS_TEST } from '../config';
 import { IS_ANDROID, IS_IOS, IS_SERVICE_WORKER_SUPPORTED } from './browser/windowEnvironment';
 import { formatShareText } from './deeplink';
 import { validateFiles } from './files';
-import { notifyClientReady, playNotifySoundDebounced } from './notifications';
 
 type WorkerAction = {
   type: string;
@@ -26,9 +25,6 @@ function handleWorkerMessage(e: MessageEvent) {
     case 'focusMessage':
       dispatch.focusMessage?.(payload as any);
       break;
-    case 'playNotificationSound':
-      playNotifySoundDebounced(action.payload.id);
-      break;
     case 'share':
       dispatch.openChatWithDraft({
         text: formatShareText(payload.url, payload.text, payload.title),
@@ -41,8 +37,6 @@ function handleWorkerMessage(e: MessageEvent) {
 function subscribeToWorker() {
   navigator.serviceWorker.removeEventListener('message', handleWorkerMessage);
   navigator.serviceWorker.addEventListener('message', handleWorkerMessage);
-  // Notify web worker that client is ready to receive messages
-  notifyClientReady();
 }
 
 if (IS_SERVICE_WORKER_SUPPORTED) {

@@ -3,7 +3,6 @@ import type { ActionReturnType } from '../../types';
 import { ARE_CALLS_SUPPORTED } from '../../../util/browser/windowEnvironment';
 import { getCurrentTabId } from '../../../util/establishMultitabRole';
 import { omit } from '../../../util/iteratees';
-import { notifyAboutCall } from '../../../util/notifications';
 import { onTickEnd } from '../../../util/schedulers';
 import { addActionHandler, getGlobal } from '../../index';
 import { updateChat, updateChatFullInfo } from '../../reducers';
@@ -108,14 +107,7 @@ addActionHandler('apiUpdate', (global, actions, update): ActionReturnType => {
           global = getGlobal();
           const user = selectPhoneCallUser(global);
           if (!user) return;
-          notifyAboutCall({
-            call,
-            user,
-          });
         });
-
-        initializeSounds();
-        void checkNavigatorUserMediaPermissions(global, actions, call.isVideo, getCurrentTabId());
         global = {
           ...global,
           phoneCall: call,

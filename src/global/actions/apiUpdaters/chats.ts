@@ -5,7 +5,6 @@ import { MAIN_THREAD_ID } from '../../../api/types';
 import { ARCHIVED_FOLDER_ID, MAX_ACTIVE_PINNED_CHATS, SERVICE_NOTIFICATIONS_USER_ID } from '../../../config';
 import { buildCollectionByKey, omit } from '../../../util/iteratees';
 import { isLocalMessageId } from '../../../util/keys/messageKey';
-import { closeMessageNotifications, notifyAboutMessage } from '../../../util/notifications';
 import { checkIfHasUnreadReactions, isChatChannel } from '../../helpers';
 import {
   addActionHandler, getGlobal, setGlobal,
@@ -75,13 +74,6 @@ addActionHandler('apiUpdate', (global, actions, update): ActionReturnType => {
         && !updatedChat?.isNotJoined) {
         // Reload top chats to update chat listing
         actions.loadTopChats();
-      }
-
-      if (update.chat.id) {
-        closeMessageNotifications({
-          chatId: update.chat.id,
-          lastReadInboxMessageId: update.chat.lastReadInboxMessageId,
-        });
       }
 
       Object.values(global.byTabId).forEach(({ id: tabId }) => {
@@ -202,11 +194,6 @@ addActionHandler('apiUpdate', (global, actions, update): ActionReturnType => {
       }
 
       setGlobal(global);
-
-      notifyAboutMessage({
-        chat,
-        message,
-      });
 
       return undefined;
     }

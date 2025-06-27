@@ -8,7 +8,6 @@ import {
 import { APP_CONFIG_REFETCH_INTERVAL, COUNTRIES_WITH_12H_TIME_FORMAT, MAX_INT_32 } from '../../../config';
 import { getCurrentTabId } from '../../../util/establishMultitabRole';
 import { buildCollectionByKey } from '../../../util/iteratees';
-import { requestPermission, subscribe, unsubscribe } from '../../../util/notifications';
 import { setTimeFormat } from '../../../util/oldLangProvider';
 import requestActionTimeout from '../../../util/requestActionTimeout';
 import { getServerTime } from '../../../util/serverTime';
@@ -343,27 +342,6 @@ addActionHandler('updateNotificationSettings', async (global, actions, payload):
     shouldShowPreviews,
   });
   setGlobal(global);
-});
-
-addActionHandler('updateWebNotificationSettings', async (global, actions, payload): Promise<void> => {
-  const oldSettings = global.settings.byKey;
-  global = replaceSettings(global, payload);
-  setGlobal(global);
-  const { hasWebNotifications, hasPushNotifications } = global.settings.byKey;
-  if (!oldSettings.hasPushNotifications && hasPushNotifications) {
-    await subscribe();
-  }
-  if (oldSettings.hasPushNotifications && !hasPushNotifications) {
-    await unsubscribe();
-  }
-  if (!oldSettings.hasWebNotifications && hasWebNotifications) {
-    const isGranted = await requestPermission();
-    if (!isGranted) {
-      global = getGlobal();
-      global = replaceSettings(global, { hasWebNotifications: false });
-      setGlobal(global);
-    }
-  }
 });
 
 addActionHandler('updateContactSignUpNotification', async (global, actions, payload): Promise<void> => {

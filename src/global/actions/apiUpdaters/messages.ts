@@ -17,7 +17,6 @@ import {
   buildCollectionByKey, omit, pickTruthy, unique,
 } from '../../../util/iteratees';
 import { getMessageKey, isLocalMessageId } from '../../../util/keys/messageKey';
-import { notifyAboutMessage } from '../../../util/notifications';
 import { onTickEnd } from '../../../util/schedulers';
 import { getServerTime } from '../../../util/serverTime';
 import {
@@ -922,11 +921,6 @@ function updateReactions<T extends GlobalState>(
     if (!chat || !newMessage) return global;
 
     onTickEnd(() => {
-      notifyAboutMessage({
-        chat,
-        message: newMessage,
-        isReaction: true,
-      });
     });
   }
 

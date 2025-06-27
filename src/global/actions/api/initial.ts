@@ -17,7 +17,6 @@ import {
 import * as cacheApi from '../../../util/cacheApi';
 import { getCurrentTabId } from '../../../util/establishMultitabRole';
 import { ACCOUNT_SLOT, getAccountsInfo } from '../../../util/multiaccount';
-import { unsubscribe } from '../../../util/notifications';
 import { clearEncryptedSession, encryptSession, forgetPasscode } from '../../../util/passcode';
 import { parseInitialLocationHash, resetInitialLocationHash, resetLocationHash } from '../../../util/routing';
 import { pause } from '../../../util/schedulers';
@@ -185,7 +184,6 @@ addActionHandler('signOut', async (global, actions, payload): Promise<void> => {
   try {
     resetInitialLocationHash();
     resetLocationHash();
-    await unsubscribe();
     await Promise.race([callApi('destroy'), pause(3000)]);
     await forceWebsync(false);
   } catch (err) {
@@ -200,9 +198,7 @@ addActionHandler('signOut', async (global, actions, payload): Promise<void> => {
 });
 
 addActionHandler('requestChannelDifference', (global, actions, payload): ActionReturnType => {
-  const { chatId } = payload;
 
-  void callApi('requestChannelDifference', chatId);
 });
 
 addActionHandler('reset', (global, actions): ActionReturnType => {
@@ -306,7 +302,6 @@ addActionHandler('lockScreen', async (global): Promise<void> => {
   }, LOCK_SCREEN_ANIMATION_DURATION_MS);
 
   try {
-    await unsubscribe();
     await callApi('destroy', true);
   } catch (err) {
     // Do nothing

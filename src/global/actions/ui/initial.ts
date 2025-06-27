@@ -10,7 +10,6 @@ import {
   IS_MAC_OS, IS_SAFARI, IS_TOUCH_ENV, IS_WINDOWS,
 } from '../../../util/browser/windowEnvironment';
 import { getCurrentTabId } from '../../../util/establishMultitabRole';
-import { subscribe, unsubscribe } from '../../../util/notifications';
 import { oldSetLanguage } from '../../../util/oldLangProvider';
 import { decryptSessionByCurrentHash } from '../../../util/passcode';
 import { applyPerformanceSettings } from '../../../util/perfomanceSettings';
@@ -58,7 +57,6 @@ addActionHandler('switchMultitabRole', async (global, actions, payload): Promise
   setGlobal(global, { forceSyncOnIOs: true });
 
   if (!isMasterTab) {
-    void unsubscribe();
     actions.destroyConnection();
     stopWebsync();
     destroySharedStatePort();
@@ -114,7 +112,6 @@ addActionHandler('initMain', (global): ActionReturnType => {
     // Most of the browsers only show the notifications permission prompt after the first user gesture.
     const events = ['click', 'keypress'];
     const subscribeAfterUserGesture = () => {
-      void subscribe();
       events.forEach((event) => {
         document.removeEventListener(event, subscribeAfterUserGesture);
       });
