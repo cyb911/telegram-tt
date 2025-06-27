@@ -157,8 +157,11 @@ export function getTranslationFn(): LangFn {
 /**
  * @deprecated Migrate to `changeLanguage` in `util/localization.ts` instead
  */
-export async function oldSetLanguage(langCode: LangCode, callback?: NoneToVoidFunction, withFallback = false) {
-  loadAndChangeLanguage(langCode, true);
+// eslint-disable-next-line @stylistic/max-len
+export async function oldSetLanguage(langCode: LangCode, callback?: NoneToVoidFunction, withFallback = false, loadFromServer = true) {
+  if (loadFromServer) {
+    loadAndChangeLanguage(langCode, true);
+  }
   if (langPack && langCode === currentLangCode) {
     if (callback) {
       callback();
@@ -173,9 +176,11 @@ export async function oldSetLanguage(langCode: LangCode, callback?: NoneToVoidFu
       await importFallbackLangPack();
     }
 
-    newLangPack = await fetchRemote(langCode);
-    if (!newLangPack) {
-      return;
+    if (loadFromServer) {
+      newLangPack = await fetchRemote(langCode);
+      if (!newLangPack) {
+        return;
+      }
     }
   }
 

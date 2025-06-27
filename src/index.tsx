@@ -62,7 +62,7 @@ async function init() {
   getActions().updateShouldEnableDebugLog();
   getActions().updateShouldDebugExportedSenders();
 
-  initLocalization('zh', true);
+  initLocalization('zh', false);
 
   subscribeToMasterChange((isMasterTab) => {
     getActions()
