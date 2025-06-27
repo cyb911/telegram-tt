@@ -7,9 +7,3 @@ export function getSearchResultKey(message: ApiMessage): SearchResultKey {
 
   return `${chatId}_${id}`;
 }
-
-export function parseSearchResultKey(key: SearchResultKey) {
-  const [chatId, messageId] = key.split('_');
-
-  return [chatId, Number(messageId)] as const;
-}
