@@ -2,25 +2,10 @@ import type { OldLangFn } from '../../hooks/useOldLang';
 import type { TimeFormat } from '../../types';
 import type { LangFn } from '../localization';
 
-import { getServerTime } from '../serverTime';
 import withCache from '../withCache';
-import { getDays, getHours, getMinutes } from './units';
 
 const WEEKDAYS_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const MONTHS_FULL = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
-
-const MONTHS_FULL_LOWERCASE = MONTHS_FULL.map((month) => month.toLowerCase());
-const MIN_SEARCH_YEAR = 2015;
-const MAX_DAY_IN_MONTH = 31;
-const MAX_MONTH_IN_YEAR = 12;
 export const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
-
-export function isToday(date: Date) {
-  return getDayStartAt(new Date()) === getDayStartAt(date);
-}
 
 export function getDayStart(datetime: number | Date) {
   const date = new Date(datetime);
@@ -30,11 +15,6 @@ export function getDayStart(datetime: number | Date) {
 
 export function getDayStartAt(datetime: number | Date) {
   return getDayStart(datetime).getTime();
-}
-
-export function toYearMonth(timestamp: number) {
-  const date = new Date(timestamp * 1000);
-  return `${date.getFullYear()}-${date.getMonth()}`;
 }
 
 function toIsoString(date: Date) {
@@ -83,34 +63,6 @@ export function formatFullDate(lang: OldLangFn | LangFn, datetime: number | Date
   return formatDateToString(datetime, lang.code, false, 'numeric');
 }
 
-export function formatMonthAndYear(lang: OldLangFn | LangFn, date: Date, isShort = false) {
-  return formatDateToString(date, lang.code, false, isShort ? 'short' : 'long', true);
-}
-
-export function formatCountdown(
-  lang: LangFn,
-  secondsLeft: number,
-) {
-  const days = getDays(secondsLeft);
-  if (secondsLeft < 0) {
-    return 0;
-  } else if (days < 1) {
-    return formatMediaDuration(secondsLeft);
-  } else if (days < 7) {
-    const count = days;
-    return lang('Days', { count }, { pluralValue: count });
-  } else if (days < 30) {
-    const count = Math.floor(days / 7);
-    return lang('Weeks', { count }, { pluralValue: count });
-  } else if (days < 365) {
-    const count = Math.floor(days / 30);
-    return lang('Months', { count }, { pluralValue: count });
-  } else {
-    const count = Math.floor(days / 365);
-    return lang('Years', { count }, { pluralValue: count });
-  }
-}
-
 export function formatCountdownShort(lang: OldLangFn, msLeft: number): string {
   if (msLeft < 60 * 1000) {
     return Math.ceil(msLeft / 1000).toString();
@@ -132,99 +84,6 @@ export function formatLocationLastUpdate(lang: OldLangFn, currentTime: number, l
   } else {
     return lang('LiveLocationUpdated.TodayAt', formatTime(lang, lastUpdated));
   }
-}
-
-export function formatRelativePastTime(lang: OldLangFn, currentTime: number, lastUpdated = currentTime) {
-  const seconds = currentTime - lastUpdated;
-
-  if (seconds < 60) {
-    return lang('Time.JustNow');
-  }
-
-  // within an hour
-  if (seconds < 60 * 60) {
-    return lang('Time.MinutesAgo', Math.floor(seconds / 60));
-  }
-
-  const lastUpdatedDate = new Date(lastUpdated * 1000);
-  const today = getDayStart(new Date());
-  if (lastUpdatedDate >= today) {
-    return lang('Time.TodayAt', formatTime(lang, lastUpdatedDate));
-  }
-
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
-  if (lastUpdatedDate > yesterday) {
-    return lang('Time.YesterdayAt', formatTime(lang, lastUpdatedDate));
-  }
-
-  return lang('Time.AtDate', formatFullDate(lang, lastUpdatedDate));
-}
-
-export function formatPastDatetime(lang: LangFn, pastTime: number, currentTime = getServerTime()) {
-  const seconds = currentTime - pastTime;
-  const minutes = getMinutes(seconds);
-  const hours = getHours(seconds);
-  const days = getDays(seconds);
-
-  if (seconds < 60) {
-    return lang('JustNowAgo');
-  }
-
-  if (minutes < 60) {
-    return lang('MinutesAgo', { count: minutes }, { pluralValue: minutes });
-  }
-
-  if (hours < 24) {
-    return lang('HoursAgo', { count: hours }, { pluralValue: hours });
-  }
-
-  if (days < 28) {
-    return lang('DaysAgo', { count: days }, { pluralValue: days });
-  }
-
-  return lang('AtDateAgo', { date: formatFullDate(lang, pastTime) });
-}
-
-type DurationType = 'Seconds' | 'Minutes' | 'Hours' | 'Days' | 'Weeks';
-
-export function formatTimeDuration(lang: OldLangFn, duration: number, showLast = 2) {
-  if (!duration) {
-    return undefined;
-  }
-
-  const durationRecords: { duration: number; type: DurationType }[] = [];
-  const labels = [
-    { multiplier: 1, type: 'Seconds' },
-    { multiplier: 60, type: 'Minutes' },
-    { multiplier: 60, type: 'Hours' },
-    { multiplier: 24, type: 'Days' },
-    { multiplier: 7, type: 'Weeks' },
-  ] as Array<{ multiplier: number; type: DurationType }>;
-  let t = 1;
-  labels.forEach((label, idx) => {
-    t *= label.multiplier;
-
-    if (duration < t) {
-      return;
-    }
-
-    const modulus = labels[idx === (labels.length - 1) ? idx : idx + 1].multiplier;
-    durationRecords.push({
-      duration: Math.floor((duration / t) % modulus),
-      type: label.type,
-    });
-  });
-
-  const out = durationRecords.slice(-showLast).reverse();
-  for (let i = out.length - 1; i >= 0; --i) {
-    if (out[i].duration === 0) {
-      out.splice(i, 1);
-    }
-  }
-
-  // TODO In arabic we don't use "," as delimiter rather we use "and" each time
-  return out.map((part) => lang(part.type, part.duration, 'i')).join(', ');
 }
 
 export function formatHumanDate(
@@ -431,39 +290,6 @@ export function formatShortDuration(lang: LangFn, duration: number) {
   return lang('Days', { count }, { pluralValue: count });
 }
 
-function isValidDate(day: number, month: number, year = 2021): boolean {
-  if (month > (MAX_MONTH_IN_YEAR - 1) || day > MAX_DAY_IN_MONTH) {
-    return false;
-  }
-  const date = new Date(year, month, day);
-  return !Number.isNaN(date.getTime()) && date.getDate() === day;
-}
-
-export function parseDateString(query = ''): string | undefined {
-  const matchStringDate = query.match(/\d{1,2}\s[a-zA-Z]{3,}/);
-  const matchEuropeStringDate = query.match(/[a-zA-Z]{3,}\s\d{1,2}/);
-  const matchNumberDate = query.match(/\d{1,2}[./-]\d{1,2}([./-]\d{2,4})?/);
-  if (!matchStringDate && !matchNumberDate && !matchEuropeStringDate) {
-    return undefined;
-  }
-
-  if (matchNumberDate) {
-    const [date, month, year] = query.split(/[./-]/).map(Number);
-    return !(year && year < MIN_SEARCH_YEAR) && isValidDate(date, month - 1, year || undefined)
-      ? `${year ? `${year}-` : ''}${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`
-      : undefined;
-  }
-
-  const dateParts = query.split(' ');
-  const date = matchStringDate ? dateParts[0] : dateParts[1];
-  const month = (matchStringDate ? dateParts[1] : dateParts[0]).toLowerCase();
-  const monthIndex = MONTHS_FULL_LOWERCASE.findIndex((item) => item.startsWith(month));
-
-  return monthIndex !== -1 && isValidDate(Number(date), monthIndex)
-    ? `${String(monthIndex + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`
-    : undefined;
-}
-
 export function timestampPlusDay(timestamp: number) {
   return timestamp + MILLISECONDS_IN_DAY / 1000;
 }
@@ -474,11 +300,4 @@ function lowerFirst(str: string) {
 
 function upperFirst(str: string) {
   return `${str[0].toUpperCase()}${str.slice(1)}`;
-}
-
-export function formatRegistrationMonth(lang: string, dateString: string) {
-  const [month, year] = dateString.split('.');
-  const date = new Date(`${year}-${month}`);
-
-  return new Intl.DateTimeFormat(lang, { month: 'long', year: 'numeric' }).format(date);
 }
