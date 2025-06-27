@@ -1,4 +1,3 @@
-export { default as UrlAuthModal } from '../components/modals/urlAuth/UrlAuthModal';
 export { default as WebAppModal } from '../components/modals/webApp/WebAppModal';
 export { default as PremiumMainModal } from '../components/main/premium/PremiumMainModal';
 export { default as GiveawayModal } from '../components/main/premium/GiveawayModal';
