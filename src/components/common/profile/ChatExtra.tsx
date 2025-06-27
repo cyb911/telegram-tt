@@ -17,7 +17,6 @@ import { MAIN_THREAD_ID } from '../../../api/types';
 
 import { FRAGMENT_PHONE_CODE, FRAGMENT_PHONE_LENGTH } from '../../../config';
 import {
-  buildStaticMapHash,
   getChatLink,
   getHasAdminRight,
   isChatChannel,
@@ -45,13 +44,10 @@ import renderText from '../helpers/renderText';
 import useEffectWithPrevDeps from '../../../hooks/useEffectWithPrevDeps';
 import useLang from '../../../hooks/useLang';
 import useLastCallback from '../../../hooks/useLastCallback';
-import useMedia from '../../../hooks/useMedia';
 import useOldLang from '../../../hooks/useOldLang';
-import useDevicePixelRatio from '../../../hooks/window/useDevicePixelRatio';
 
 import Button from '../../ui/Button';
 import ListItem from '../../ui/ListItem';
-import Skeleton from '../../ui/placeholder/Skeleton';
 import Switcher from '../../ui/Switcher';
 import CustomEmoji from '../CustomEmoji';
 import SafeLink from '../SafeLink';
@@ -85,12 +81,6 @@ type StateProps = {
   botVerification?: ApiBotVerification;
 };
 
-const DEFAULT_MAP_CONFIG = {
-  width: 64,
-  height: 64,
-  zoom: 15,
-};
-
 const BOT_VERIFICATION_ICON_SIZE = 16;
 
 const ChatExtra: FC<OwnProps & StateProps> = ({
@@ -119,7 +109,6 @@ const ChatExtra: FC<OwnProps & StateProps> = ({
     updateTopicMutedState,
     loadPeerStories,
     openSavedDialog,
-    openMapModal,
     requestCollectibleInfo,
     requestMainWebView,
     toggleUserEmojiStatusPermission,
@@ -148,21 +137,6 @@ const ChatExtra: FC<OwnProps & StateProps> = ({
       loadPeerStories({ peerId });
     }
   }, [peerId, chat, user]);
-
-  const { width, height, zoom } = DEFAULT_MAP_CONFIG;
-  const dpr = useDevicePixelRatio();
-  const locationMediaHash = businessLocation?.geo
-    && buildStaticMapHash(businessLocation.geo, width, height, zoom, dpr);
-  const locationBlobUrl = useMedia(locationMediaHash);
-
-  const locationRightComponent = useMemo(() => {
-    if (!businessLocation?.geo) return undefined;
-    if (locationBlobUrl) {
-      return <img src={locationBlobUrl} alt="" className={styles.businessLocation} />;
-    }
-
-    return <Skeleton className={styles.businessLocation} />;
-  }, [businessLocation, locationBlobUrl]);
 
   const isTopicInfo = Boolean(topicId && topicId !== MAIN_THREAD_ID);
   const shouldRenderAllLinks = (chat && isChatChannel(chat)) || user?.isPremium;
@@ -194,8 +168,6 @@ const ChatExtra: FC<OwnProps & StateProps> = ({
       showNotification({ message: oldLang('BusinessLocationCopied') });
       return;
     }
-
-    openMapModal({ geoPoint: geo, zoom });
   });
 
   const handleNotificationChange = useLastCallback(() => {
@@ -422,7 +394,6 @@ const ChatExtra: FC<OwnProps & StateProps> = ({
           ripple
           multiline
           narrow
-          rightElement={locationRightComponent}
           onClick={handleClickLocation}
         >
           <div className="title">{businessLocation.address}</div>

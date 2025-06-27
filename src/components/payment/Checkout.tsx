@@ -26,7 +26,6 @@ import useOldLang from '../../hooks/useOldLang';
 import SafeLink from '../common/SafeLink';
 import Checkbox from '../ui/Checkbox';
 import ListItem from '../ui/ListItem';
-import Skeleton from '../ui/placeholder/Skeleton';
 
 import styles from './Checkout.module.scss';
 
@@ -179,14 +178,6 @@ const Checkout: FC<OwnProps> = ({
             width={photo!.dimensions?.width}
             height={photo!.dimensions?.height}
             alt=""
-          />
-        )}
-        {!photoUrl && photo && (
-          <Skeleton
-            width={photo.dimensions?.width}
-            height={photo.dimensions?.height}
-            className={styles.checkoutPicture}
-            forceAspectRatio
           />
         )}
         <div className={styles.text}>
