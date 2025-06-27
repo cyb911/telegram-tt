@@ -23,7 +23,6 @@ import './ui/messages';
 import './ui/globalSearch';
 import './ui/middleSearch';
 import './ui/stickerSearch';
-import './ui/account';
 import './ui/users';
 import './ui/settings';
 import './ui/misc';
