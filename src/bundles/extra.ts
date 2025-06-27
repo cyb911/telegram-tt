@@ -23,7 +23,6 @@ export { default as ChatLanguageModal } from '../components/middle/ChatLanguageM
 
 export { default as StickerSetModal } from '../components/common/StickerSetModal';
 export { default as CustomEmojiSetsModal } from '../components/common/CustomEmojiSetsModal';
-export { default as HeaderMenuContainer } from '../components/middle/HeaderMenuContainer';
 
 export { default as PaymentModal } from '../components/payment/PaymentModal';
 export { default as ReceiptModal } from '../components/payment/ReceiptModal';
