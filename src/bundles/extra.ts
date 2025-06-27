@@ -25,4 +25,3 @@ export { default as CustomEmojiSetsModal } from '../components/common/CustomEmoj
 export { default as PaymentModal } from '../components/payment/PaymentModal';
 export { default as ReceiptModal } from '../components/payment/ReceiptModal';
 export { default as OneTimeMediaModal } from '../components/modals/oneTimeMedia/OneTimeMediaModal';
-export { default as FrozenAccountModal } from '../components/modals/frozenAccount/FrozenAccountModal';
