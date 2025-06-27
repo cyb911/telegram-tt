@@ -13,7 +13,6 @@ export { default as ReportAdModal } from '../components/modals/reportAd/ReportAd
 export { default as ReportModal } from '../components/modals/reportModal/ReportModal';
 export { default as PreparedMessageModal } from '../components/modals/preparedMessage/PreparedMessageModal';
 export { default as CalendarModal } from '../components/common/CalendarModal';
-export { default as MessageSelectToolbar } from '../components/middle/MessageSelectToolbar';
 export { default as SeenByModal } from '../components/common/SeenByModal';
 export { default as PrivacySettingsNoticeModal } from '../components/common/PrivacySettingsNoticeModal';
 export { default as CountryPickerModal } from '../components/common/CountryPickerModal';
