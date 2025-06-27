@@ -32,7 +32,6 @@ import Transition from '../ui/Transition';
 import CustomEmoji from './CustomEmoji';
 import FakeIcon from './FakeIcon';
 import StarIcon from './icons/StarIcon';
-import VerifiedIcon from './VerifiedIcon';
 
 import styles from './FullNameTitle.module.scss';
 
@@ -146,7 +145,6 @@ const FullNameTitle: FC<OwnProps> = ({
       </h3>
       {!iconElement && peer && (
         <>
-          {!noVerified && peer?.isVerified && <VerifiedIcon />}
           {!noFake && peer?.fakeType && <FakeIcon fakeType={peer.fakeType} />}
           {canShowEmojiStatus && emojiStatus && (
             <Transition
