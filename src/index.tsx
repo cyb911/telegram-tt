@@ -13,7 +13,6 @@ import {
 } from './config';
 import { enableStrict, requestMutation } from './lib/fasterdom/fasterdom';
 import { selectTabState } from './global/selectors';
-import { selectSharedSettings } from './global/selectors/sharedState';
 import { betterView } from './util/betterView';
 import { requestGlobal, subscribeToMultitabBroadcastChannel } from './util/browser/multitab';
 import { establishMultitabRole, subscribeToMasterChange } from './util/establishMultitabRole';
@@ -63,9 +62,7 @@ async function init() {
   getActions().updateShouldEnableDebugLog();
   getActions().updateShouldDebugExportedSenders();
 
-  const global = getGlobal();
-
-  initLocalization(selectSharedSettings(global).language, true);
+  initLocalization('zh', true);
 
   subscribeToMasterChange((isMasterTab) => {
     getActions()

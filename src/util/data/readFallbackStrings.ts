@@ -4,16 +4,16 @@ import type {
 
 import readStrings from './readStrings';
 
-const FALLBACK_LANG_CODE = 'en';
+const FALLBACK_LANG_CODE = 'zh';
 const FALLBACK_VERSION = 0;
-const FALLBACK_TRANSLATE_URL = 'https://translations.telegram.org/en/weba';
+const FALLBACK_TRANSLATE_URL = 'https://translations.telegram.org/zh/weba';
 
 export default async function readFallbackStrings(forLocalScript?: boolean): Promise<CachedLangData> {
   let fileData;
   if (forLocalScript) {
-    fileData = (await import('fs')).readFileSync('./src/assets/localization/fallback.strings', 'utf8');
+    fileData = (await import('fs')).readFileSync('./src/assets/localization/fallback.zh.strings', 'utf8');
   } else {
-    const file = await import('../../assets/localization/fallback.strings');
+    const file = await import('../../assets/localization/fallback.zh.strings');
     fileData = file.default;
   }
   const rawStrings = readStrings(fileData);
@@ -43,8 +43,8 @@ export default async function readFallbackStrings(forLocalScript?: boolean): Pro
 
   const language: ApiLanguage = {
     langCode: FALLBACK_LANG_CODE,
-    name: 'English',
-    nativeName: 'English',
+    name: 'Chinese',
+    nativeName: '中文',
     pluralCode: FALLBACK_LANG_CODE,
     stringsCount,
     translatedCount: stringsCount,

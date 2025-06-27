@@ -42,7 +42,7 @@ import LimitedMap from '../primitives/LimitedMap';
 import initialStrings from '../../assets/localization/initialStrings';
 
 const LANGPACK_STORE_PREFIX = 'langpack-';
-const FORMATTERS_FALLBACK_LANG = 'en';
+const FORMATTERS_FALLBACK_LANG = 'zh';
 
 const STRING_CACHE_LIMIT = 400;
 const TRANSLATION_CACHE = new LimitedMap<string, string>(STRING_CACHE_LIMIT);
