@@ -60,7 +60,7 @@
 "PremiumPreviewDownloadSpeed" = "更快的下载速度";
 "PremiumPreviewUploads" = "无限云存储";
 "PremiumPreviewAdvancedChatManagement" = "高级聊天管理";
-"PremiumPreviewAnimatedProfiles" = "动态头像";
+"PremiumPreviewStories" = "高级动态";
 "PremiumPreviewLimitsDescription" = "最多 {limit1} 个频道、{limit2} 个文件夹、{limit3} 个置顶聊天、{limit4} 个公共链接、{limit5} 个账号等。";
 "PremiumPreviewReactionsDescription" = "额外的消息动画表情，仅限高级用户使用。";
 "PremiumPreviewStickersDescription" = "独家放大的贴纸，包含额外特效，每月更新。";
@@ -335,7 +335,8 @@
 "MenuNightMode" = "夜间模式";
 "SettingsDisableNightTheme" = "关闭夜间模式";
 "SettingsEnableNightTheme" = "启用夜间模式";
-"TelegramPremium" = "Telegram 高级版12334433";
+"TelegramPremium" = "Telegram Premium 介绍";
+"PremiumPreviewStoriesDescription" = "无限发布动态、优先显示、隐身模式、永久查看记录和更多功能";
 "New" = "新建";
 "TelegramFeatures" = "Telegram 功能";
 "ShortcutsControllerOthersLockByPasscode" = "通过密码锁定";

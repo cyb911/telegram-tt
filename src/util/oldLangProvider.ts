@@ -233,9 +233,10 @@ async function importFallbackLangPack() {
   const result: ApiOldLangPack = {};
   Object.entries(rawStrings).forEach(([key, value]) => {
     const [clearKey, pluralSuffix] = key.split('_');
+    const processedValue = convertPlaceholders(value);
 
     if (!pluralSuffix) {
-      result[clearKey] = value;
+      result[clearKey] = processedValue;
       return;
     }
 
@@ -246,6 +247,15 @@ async function importFallbackLangPack() {
 
   fallbackLangPack = result;
   runCallbacks();
+}
+
+function convertPlaceholders(str: string) {
+  let autoIndex = 1;
+  return str.replace(/\{[^}]+\}/g, (match) => {
+    const digits = match.match(/\d+/);
+    const index = digits ? Number(digits[0]) : autoIndex++;
+    return `%${index}$@`;
+  });
 }
 
 async function fetchRemote(langCode: string): Promise<ApiOldLangPack | undefined> {
