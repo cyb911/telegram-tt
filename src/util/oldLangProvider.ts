@@ -12,6 +12,7 @@ import * as cacheApi from './cacheApi';
 import { createCallbackManager } from './callbacks';
 import { loadAndChangeLanguage } from './localization';
 import { formatInteger } from './textFormat';
+import readStrings from './data/readStrings';
 
 export interface LangFn {
   (key: string, value?: any, format?: 'i', pluralValue?: number): string;
@@ -160,6 +161,7 @@ export function getTranslationFn(): LangFn {
 // eslint-disable-next-line @stylistic/max-len
 export async function oldSetLanguage(langCode: LangCode, callback?: NoneToVoidFunction, withFallback = false, loadFromServer = true) {
   if (loadFromServer) {
+    // 加载浏览器缓存的语言包
     loadAndChangeLanguage(langCode, true);
   }
   if (langPack && langCode === currentLangCode) {
@@ -174,6 +176,9 @@ export async function oldSetLanguage(langCode: LangCode, callback?: NoneToVoidFu
   if (!newLangPack) {
     if (withFallback) {
       await importFallbackLangPack();
+      if (!newLangPack && fallbackLangPack) {
+        newLangPack = fallbackLangPack;
+      }
     }
 
     if (loadFromServer) {
@@ -221,8 +226,25 @@ async function importFallbackLangPack() {
   if (fallbackLangPack) {
     return;
   }
+  const file = await import('../assets/localization/fallback.zh.strings');
+  const fileData = file.default;
+  const rawStrings = readStrings(fileData);
 
-  fallbackLangPack = (await import('./fallbackLangPack')).default;
+  const result: ApiOldLangPack = {};
+  Object.entries(rawStrings).forEach(([key, value]) => {
+    const [clearKey, pluralSuffix] = key.split('_');
+
+    if (!pluralSuffix) {
+      result[clearKey] = value;
+      return;
+    }
+
+    const knownValue = (result[clearKey] || {}) as Record<string, any>;
+    knownValue[`${pluralSuffix}Value`] = value;
+    result[clearKey] = knownValue as ApiOldLangString;
+  });
+
+  fallbackLangPack = result;
   runCallbacks();
 }
 
