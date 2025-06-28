@@ -1168,7 +1168,7 @@
 "ChatPerFolderLimitSubtitle" = "Add up to {count} chats into each of your folders";
 "TelegramPremiumUserDialogSubtitle" = "Owners of **Telegram Premium** accounts have exclusive access to multiple additional features.";
 "TelegramPremiumSubscribedSubtitle" = "Thank you for subscribing to **Telegram Premium**.\nHere’s what is now unlocked.";
-"TelegramPremiumSubtitle" = "Go **beyond the limits** and **unlock dozens of exclusive** features by subscribing to **Telegram Premium**.";
+"TelegramPremiumSubtitle" = "订阅 **Telegram Premium**，可获得上限翻倍，独家功能，并且支持我们做的更好、走的更远";
 "EditMessageAriaLabel" = "Save edited message";
 "Emoji1" = "Emoji & People";
 "Emoji2" = "Animals and nature";
