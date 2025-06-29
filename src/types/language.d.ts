@@ -1676,6 +1676,9 @@ export interface LangPairWithVariables<V = LangVariable> {
   'SubscribeToPremium': {
     'price': V;
   };
+  'PricePerMonth': {
+    'price': V;
+  };
   'TelegramPremiumUserDialogTitle': {
     'user': V;
   };

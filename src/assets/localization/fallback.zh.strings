@@ -619,6 +619,7 @@
 "Block" = "屏蔽";
 "DeleteThisChat" = "删除此聊天";
 "ReportChat" = "举报 {peer}";
+"PricePerMonth" = {price}/月";
 "PreviewSenderSendPhoto_one" = "发送照片";
 "PreviewSenderSendPhoto_other" = "发送 {count} 张照片";
 "PreviewSenderSendVideo_one" = "发送视频";
