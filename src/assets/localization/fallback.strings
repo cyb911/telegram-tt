@@ -618,6 +618,7 @@
 "Block" = "BLOCK";
 "DeleteThisChat" = "Delete this chat";
 "ReportChat" = "Report {peer}";
+"ReportChat" = "{price}/month";
 "PreviewSenderSendPhoto_one" = "Send Photo";
 "PreviewSenderSendPhoto_other" = "Send {count} Photos";
 "PreviewSenderSendVideo_one" = "Send Video";

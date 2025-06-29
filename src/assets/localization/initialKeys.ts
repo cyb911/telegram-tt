@@ -31,6 +31,7 @@ const INITIAL_KEYS: LangKey[] = [
   'ErrorFloodTime',
   'ErrorUnexpected',
   'ErrorUnexpectedMessage',
+  'PricePerMonth',
 ];
 
 export default INITIAL_KEYS;

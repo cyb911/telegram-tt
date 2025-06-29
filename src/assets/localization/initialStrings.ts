@@ -33,5 +33,6 @@ export default {
   "ErrorPhoneBanned": "This phone number is banned.",
   "ErrorFloodTime": "Too many attempts, please try again in {time}.",
   "ErrorUnexpected": "Unexpected error",
-  "ErrorUnexpectedMessage": "Unexpected error: {error}"
+  "ErrorUnexpectedMessage": "Unexpected error: {error}",
+  "PricePerMonth": "{price}/month"
 } as Record<LangKey, LangPackStringValue>;
