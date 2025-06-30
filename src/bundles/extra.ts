@@ -7,8 +7,6 @@ export { default as BoostModal } from '../components/modals/boost/BoostModal';
 export { default as GiftCodeModal } from '../components/modals/giftcode/GiftCodeModal';
 
 export { default as LocationAccessModal } from '../components/modals/locationAccess/LocationAccessModal';
-export { default as ReportAdModal } from '../components/modals/reportAd/ReportAdModal';
-export { default as ReportModal } from '../components/modals/reportModal/ReportModal';
 export { default as PreparedMessageModal } from '../components/modals/preparedMessage/PreparedMessageModal';
 export { default as CalendarModal } from '../components/common/CalendarModal';
 export { default as SeenByModal } from '../components/common/SeenByModal';

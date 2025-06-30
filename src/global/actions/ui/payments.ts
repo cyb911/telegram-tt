@@ -2,6 +2,7 @@ import type { ActionReturnType } from '../../types';
 
 import { DEFAULT_GIFT_PROFILE_FILTER_OPTIONS } from '../../../config';
 import { getCurrentTabId } from '../../../util/establishMultitabRole';
+import { addTabStateResetterAction } from '../../helpers/meta';
 import { addActionHandler, setGlobal } from '../../index';
 import {
   clearPayment,
