@@ -427,13 +427,11 @@ const PremiumMainModal: FC<OwnProps & StateProps> = ({
               </div>
               {renderFooterText()}
             </div>
-            {!isPremium && selectedSubscriptionOption && (
-              <div className={styles.footer}>
-                <Button className={styles.button} isShiny withPremiumGradient onClick={handleClick}>
-                  {oldLang('SubscribeToPremium', subscribeButtonText)}
-                </Button>
-              </div>
-            )}
+            <div className={styles.footer}>
+              <Button className={styles.button} isShiny withPremiumGradient onClick={handleClick}>
+                {oldLang('SubscribeToPremium', subscribeButtonText)}
+              </Button>
+            </div>
           </div>
         ) : (
           <PremiumFeatureModal
