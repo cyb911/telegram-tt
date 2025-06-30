@@ -2553,6 +2553,8 @@ export interface ActionPayloads {
 
   // Invoice
   openInvoice: Exclude<ApiInputInvoice, ApiInputInvoiceStarGift> & WithTabId;
+  openWalletPaymentModal: { invoice?: unknown } & WithTabId;
+  closeWalletPaymentModal: WithTabId | undefined;
 
   // Payment
   validatePaymentPassword: {

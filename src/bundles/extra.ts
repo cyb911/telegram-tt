@@ -22,5 +22,6 @@ export { default as StickerSetModal } from '../components/common/StickerSetModal
 export { default as CustomEmojiSetsModal } from '../components/common/CustomEmojiSetsModal';
 
 export { default as PaymentModal } from '../components/payment/PaymentModal';
+export { default as WalletPaymentModal } from '../components/payment/WalletPaymentModal';
 export { default as ReceiptModal } from '../components/payment/ReceiptModal';
 export { default as OneTimeMediaModal } from '../components/modals/oneTimeMedia/OneTimeMediaModal';

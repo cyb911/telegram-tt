@@ -135,7 +135,7 @@ const PremiumMainModal: FC<OwnProps & StateProps> = ({
 }) => {
   const dialogRef = useRef<HTMLDivElement>();
   const {
-    closePremiumModal, openInvoice, requestConfetti, openTelegramLink, loadStickers, openStickerSet,
+    closePremiumModal, openWalletPaymentModal, requestConfetti, openTelegramLink, loadStickers, openStickerSet,
   } = getActions();
 
   const oldLang = useOldLang();
@@ -170,10 +170,7 @@ const PremiumMainModal: FC<OwnProps & StateProps> = ({
     if (!dialog) return;
 
     if (premiumSlug) {
-      openInvoice({
-        type: 'slug',
-        slug: premiumSlug,
-      });
+      openWalletPaymentModal({ invoice: { type: 'slug', slug: premiumSlug } });
     } else if (premiumBotUsername) {
       openTelegramLink({
         url: `${TME_LINK_PREFIX}${premiumBotUsername}?start=${startParam || 'promo'}`,

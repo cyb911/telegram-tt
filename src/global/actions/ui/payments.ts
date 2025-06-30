@@ -151,3 +151,13 @@ addActionHandler('closePaymentMessageConfirmDialogOpen', (global, actions, paylo
     isPaymentMessageConfirmDialogOpen: false,
   }, tabId);
 });
+
+addActionHandler('openWalletPaymentModal', (global, actions, payload): ActionReturnType => {
+  const { invoice, tabId = getCurrentTabId() } = payload || {};
+
+  return updateTabState(global, {
+    walletPaymentModal: { invoice },
+  }, tabId);
+});
+
+addTabStateResetterAction('closeWalletPaymentModal', 'walletPaymentModal');

@@ -806,6 +806,10 @@ export type TabState = {
     errorKey?: RegularLangFnParameters;
   };
 
+  walletPaymentModal?: {
+    invoice?: unknown;
+  };
+
   giftStatusInfoModal?: {
     emojiStatus: ApiEmojiStatusCollectible;
   };
