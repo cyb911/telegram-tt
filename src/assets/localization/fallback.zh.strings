@@ -395,8 +395,8 @@
 "SessionPreviewAcceptCalls" = "来电请求";
 "Weeks_one" = "{count} 周";
 "Weeks_other" = "{count} 周";
-"Months_one" = "{count} 月";
-"Months_other" = "{count} 月";
+"Months_one" = "月度";
+"Months_other" = "年度";
 "AuthSessionsCurrentSession" = "当前设备";
 "TerminateAllSessions" = "终止所有其他会话";
 "OtherSessions" = "活动会话";

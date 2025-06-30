@@ -100,6 +100,7 @@ const PLURAL_RULES = {
   tr: (n: number) => (n > 1 ? 6 : 2),
   uk: (n: number) => (n % 10 === 1 && n % 100 !== 11 ? 2 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 4 : 5),
   uz: (n: number) => (n > 1 ? 6 : 2),
+  zh: (n: number) => (n !== 1 ? 6 : 2),
   /* eslint-enable @stylistic/max-len */
 };
 

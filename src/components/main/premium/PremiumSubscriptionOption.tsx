@@ -64,6 +64,7 @@ const PremiumSubscriptionOption: FC<OwnProps> = ({
       />
       <div className={styles.content}>
         <div className={styles.month}>
+          {oldLang('Months', months)}
           {Boolean(discount) && (
             <span
               className={buildClassName(styles.giveawayDiscount, styles.discount)}
@@ -75,7 +76,6 @@ const PremiumSubscriptionOption: FC<OwnProps> = ({
               %
             </span>
           )}
-          {oldLang('Months', months)}
         </div>
         <div className={styles.perMonth}>
           {(isGiveaway || isUserCountPlural) ? `${formatCurrencyAsString(amount, currency, oldLang.code)} x ${users!}`
