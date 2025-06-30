@@ -73,6 +73,10 @@ export async function checkAuthorization(client: TelegramClient, shouldThrow = f
     await client.invoke(new Api.updates.GetState());
     return true;
   } catch (err: unknown) {
+    if (err instanceof RPCError && err.errorMessage === 'AUTH_KEY_UNREGISTERED') {
+      // Session is not valid, treat as unauthorized without throwing
+      return false;
+    }
     if ((err instanceof Error && err.message === 'Disconnect') || shouldThrow) throw err;
     return false;
   }
