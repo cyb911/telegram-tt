@@ -83,23 +83,6 @@ declare module 'opus-recorder' {
 
     ondataavailable: (typedArray: Uint8Array) => void;
   }
-
-  const recorder: IOpusRecorder;
-  export default recorder;
-}
-
-interface TEncodedImage {
-  result: Uint8ClampedArray;
-  width: number;
-  height: number;
-}
-
-interface Document {
-  mozFullScreenElement: HTMLElement;
-  webkitFullscreenElement: HTMLElement;
-  mozCancelFullScreen?: () => Promise<void>;
-  webkitCancelFullScreen?: () => Promise<void>;
-  webkitExitFullscreen?: () => Promise<void>;
 }
 
 interface HTMLElement {
@@ -129,9 +112,6 @@ interface BooleanConstructor {
 }
 
 interface Array<T> {
-  filter<S extends T>(predicate: BooleanConstructor, thisArg?: unknown): Exclude<S, Falsy>[];
-}
-interface ReadonlyArray<T> {
   filter<S extends T>(predicate: BooleanConstructor, thisArg?: unknown): Exclude<S, Falsy>[];
 }
 
