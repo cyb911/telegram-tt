@@ -29,8 +29,6 @@ export * from './twoFaSettings';
 
 export * from './bots';
 
-export * from './calls';
-
 export * from './reactions';
 
 export * from './statistics';

@@ -16,10 +16,6 @@ export function isMtpPeerChat(peer: TypePeerOrInput): peer is GramJs.PeerChat {
   return peer.hasOwnProperty('chatId');
 }
 
-export function isMtpPeerChannel(peer: TypePeerOrInput): peer is GramJs.PeerChannel {
-  return peer.hasOwnProperty('channelId');
-}
-
 export function buildApiPeerId(id: BigInt.BigInteger, type: 'user' | 'chat' | 'channel') {
   if (type === 'user') {
     return id.toString();

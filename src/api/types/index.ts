@@ -7,7 +7,6 @@ export * from './payments';
 export * from './settings';
 export * from './bots';
 export * from './misc';
-export * from './calls';
 export * from './statistics';
 export * from './stories';
 export * from './business';
