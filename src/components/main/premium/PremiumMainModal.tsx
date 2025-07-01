@@ -186,7 +186,14 @@ const PremiumMainModal: FC<OwnProps & StateProps> = ({
   const handleClick = useLastCallback(() => {
     // eslint-disable-next-line no-console
     console.log('打开钱包选择界面');
-    openWalletPaymentModal({});
+    openWalletPaymentModal({
+      invoice: {
+        orderNo: '20250611200635756528',
+        goodsDesc: '（提货专用链接）请根据客服沟通指引下单，请勿乱拍',
+        buyCount: '1件',
+        payAmount: '0.10 USDT',
+      },
+    });
   });
 
   const handleChangeSubscriptionOption = useLastCallback((months: number) => {

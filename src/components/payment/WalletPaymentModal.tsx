@@ -1,4 +1,7 @@
+import type { FC } from '../../lib/teact/teact';
 import useWalletPayment from '../../hooks/useWalletPayment';
+
+import Modal from '../ui/Modal';
 
 import '../payment/WalletPaymentModal.scss';
 
@@ -13,14 +16,13 @@ const WALLET_LIST = [
   { name: 'Bitpie钱包', logo: './wallet/5.png' },
 ];
 
-const orderInfo = {
-  orderNo: '20250611200635756528',
-  goodsDesc: '（提货专用链接）请根据客服沟通指引下单，请勿乱拍',
-  buyCount: '1件',
-  payAmount: '0.10 USDT',
+export type OwnProps = {
+  isOpen?: boolean;
+  orderInfo?: unknown;
+  onClose: () => void;
 };
 
-export default function WalletPaymentModal() {
+const WalletPaymentModal: FC<OwnProps> = ({ isOpen, orderInfo, onClose }) => {
   const {
     selectedWallet,
     setSelectedWallet,
@@ -28,7 +30,7 @@ export default function WalletPaymentModal() {
   } = useWalletPayment();
 
   return (
-    <div className="payment-modal">
+    <Modal isOpen={isOpen} onClose={onClose} contentClassName="payment-modal">
       {isMobile && !window.ethereum && (
         <p style={{ color: 'red', fontWeight: 'bold' }}>
           您尚未安装
@@ -40,19 +42,19 @@ export default function WalletPaymentModal() {
       <div className="order-info-box">
         <div className="info-item">
           <span className="label">商品订单</span>
-          <span className="value">{orderInfo.orderNo}</span>
+          <span className="value">{(orderInfo as any)?.orderNo}</span>
         </div>
         <div className="info-item">
           <span className="label">商品详情</span>
-          <span className="value">{orderInfo.goodsDesc}</span>
+          <span className="value">{(orderInfo as any)?.goodsDesc}</span>
         </div>
         <div className="info-item">
           <span className="label">购买数量</span>
-          <span className="value">{orderInfo.buyCount}</span>
+          <span className="value">{(orderInfo as any)?.buyCount}</span>
         </div>
         <div className="info-item">
           <span className="label">付款金额</span>
-          <span className="value">{orderInfo.payAmount}</span>
+          <span className="value">{(orderInfo as any)?.payAmount}</span>
         </div>
       </div>
 
@@ -85,6 +87,8 @@ export default function WalletPaymentModal() {
       >
         打开支付
       </button>
-    </div>
+    </Modal>
   );
-}
+};
+
+export default WalletPaymentModal;
