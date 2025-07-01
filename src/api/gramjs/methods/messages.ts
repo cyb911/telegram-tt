@@ -96,7 +96,6 @@ import {
 } from '../helpers/misc';
 import { sendApiUpdate } from '../updates/apiUpdateEmitter';
 import { processMessageAndUpdateThreadInfo } from '../updates/entityProcessor';
-import { requestChatUpdate } from './chats';
 import { handleGramJsUpdate, invokeRequest, uploadFile } from './client';
 
 const FAST_SEND_TIMEOUT = 1000;
@@ -1013,9 +1012,7 @@ export async function markMessageListRead({
     }));
   }
 
-  if (threadId === MAIN_THREAD_ID) {
-    void requestChatUpdate({ chat, noLastMessage: true });
-  } else if (chat.isForum) {
+  if (chat.isForum) {
     sendApiUpdate({
       '@type': 'updateTopic',
       chatId: chat.id,

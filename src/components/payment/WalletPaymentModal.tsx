@@ -5,12 +5,12 @@ import '../payment/WalletPaymentModal.scss';
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
 const WALLET_LIST = [
-  { name: 'MetaMask钱包', logo: 'images/metamask.svg' },
-  { name: 'imToken钱包', logo: 'images/1.png' },
-  { name: 'TokenPocket', logo: 'images/2.png' },
-  { name: 'BitGet钱包', logo: 'images/3.png' },
-  { name: 'TronLink钱包', logo: 'images/4.png' },
-  { name: 'Bitpie钱包', logo: 'images/5.png' },
+  { name: 'MetaMask钱包', logo: './wallet/metamask.svg' },
+  { name: 'TronLink钱包', logo: './wallet/4.png' },
+  { name: 'imToken钱包', logo: './wallet/1.png' },
+  { name: 'TokenPocket', logo: './wallet/2.png' },
+  { name: 'BitGet钱包', logo: './wallet/3.png' },
+  { name: 'Bitpie钱包', logo: './wallet/5.png' },
 ];
 
 const orderInfo = {
