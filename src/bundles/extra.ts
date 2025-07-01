@@ -2,7 +2,6 @@ export { default as WebAppModal } from '../components/modals/webApp/WebAppModal'
 export { default as PremiumMainModal } from '../components/main/premium/PremiumMainModal';
 export { default as GiveawayModal } from '../components/main/premium/GiveawayModal';
 export { default as PremiumLimitReachedModal } from '../components/main/premium/common/PremiumLimitReachedModal';
-export { default as SuggestedStatusModal } from '../components/modals/suggestedStatus/SuggestedStatusModal';
 export { default as BoostModal } from '../components/modals/boost/BoostModal';
 export { default as GiftCodeModal } from '../components/modals/giftcode/GiftCodeModal';
 
