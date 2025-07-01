@@ -44,5 +44,6 @@ export interface ElectronApi {
 declare global {
   interface Window {
     electron?: ElectronApi;
+    ethereum?: any;
   }
 }

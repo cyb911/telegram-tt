@@ -22,6 +22,7 @@ const PremiumModalApp: FC<StateProps> = ({ isOpen, walletModal }) => {
       <PremiumMainModal isOpen={isOpen} />
       <WalletPaymentModal
         isOpen={Boolean(walletModal)}
+        orderInfo={walletModal?.invoice as any}
         onClose={actions.closeWalletPaymentModal}
       />
     </>
