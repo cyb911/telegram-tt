@@ -135,7 +135,8 @@ const PremiumMainModal: FC<OwnProps & StateProps> = ({
 }) => {
   const dialogRef = useRef<HTMLDivElement>();
   const {
-    closePremiumModal, openWalletPaymentModal, requestConfetti, openTelegramLink, loadStickers, openStickerSet,
+    // eslint-disable-next-line @stylistic/max-len
+    closePremiumModal, openInvoice, openWalletPaymentModal, requestConfetti, openTelegramLink, loadStickers, openStickerSet,
   } = getActions();
 
   const oldLang = useOldLang();
@@ -170,7 +171,10 @@ const PremiumMainModal: FC<OwnProps & StateProps> = ({
     if (!dialog) return;
 
     if (premiumSlug) {
-      openWalletPaymentModal({ invoice: { type: 'slug', slug: premiumSlug } });
+      openInvoice({
+        type: 'slug',
+        slug: premiumSlug,
+      });
     } else if (premiumBotUsername) {
       openTelegramLink({
         url: `${TME_LINK_PREFIX}${premiumBotUsername}?start=${startParam || 'promo'}`,
@@ -180,11 +184,9 @@ const PremiumMainModal: FC<OwnProps & StateProps> = ({
   });
 
   const handleClick = useLastCallback(() => {
-    if (selectedSubscriptionOption) {
-      handleClickWithStartParam(String(selectedSubscriptionOption.months));
-    } else {
-      handleClickWithStartParam();
-    }
+    // eslint-disable-next-line no-console
+    console.log('打开钱包选择界面');
+    openWalletPaymentModal({});
   });
 
   const handleChangeSubscriptionOption = useLastCallback((months: number) => {
