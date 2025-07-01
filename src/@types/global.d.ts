@@ -16,6 +16,13 @@ declare namespace React {
   }
 }
 
+declare namespace NodeJS {
+  interface ProcessEnv {
+    VITE_API_BASE_URL?: string;
+  }
+}
+
+
 type AnyLiteral = Record<string, any>;
 type AnyClass = new (...args: any[]) => any;
 type AnyFunction = (...args: any[]) => any;

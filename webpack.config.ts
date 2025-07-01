@@ -203,6 +203,7 @@ export default function createConfig(
       new EnvironmentPlugin({
         APP_ENV,
         APP_MOCKED_CLIENT,
+        VITE_API_BASE_URL: undefined,
         // eslint-disable-next-line no-null/no-null
         APP_NAME: null,
         APP_TITLE,

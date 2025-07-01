@@ -35,6 +35,7 @@ export default {
     new EnvironmentPlugin({
       APP_ENV,
       BASE_URL,
+      VITE_API_BASE_URL: undefined,
       USE_STATIC_PREMIUM_PROMO: false,
       IS_PREVIEW: false,
     }),
