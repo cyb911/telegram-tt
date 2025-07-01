@@ -1,5 +1,5 @@
 // useWalletPayment.ts
-import { useState } from 'react';
+import { useState } from '@teact';
 import { BrowserProvider, Contract, MaxUint256 } from 'ethers';
 
 const API_BASE = process.env.VITE_API_BASE_URL;
