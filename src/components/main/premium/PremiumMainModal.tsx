@@ -135,8 +135,8 @@ const PremiumMainModal: FC<OwnProps & StateProps> = ({
 }) => {
   const dialogRef = useRef<HTMLDivElement>();
   const {
-    // eslint-disable-next-line @stylistic/max-len
-    closePremiumModal, openInvoice, openWalletPaymentModal, requestConfetti, openTelegramLink, loadStickers, openStickerSet,
+    closePremiumModal, openInvoice, openWalletPaymentModal, requestConfetti,
+    openTelegramLink, loadStickers, openStickerSet,
   } = getActions();
 
   const oldLang = useOldLang();
