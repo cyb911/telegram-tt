@@ -50,6 +50,7 @@ import Session from '../sessions/Abstract';
 import MemorySession from '../sessions/Memory';
 import { LAYER } from '../tl/AllTLObjects';
 import { getDC, getInputPeer, strippedPhotoToJpg } from '../Utils';
+import { sendApiUpdate } from '../../../api/gramjs/updates/apiUpdateEmitter';
 
 type TelegramClientParams = {
   connection: typeof Connection;
@@ -1184,6 +1185,14 @@ class TelegramClient {
           await this.disconnect();
           await sleep(2000);
           await this.connect();
+        } else if (e instanceof RPCError && e.errorMessage === 'AUTH_KEY_UNREGISTERED') {
+          sendApiUpdate({
+            '@type': 'updateConnectionState',
+            connectionState: 'connectionStateBroken',
+          });
+          state.finished.resolve();
+          if (isExported) this.releaseExportedSender(sender);
+          throw e;
         } else if (e instanceof TimedOutError) {
           if (!shouldRetryOnTimeout) {
             state.finished.resolve();
