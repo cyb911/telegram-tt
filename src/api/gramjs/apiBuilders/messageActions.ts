@@ -1,9 +1,7 @@
 import { Api as GramJs } from '../../../lib/gramjs';
 
-import type { ApiPhoneCallDiscardReason } from '../../types';
 import type { ApiMessageAction } from '../../types/messageActions';
 
-import { buildApiBotApp } from './bots';
 import { buildApiFormattedText, buildApiPhoto } from './common';
 import { buildApiStarGift } from './gifts';
 import { buildApiPeerId, getApiChatIdFromMtpPeer } from './peers';
@@ -140,7 +138,6 @@ export function buildApiMessageAction(action: GramJs.TypeMessageAction): ApiMess
       type: 'phoneCall',
       isVideo: video,
       callId: callId.toString(),
-      reason: reason && buildApiPhoneCallDiscardReason(reason),
       duration,
     };
   }
@@ -160,7 +157,7 @@ export function buildApiMessageAction(action: GramJs.TypeMessageAction): ApiMess
   }
   if (action instanceof GramJs.MessageActionBotAllowed) {
     const {
-      attachMenu, fromRequest, domain, app,
+      attachMenu, fromRequest, domain,
     } = action;
     return {
       mediaType: 'action',
@@ -168,7 +165,6 @@ export function buildApiMessageAction(action: GramJs.TypeMessageAction): ApiMess
       isAttachMenu: attachMenu,
       isFromRequest: fromRequest,
       domain,
-      app: app && buildApiBotApp(app),
     };
   }
   if (action instanceof GramJs.MessageActionBoostApply) {
@@ -448,18 +444,4 @@ export function buildApiMessageAction(action: GramJs.TypeMessageAction): ApiMess
   }
 
   return UNSUPPORTED_ACTION;
-}
-
-export function buildApiPhoneCallDiscardReason(reason: GramJs.TypePhoneCallDiscardReason): ApiPhoneCallDiscardReason {
-  if (reason instanceof GramJs.PhoneCallDiscardReasonBusy) {
-    return 'busy';
-  }
-  if (reason instanceof GramJs.PhoneCallDiscardReasonHangup) {
-    return 'hangup';
-  }
-  if (reason instanceof GramJs.PhoneCallDiscardReasonMissed) {
-    return 'missed';
-  }
-
-  return 'disconnect';
 }

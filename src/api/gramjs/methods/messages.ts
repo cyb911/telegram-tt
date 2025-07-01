@@ -67,7 +67,6 @@ import {
   buildApiThreadInfo,
   buildLocalForwardedMessage,
   buildLocalMessage,
-  buildPreparedInlineMessage,
   buildUploadingMedia,
 } from '../apiBuilders/messages';
 import { getApiChatIdFromMtpPeer } from '../apiBuilders/peers';
@@ -2153,19 +2152,4 @@ export async function exportMessageLink({
   }));
 
   return result?.link;
-}
-
-export async function fetchPreparedInlineMessage({
-  bot, id,
-}: {
-  bot: ApiUser;
-  id: string;
-}) {
-  const result = await invokeRequest(new GramJs.messages.GetPreparedInlineMessage({
-    bot: buildInputUser(bot.id, bot.accessHash),
-    id,
-  }));
-  if (!result) return undefined;
-
-  return buildPreparedInlineMessage(result);
 }

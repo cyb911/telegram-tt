@@ -53,7 +53,6 @@ import type {
   PrivacyVisibility,
 } from '../../api/types';
 import type { ApiEmojiStatusCollectible, ApiEmojiStatusType } from '../../api/types/users';
-import type { ApiCredentials } from '../../components/payment/PaymentModal';
 import type { FoldersActions } from '../../hooks/reducers/useFoldersReducer';
 import type { ReducerAction } from '../../hooks/useReducer';
 import type { P2pMessage } from '../../lib/secret-sauce';
@@ -750,7 +749,7 @@ export interface ActionPayloads {
   } & WithTabId;
   closePrizeStarsTransactionFromGiveaway: WithTabId | undefined;
   sendCredentialsInfo: {
-    credentials: ApiCredentials;
+    credentials: undefined;
   } & WithTabId;
   setSmartGlocalCardInfo: {
     type: string;

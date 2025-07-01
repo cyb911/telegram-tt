@@ -9,7 +9,6 @@ import type {
   ApiUserType,
 } from '../../types';
 
-import { buildApiBotInfo } from './bots';
 import { buildApiBusinessIntro, buildApiBusinessLocation, buildApiBusinessWorkHours } from './business';
 import {
   buildApiBotVerification, buildApiPhoto, buildApiUsernames, buildAvatarPhotoId,
@@ -21,17 +20,14 @@ import { buildApiEmojiStatus, buildApiPeerColor, buildApiPeerId } from './peers'
 export function buildApiUserFullInfo(mtpUserFull: GramJs.users.UserFull): ApiUserFullInfo {
   const {
     fullUser: {
-      about, commonChatsCount, pinnedMsgId, botInfo, blocked,
+      about, commonChatsCount, pinnedMsgId, blocked,
       profilePhoto, voiceMessagesForbidden, hasScheduled,
       fallbackPhoto, personalPhoto, translationsDisabled, storiesPinnedAvailable,
       contactRequirePremium, businessWorkHours, businessLocation, businessIntro,
       birthday, personalChannelId, personalChannelMessage, sponsoredEnabled, stargiftsCount, botVerification,
       botCanManageEmojiStatus, settings, sendPaidMessagesStars, displayGiftsButton, disallowedGifts,
     },
-    users,
   } = mtpUserFull;
-
-  const userId = buildApiPeerId(users[0].id, 'user');
 
   return {
     bio: about,
@@ -44,7 +40,6 @@ export function buildApiUserFullInfo(mtpUserFull: GramJs.users.UserFull): ApiUse
     profilePhoto: profilePhoto instanceof GramJs.Photo ? buildApiPhoto(profilePhoto) : undefined,
     fallbackPhoto: fallbackPhoto instanceof GramJs.Photo ? buildApiPhoto(fallbackPhoto) : undefined,
     personalPhoto: personalPhoto instanceof GramJs.Photo ? buildApiPhoto(personalPhoto) : undefined,
-    botInfo: botInfo && buildApiBotInfo(botInfo, userId),
     isContactRequirePremium: contactRequirePremium,
     shouldDisplayGiftsButton: displayGiftsButton,
     disallowedGifts: disallowedGifts && buildApiDisallowedGiftsSettings(disallowedGifts),

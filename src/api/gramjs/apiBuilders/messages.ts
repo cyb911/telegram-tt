@@ -16,7 +16,6 @@ import type {
   ApiPeer,
   ApiPhoto,
   ApiPoll,
-  ApiPreparedInlineMessage,
   ApiQuickReply,
   ApiReplyInfo,
   ApiSponsoredMessage,
@@ -44,18 +43,10 @@ import { getServerTime, getServerTimeOffset } from '../../../util/serverTime';
 import { interpolateArray } from '../../../util/waveform';
 import { buildPeer } from '../gramjsBuilders';
 import {
-  addDocumentToLocalDb,
   addPhotoToLocalDb,
-  addWebDocumentToLocalDb,
   type MediaRepairContext,
 } from '../helpers/localDb';
 import { resolveMessageApiChatId, serializeBytes } from '../helpers/misc';
-import {
-  buildApiBotInlineMediaResult,
-  buildApiBotInlineResult,
-  buildApiInlineQueryPeerType,
-  buildReplyButtons,
-} from './bots';
 import {
   buildApiFormattedText,
   buildApiPhoto,
@@ -199,12 +190,6 @@ export function buildApiMessageWithChatId(
     && Boolean(mtpMessage.media.extendedMedia);
 
   const isEdited = Boolean(mtpMessage.editDate) && !mtpMessage.editHide;
-  const {
-    inlineButtons, keyboardButtons, keyboardPlaceholder, isKeyboardSingleUse, isKeyboardSelective,
-  } = buildReplyButtons(
-    mtpMessage.replyMarkup,
-    mtpMessage.media instanceof GramJs.MessageMediaInvoice ? mtpMessage.media.receiptMsgId : undefined,
-  ) || {};
   const { mediaUnread: isMediaUnread, postAuthor } = mtpMessage;
   const groupedId = mtpMessage.groupedId && String(mtpMessage.groupedId);
   const isInAlbum = Boolean(groupedId) && !(content.document || content.audio || content.sticker);
@@ -250,10 +235,6 @@ export function buildApiMessageWithChatId(
     ...(groupedId && {
       groupedId,
       isInAlbum,
-    }),
-    inlineButtons,
-    ...(keyboardButtons && {
-      keyboardButtons, keyboardPlaceholder, isKeyboardSingleUse, isKeyboardSelective,
     }),
     ...(shouldHideKeyboardButtons && { shouldHideKeyboardButtons, isHideKeyboardSelective }),
     ...(mtpMessage.viaBotId && { viaBotId: buildApiPeerId(mtpMessage.viaBotId, 'user') }),
@@ -745,38 +726,5 @@ export function buildApiReportResult(
     type: 'selectOption',
     title,
     options,
-  };
-}
-
-function processInlineBotResult(queryId: string, result: GramJs.TypeBotInlineResult) {
-  if (result instanceof GramJs.BotInlineMediaResult) {
-    if (result.document instanceof GramJs.Document) {
-      addDocumentToLocalDb(result.document);
-    }
-
-    if (result.photo instanceof GramJs.Photo) {
-      addPhotoToLocalDb(result.photo);
-    }
-
-    return buildApiBotInlineMediaResult(result, queryId);
-  }
-
-  if (result.thumb) {
-    addWebDocumentToLocalDb(result.thumb);
-  }
-
-  return buildApiBotInlineResult(result, queryId);
-}
-
-export function buildPreparedInlineMessage(
-  result: GramJs.messages.TypePreparedInlineMessage,
-): ApiPreparedInlineMessage {
-  const queryId = result.queryId.toString();
-
-  return {
-    queryId,
-    result: processInlineBotResult(queryId, result.result),
-    peerTypes: result.peerTypes?.map(buildApiInlineQueryPeerType),
-    cacheTime: result.cacheTime,
   };
 }

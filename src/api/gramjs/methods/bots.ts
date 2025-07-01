@@ -12,15 +12,6 @@ import type {
 } from '../../types';
 
 import { WEB_APP_PLATFORM } from '../../../config';
-import { buildCollectionByKey } from '../../../util/iteratees';
-import {
-  buildApiAttachBot,
-  buildApiBotInlineMediaResult,
-  buildApiBotInlineResult,
-  buildApiMessagesBotApp,
-  buildBotSwitchPm,
-  buildBotSwitchWebview,
-} from '../apiBuilders/bots';
 import { buildApiChatFromPreview } from '../apiBuilders/chats';
 import { omitVirtualClassFields } from '../apiBuilders/helpers';
 import { buildMessageMediaContent } from '../apiBuilders/messageContent';
@@ -35,10 +26,7 @@ import {
   generateRandomBigInt,
 } from '../gramjsBuilders';
 import {
-  addDocumentToLocalDb,
-  addPhotoToLocalDb,
   addUserToLocalDb,
-  addWebDocumentToLocalDb,
 } from '../helpers/localDb';
 import { deserializeBytes } from '../helpers/misc';
 import { sendApiUpdate } from '../updates/apiUpdateEmitter';
@@ -135,9 +123,6 @@ export async function fetchInlineBotResults({
     isGallery: Boolean(result.gallery),
     help: bot.botPlaceholder,
     nextOffset: getInlineBotResultsNextOffset(bot.usernames![0].username, result.nextOffset),
-    switchPm: buildBotSwitchPm(result.switchPm),
-    switchWebview: buildBotSwitchWebview(result.switchWebview),
-    results: processInlineBotResult(String(result.queryId), result.results),
     cacheTime: result.cacheTime,
   };
 }
@@ -295,27 +280,6 @@ export async function requestSimpleWebView({
   return result?.url;
 }
 
-export async function fetchBotApp({
-  bot,
-  appName,
-}: {
-  bot: ApiUser;
-  appName: string;
-}) {
-  const result = await invokeRequest(new GramJs.messages.GetBotApp({
-    app: new GramJs.InputBotAppShortName({
-      botId: buildInputUser(bot.id, bot.accessHash),
-      shortName: appName,
-    }),
-  }));
-
-  if (!result || result instanceof GramJs.BotAppNotModified) {
-    return undefined;
-  }
-
-  return buildApiMessagesBotApp(result);
-}
-
 export async function requestAppWebView({
   peer,
   app,
@@ -383,41 +347,6 @@ export async function sendWebViewData({
     data,
     randomId,
   }));
-}
-
-export async function loadAttachBots({
-  hash,
-}: {
-  hash?: string;
-}) {
-  const result = await invokeRequest(new GramJs.messages.GetAttachMenuBots({
-    hash: hash ? BigInt(hash) : undefined,
-  }));
-
-  if (result instanceof GramJs.AttachMenuBots) {
-    return {
-      hash: result.hash.toString(),
-      bots: buildCollectionByKey(result.bots.map(buildApiAttachBot), 'id'),
-    };
-  }
-  return undefined;
-}
-
-export async function loadAttachBot({
-  bot,
-}: {
-  bot: ApiUser;
-}) {
-  const result = await invokeRequest(new GramJs.messages.GetAttachMenuBot({
-    bot: buildInputUser(bot.id, bot.accessHash),
-  }));
-
-  if (result instanceof GramJs.AttachMenuBotsBot) {
-    return {
-      bot: buildApiAttachBot(result.bot),
-    };
-  }
-  return undefined;
 }
 
 export function toggleAttachBot({
@@ -619,28 +548,6 @@ export function toggleUserEmojiStatusPermission({ bot, isEnabled }: { bot: ApiUs
     enabled: isEnabled,
   }), {
     shouldReturnTrue: true,
-  });
-}
-
-function processInlineBotResult(queryId: string, results: GramJs.TypeBotInlineResult[]) {
-  return results.map((result) => {
-    if (result instanceof GramJs.BotInlineMediaResult) {
-      if (result.document instanceof GramJs.Document) {
-        addDocumentToLocalDb(result.document);
-      }
-
-      if (result.photo instanceof GramJs.Photo) {
-        addPhotoToLocalDb(result.photo);
-      }
-
-      return buildApiBotInlineMediaResult(result, queryId);
-    }
-
-    if (result.thumb) {
-      addWebDocumentToLocalDb(result.thumb);
-    }
-
-    return buildApiBotInlineResult(result, queryId);
   });
 }
 
