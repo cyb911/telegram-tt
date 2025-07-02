@@ -4,7 +4,6 @@ import type { LangCode } from '../../../types';
 import type { ActionReturnType, GlobalState } from '../../types';
 
 import { requestMutation } from '../../../lib/fasterdom/fasterdom';
-import { IS_MULTIACCOUNT_SUPPORTED } from '../../../util/browser/globalEnvironment';
 import {
   IS_ANDROID, IS_ELECTRON, IS_IOS, IS_LINUX,
   IS_MAC_OS, IS_SAFARI, IS_TOUCH_ENV, IS_WINDOWS,
@@ -30,7 +29,6 @@ import {
   selectTheme,
 } from '../../selectors';
 import { selectSharedSettings } from '../../selectors/sharedState';
-import { destroySharedStatePort, initSharedState } from '../../shared/sharedStateConnector';
 
 const HISTORY_ANIMATION_DURATION = 450;
 
@@ -59,7 +57,6 @@ addActionHandler('switchMultitabRole', async (global, actions, payload): Promise
   if (!isMasterTab) {
     actions.destroyConnection();
     stopWebsync();
-    destroySharedStatePort();
     clearCaching();
     actions.onSomeTabSwitchedMultitabRole();
   } else {
@@ -86,9 +83,6 @@ addActionHandler('switchMultitabRole', async (global, actions, payload): Promise
     }
 
     startWebsync();
-    if (IS_MULTIACCOUNT_SUPPORTED) {
-      initSharedState(global.sharedState);
-    }
   }
 });
 

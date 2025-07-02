@@ -37,7 +37,6 @@ import {
   clearGlobalForLockScreen, updateManagementProgress, updatePasscodeSettings,
 } from '../../reducers';
 import { selectSharedSettings } from '../../selectors/sharedState';
-import { destroySharedStatePort } from '../../shared/sharedStateConnector';
 
 addActionHandler('initApi', (global, actions): ActionReturnType => {
   const initialLocationHash = parseInitialLocationHash();
@@ -211,7 +210,6 @@ addActionHandler('reset', (global, actions): ActionReturnType => {
   void cacheApi.clear(CUSTOM_BG_CACHE_NAME);
 
   removeGlobalFromCache();
-  destroySharedStatePort();
 
   // Check if there are any accounts left
   const accounts = getAccountsInfo();
