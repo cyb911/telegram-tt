@@ -30,7 +30,6 @@ import type { UniversalMessage } from './messages';
 
 import { SUPPORTED_PHOTO_CONTENT_TYPES, SUPPORTED_VIDEO_CONTENT_TYPES, VIDEO_WEBM_TYPE } from '../../../config';
 import { addTimestampEntities } from '../../../util/dates/timestamp';
-import { generateWaveform } from '../../../util/generateWaveform';
 import { pick } from '../../../util/iteratees';
 import {
   addMediaToLocalDb, addStoryToLocalDb, type MediaRepairContext,
@@ -240,7 +239,7 @@ export function buildVideoFromDocument(document: GramJs.Document, params?: {
     nosound,
   } = videoAttr;
 
-  const waveform = isRound ? generateWaveform(duration) : undefined;
+  const waveform = undefined;
 
   return {
     mediaType: 'video',

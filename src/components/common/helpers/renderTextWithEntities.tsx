@@ -425,7 +425,6 @@ function processEntity({
   highlight,
   containerId,
   asPreview,
-  isProtected,
   observeIntersectionForLoading,
   observeIntersectionForPlaying,
   withTranslucentThumbs,
