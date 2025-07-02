@@ -2,7 +2,6 @@ import './api/initial';
 import './api/chats';
 import './api/messages';
 import './api/symbols';
-import './api/globalSearch';
 import './api/middleSearch';
 import './api/management';
 import './api/sync';
