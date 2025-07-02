@@ -587,7 +587,7 @@
 "IncreaseLimit" = "提升上限";
 "LimitFree" = "免费";
 "LimitPremium" = "高级";
-"SubscribeToPremium" = "订阅，每月 {price}";
+"SubscribeToPremium" = "立即订阅，仅需0.1U/月";
 "TelegramPremiumUserDialogTitle" = "**{user}** 是 Telegram 高级用户。";
 "TelegramPremiumSubscribedTitle" = "一切就绪！";
 "AboutPremiumDescription" = "虽然 Telegram 免费版已比其他消息应用提供更多功能，**Telegram Premium** 将其能力推向更高层级。";
