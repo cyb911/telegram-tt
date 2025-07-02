@@ -11,7 +11,6 @@ export enum Bundles {
 interface ImportedBundles {
   [Bundles.Main]: typeof import('../bundles/main');
   [Bundles.Extra]: typeof import('../bundles/extra');
-  [Bundles.Calls]: typeof import('../bundles/calls');
   [Bundles.Stars]: typeof import('../bundles/stars');
 }
 
@@ -39,9 +38,6 @@ export async function loadBundle<B extends Bundles>(bundleName: B) {
         break;
       case Bundles.Extra:
         LOAD_PROMISES[Bundles.Extra] = import(/* webpackChunkName: "BundleExtra" */ '../bundles/extra');
-        break;
-      case Bundles.Calls:
-        LOAD_PROMISES[Bundles.Calls] = import(/* webpackChunkName: "BundleCalls" */ '../bundles/calls');
         break;
       case Bundles.Stars:
         LOAD_PROMISES[Bundles.Stars] = import(/* webpackChunkName: "BundleStars" */ '../bundles/stars');
