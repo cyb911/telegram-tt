@@ -9,7 +9,6 @@ export { default as SeenByModal } from '../components/common/SeenByModal';
 export { default as PrivacySettingsNoticeModal } from '../components/common/PrivacySettingsNoticeModal';
 export { default as ReactorListModal } from '../components/middle/ReactorListModal';
 export { default as EmojiInteractionAnimation } from '../components/middle/EmojiInteractionAnimation';
-export { default as ChatLanguageModal } from '../components/middle/ChatLanguageModal';
 
 export { default as CustomEmojiSetsModal } from '../components/common/CustomEmojiSetsModal';
 
