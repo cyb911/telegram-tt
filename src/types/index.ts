@@ -17,7 +17,6 @@ import type {
   ApiFormattedText,
   ApiInputReplyInfo,
   ApiLabeledPrice,
-  ApiLanguage,
   ApiMediaFormat,
   ApiMessage,
   ApiMessageEntity,
@@ -83,16 +82,6 @@ export enum FocusDirection {
 }
 
 export type ScrollTargetPosition = ScrollLogicalPosition | 'centerOrTop';
-
-export interface IAlbum {
-  albumId: string;
-  messages: ApiMessage[];
-  isPaidMedia?: boolean;
-  mainMessage: ApiMessage;
-  captionMessage?: ApiMessage;
-  hasMultipleCaptions: boolean;
-  commentsMessage?: ApiMessage;
-}
 
 export type ThreadId = string | number;
 
@@ -335,16 +324,8 @@ export interface ChatMediaSearchParams {
   isLoading: boolean;
 }
 
-export enum ProfileState {
-  SavedDialogs,
-}
-
 export enum PaymentStep {
   Checkout,
-  SavedPayments,
-  ConfirmPassword,
-  PaymentInfo,
-  ShippingInfo,
   Shipping,
   ConfirmPayment,
 }
@@ -356,7 +337,6 @@ export enum ManagementScreens {
   Discussion,
   ChatAdminRights,
   Reactions,
-  JoinRequests,
 }
 
 export type EmojiKeywords = {
