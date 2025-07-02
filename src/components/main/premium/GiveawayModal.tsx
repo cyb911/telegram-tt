@@ -39,7 +39,6 @@ import useOldLang from '../../../hooks/useOldLang';
 
 import CalendarModal from '../../common/CalendarModal';
 import CountryPickerModal from '../../common/CountryPickerModal';
-import GroupChatInfo from '../../common/GroupChatInfo';
 import Icon from '../../common/icons/Icon';
 import Button from '../../ui/Button';
 import ConfirmDialog from '../../ui/ConfirmDialog';
@@ -511,11 +510,6 @@ const GiveawayModal: FC<OwnProps & StateProps> = ({
     );
   }
 
-  function deleteParticipantsHandler(id: string) {
-    const filteredChannelIds = selectedChannelIds.filter((channelId) => channelId !== id);
-    setSelectedChannelIds(filteredChannelIds);
-  }
-
   function renderGiveawayOptionList() {
     return (
       <>
@@ -528,29 +522,8 @@ const GiveawayModal: FC<OwnProps & StateProps> = ({
             inactive
             className="chat-item-clickable contact-list-item"
           >
-            <GroupChatInfo
-              chatId={chatId!}
-              status={lang(isChannel ? 'BoostingChannelWillReceiveBoost'
-                : 'BoostingGroupWillReceiveBoost', boostQuantity || boostStarsQuantity, 'i')}
-            />
+            1111111112222
           </ListItem>
-
-          {selectedChannelIds?.map((channelId) => {
-            return (
-              <ListItem
-                ripple
-                key={channelId}
-                className="chat-item-clickable contact-list-item"
-
-                onClick={() => deleteParticipantsHandler(channelId)}
-                rightElement={(<Icon name="close" className={styles.removeChannel} />)}
-              >
-                <GroupChatInfo
-                  chatId={channelId.toString()}
-                />
-              </ListItem>
-            );
-          })}
 
           {selectedChannelIds.length < MAX_ADDITIONAL_CHANNELS && (
             <ListItem
