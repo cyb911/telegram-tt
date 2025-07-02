@@ -23,7 +23,6 @@ export const USE_STATIC_PREMIUM_PROMO = process.env.USE_STATIC_PREMIUM_PROMO ===
 
 export const ELECTRON_WINDOW_DRAG_EVENT_START = 'tt-electron-window-drag-start';
 export const ELECTRON_WINDOW_DRAG_EVENT_END = 'tt-electron-window-drag-end';
-export const PAID_MESSAGES_PURPOSE = 'paid_messages';
 
 export const DEBUG = process.env.APP_ENV !== 'production';
 export const DEBUG_MORE = false;
@@ -37,8 +36,6 @@ export const DEBUG_GRAMJS = false;
 
 export const PAGE_TITLE = process.env.APP_TITLE!;
 export const INACTIVE_MARKER = '[Inactive]';
-
-export const DEBUG_PAYMENT_SMART_GLOCAL = false;
 
 export const SESSION_LEGACY_USER_KEY = 'user_auth';
 export const SESSION_ACCOUNT_PREFIX = 'account';
@@ -85,13 +82,8 @@ export const CHAT_LIST_LOAD_SLICE = 100;
 export const SHARED_MEDIA_SLICE = 42;
 export const CHAT_MEDIA_SLICE = 42;
 export const MESSAGE_SEARCH_SLICE = 42;
-export const GLOBAL_SEARCH_SLICE = 20;
-export const GLOBAL_TOPIC_SEARCH_SLICE = 5;
-export const GLOBAL_SEARCH_CONTACTS_LIMIT = 20;
-export const MEMBERS_LOAD_SLICE = 200;
 export const PINNED_MESSAGES_LIMIT = 50;
 export const BLOCKED_LIST_LIMIT = 100;
-export const GROUP_CALL_PARTICIPANTS_LIMIT = 100;
 export const STORY_LIST_LIMIT = 100;
 export const API_GENERAL_ID_LIMIT = 100;
 export const STATISTICS_PUBLIC_FORWARDS_LIMIT = 50;
@@ -116,9 +108,6 @@ export const TOP_CHAT_MESSAGES_PRELOAD_LIMIT = 20;
 
 export const SPONSORED_MESSAGE_CACHE_MS = 300000; // 5 min
 
-export const MINIMUM_CHARGE_FOR_MESSAGES = 1;
-export const DEFAULT_MAXIMUM_CHARGE_FOR_MESSAGES = 10000;
-
 export const DEFAULT_VOLUME = 1;
 export const DEFAULT_PLAYBACK_RATE = 1;
 export const PLAYBACK_RATE_FOR_AUDIO_MIN_DURATION = 20 * 60; // 20 min
@@ -137,7 +126,6 @@ export const GENERAL_REFETCH_INTERVAL = 60 * 60 * 1000; // 1h
 
 export const EDITABLE_INPUT_ID = 'editable-message-text';
 export const EDITABLE_INPUT_MODAL_ID = 'editable-message-text-modal';
-export const EDITABLE_STORY_INPUT_ID = 'editable-story-input-text';
 // eslint-disable-next-line @stylistic/max-len
 export const EDITABLE_INPUT_CSS_SELECTOR = `.messages-layout .Transition_slide-active #${EDITABLE_INPUT_ID}, .messages-layout .Transition > .Transition_slide-to #${EDITABLE_INPUT_ID}`;
 
@@ -180,8 +168,6 @@ export const API_THROTTLE_RESET_UPDATES = new Set([
 
 export const LOCK_SCREEN_ANIMATION_DURATION_MS = 200;
 
-export const STICKER_SIZE_INLINE_DESKTOP_FACTOR = 13;
-export const STICKER_SIZE_INLINE_MOBILE_FACTOR = 11;
 export const STICKER_SIZE_AUTH = 160;
 export const STICKER_SIZE_AUTH_MOBILE = 120;
 export const STICKER_SIZE_PICKER = 72;
@@ -314,8 +300,6 @@ export const GIVEAWAY_BOOST_PER_PREMIUM = 4;
 export const GIVEAWAY_MAX_ADDITIONAL_CHANNELS = 10;
 export const GIVEAWAY_MAX_ADDITIONAL_USERS = 10;
 export const GIVEAWAY_MAX_ADDITIONAL_COUNTRIES = 10;
-export const FRAGMENT_PHONE_CODE = '888';
-export const FRAGMENT_PHONE_LENGTH = 11;
 
 export const DEFAULT_PATTERN_COLOR = '#4A8E3A8C';
 export const DARK_THEME_PATTERN_COLOR = '#0A0A0A8C';
@@ -328,9 +312,6 @@ export const MAX_UNIQUE_REACTIONS = 11;
 export const IGNORE_UNHANDLED_ERRORS = new Set([
   'USER_CANCELED',
 ]);
-
-// Group calls
-export const GROUP_CALL_VOLUME_MULTIPLIER = 100;
 
 export const DEFAULT_LIMITS: Record<ApiLimitType, readonly [number, number]> = {
   uploadMaxFileparts: [4000, 8000],
@@ -416,5 +397,3 @@ export const DEFAULT_GIFT_PROFILE_FILTER_OPTIONS: GiftProfileFilterOptions = {
 export const DEFAULT_RESALE_GIFTS_FILTER_OPTIONS: ResaleGiftsFilterOptions = {
   sortType: 'byDate',
 };
-
-export const ACCOUNT_TTL_OPTIONS = [1, 3, 6, 12, 18, 24];

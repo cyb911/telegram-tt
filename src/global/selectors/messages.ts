@@ -1,12 +1,7 @@
 import type {
-  ApiChat,
   ApiInputMessageReplyInfo,
   ApiMessage,
-  ApiMessageEntityCustomEmoji,
-  ApiMessageForwardInfo,
-  ApiMessageOutgoingStatus,
-  ApiPeer, ApiSponsoredMessage,
-  ApiStickerSetInfo,
+  ApiPeer,
 } from '../../api/types';
 import type {
   ChatTranslatedMessages,
@@ -19,42 +14,26 @@ import type { IAllowedAttachmentOptions } from '../helpers';
 import type {
   GlobalState, TabArgs,
 } from '../types';
-import { ApiMessageEntityTypes, MAIN_THREAD_ID } from '../../api/types';
+import { MAIN_THREAD_ID } from '../../api/types';
 
 import {
-  ANONYMOUS_USER_ID, API_GENERAL_ID_LIMIT, GENERAL_TOPIC_ID, SERVICE_NOTIFICATIONS_USER_ID,
-  SVG_EXTENSIONS,
+  ANONYMOUS_USER_ID, GENERAL_TOPIC_ID, SERVICE_NOTIFICATIONS_USER_ID,
 } from '../../config';
-import { IS_TRANSLATION_SUPPORTED } from '../../util/browser/windowEnvironment';
 import { isUserId } from '../../util/entities/ids';
 import { getCurrentTabId } from '../../util/establishMultitabRole';
 import { findLast } from '../../util/iteratees';
-import { getMessageKey, isLocalMessageId } from '../../util/keys/messageKey';
-import { MEMO_EMPTY_ARRAY } from '../../util/memo';
+import { isLocalMessageId } from '../../util/keys/messageKey';
 import { getServerTime } from '../../util/serverTime';
-import { getDocumentExtension } from '../../components/common/helpers/documentInfo';
 import {
   canSendReaction,
   getAllowedAttachmentOptions,
   getCanPostInChat,
   getHasAdminRight,
   getIsSavedDialog,
-  getMessageAudio,
-  getMessageDocument,
-  getMessageLink,
-  getMessagePaidMedia,
-  getMessagePhoto,
-  getMessageVideo,
-  getMessageVoice,
-  getMessageWebPagePhoto,
-  getMessageWebPageVideo,
-  getSendingState,
-  getTimestampableMedia,
   hasMessageTtl,
   isActionMessage,
   isChatBasicGroup,
   isChatChannel,
-  isChatGroup,
   isChatSuperGroup,
   isCommonBoxChat,
   isExpiredMessage,
@@ -62,7 +41,6 @@ import {
   isMessageDocumentSticker,
   isMessageFailed,
   isMessageLocal,
-  isMessageTranslatable,
   isOwnMessage,
   isServiceNotificationMessage,
   isUserRightBanned,
@@ -74,7 +52,6 @@ import {
   selectChatLastMessageId,
   selectIsChatWithBot,
   selectIsChatWithSelf,
-  selectRequestedChatTranslationLanguage,
 } from './chats';
 import { selectPeer, selectPeerPaidMessagesStars } from './peers';
 import { selectPeerStory } from './stories';
@@ -206,17 +183,6 @@ export function selectScheduledIds<T extends GlobalState>(global: T, chatId: str
   return selectThreadParam(global, chatId, threadId, 'scheduledIds');
 }
 
-export function selectScrollOffset<T extends GlobalState>(
-  global: T, chatId: string, threadId: ThreadId,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  return selectTabThreadParam(global, chatId, threadId, 'scrollOffset', tabId);
-}
-
-export function selectLastScrollOffset<T extends GlobalState>(global: T, chatId: string, threadId: ThreadId) {
-  return selectThreadParam(global, chatId, threadId, 'lastScrollOffset');
-}
-
 export function selectEditingId<T extends GlobalState>(global: T, chatId: string, threadId: ThreadId) {
   return selectThreadParam(global, chatId, threadId, 'editingId');
 }
@@ -254,15 +220,6 @@ export function selectReplyStack<T extends GlobalState>(
   ...[tabId = getCurrentTabId()]: TabArgs<T>
 ) {
   return selectTabThreadParam(global, chatId, threadId, 'replyStack', tabId);
-}
-
-export function selectThreadMessagesCount(global: GlobalState, chatId: string, threadId: ThreadId) {
-  const chat = selectChat(global, chatId);
-  const threadInfo = selectThreadInfo(global, chatId, threadId);
-  if (!chat || !threadInfo || threadInfo.messagesCount === undefined) return undefined;
-  // In forum topics first message is ignored, but not in General
-  if (chat.isForum && threadId !== GENERAL_TOPIC_ID) return threadInfo.messagesCount - 1;
-  return threadInfo.messagesCount;
 }
 
 export function selectThreadByMessage<T extends GlobalState>(global: T, message: ApiMessage) {
@@ -373,33 +330,6 @@ export function selectFocusedMessageId<T extends GlobalState>(
   return focusedChatId === chatId ? messageId : undefined;
 }
 
-export function selectIsMessageFocused<T extends GlobalState>(
-  global: T, message: ApiMessage, currentThreadId: ThreadId,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  const focusedId = selectFocusedMessageId(global, message.chatId, tabId);
-  const threadId = selectTabState(global, tabId).focusedMessage?.threadId;
-
-  if (currentThreadId !== threadId) return false;
-
-  return focusedId ? focusedId === message.id || focusedId === message.previousLocalId : false;
-}
-
-export function selectIsMessageUnread<T extends GlobalState>(global: T, message: ApiMessage) {
-  const { lastReadOutboxMessageId } = selectChat(global, message.chatId) || {};
-  return isMessageLocal(message) || !lastReadOutboxMessageId || lastReadOutboxMessageId < message.id;
-}
-
-export function selectOutgoingStatus<T extends GlobalState>(
-  global: T, message: ApiMessage, isScheduledList = false,
-): ApiMessageOutgoingStatus {
-  if (!selectIsMessageUnread(global, message) && !isScheduledList) {
-    return 'read';
-  }
-
-  return getSendingState(message);
-}
-
 export function selectSender<T extends GlobalState>(global: T, message: ApiMessage): ApiPeer | undefined {
   const { senderId } = message;
   const chat = selectChat(global, message.chatId);
@@ -411,72 +341,6 @@ export function selectSender<T extends GlobalState>(global: T, message: ApiMessa
   if (chat && isChatChannel(chat) && !chat.areProfilesShown) return chat;
 
   return selectPeer(global, senderId);
-}
-
-export function getSendersFromSelectedMessages<T extends GlobalState>(
-  global: T,
-  chatId: string,
-  messageIds: number[],
-) {
-  return messageIds.map((id) => {
-    const message = selectChatMessage(global, chatId, id);
-    return message && selectSender(global, message);
-  }).filter(Boolean);
-}
-
-export function selectSenderFromMessage<T extends GlobalState>(
-  global: T,
-  chatId: string,
-  messageId: number,
-): ApiPeer | undefined {
-  const message = selectChatMessage(global, chatId, messageId);
-
-  return message && selectSender(global, message);
-}
-
-export function selectSenderFromHeader<T extends GlobalState>(
-  global: T,
-  header: ApiMessageForwardInfo,
-) {
-  const { fromId } = header;
-  if (fromId) {
-    return selectPeer(global, fromId);
-  }
-
-  return undefined;
-}
-
-export function selectForwardedSender<T extends GlobalState>(
-  global: T, message: ApiMessage,
-): ApiPeer | undefined {
-  const isStoryForward = Boolean(message.content.storyData);
-  if (isStoryForward) {
-    const peerId = message.content.storyData!.peerId;
-    return selectPeer(global, peerId);
-  }
-
-  const { forwardInfo } = message;
-  if (!forwardInfo) {
-    return undefined;
-  }
-
-  if (forwardInfo.isChannelPost && forwardInfo.fromChatId) {
-    return selectChat(global, forwardInfo.fromChatId);
-  }
-
-  if (forwardInfo.hiddenUserName) {
-    return undefined;
-  }
-
-  if (forwardInfo.fromId) {
-    return selectPeer(global, forwardInfo.fromId);
-  }
-
-  if (forwardInfo.savedFromPeerId) {
-    return selectPeer(global, forwardInfo.savedFromPeerId);
-  }
-
-  return undefined;
 }
 
 export function selectPoll<T extends GlobalState>(global: T, pollId: string) {
@@ -495,41 +359,6 @@ export function selectTopicFromMessage<T extends GlobalState>(global: T, message
 
   const threadId = selectThreadIdFromMessage(global, message);
   return selectTopic(global, chatId, threadId);
-}
-
-const MAX_MESSAGES_TO_DELETE_OWNER_TOPIC = 10;
-export function selectCanDeleteOwnerTopic<T extends GlobalState>(global: T, chatId: string, topicId: number) {
-  const topic = selectTopic(global, chatId, topicId);
-  if (topic && !topic.isOwner) return false;
-
-  const thread = selectThread(global, chatId, topicId);
-  if (!thread) return false;
-
-  const { listedIds } = thread;
-  if (!listedIds
-    // Plus one for root message
-    || listedIds.length + 1 >= MAX_MESSAGES_TO_DELETE_OWNER_TOPIC) {
-    return false;
-  }
-
-  const hasNotOutgoingMessages = listedIds.some((messageId) => {
-    const message = selectChatMessage(global, chatId, messageId);
-    return !message || !message.isOutgoing;
-  });
-
-  return !hasNotOutgoingMessages;
-}
-
-export function selectCanDeleteTopic<T extends GlobalState>(global: T, chatId: string, topicId: number) {
-  const chat = selectChat(global, chatId);
-  if (!chat) return false;
-
-  if (topicId === GENERAL_TOPIC_ID) return false;
-
-  return chat.isCreator
-    || getHasAdminRight(chat, 'deleteMessages')
-    || (chat.isForum
-      && selectCanDeleteOwnerTopic(global, chat.id, topicId));
 }
 
 export function selectSavedDialogIdFromMessage<T extends GlobalState>(
@@ -783,90 +612,6 @@ export function selectAllowedMessageActionsSlow<T extends GlobalState>(
   };
 }
 
-export function selectCanDeleteMessages<T extends GlobalState>(
-  global: T,
-  chatId: string,
-  threadId: ThreadId,
-  messageIds: number[],
-) {
-  const chatMessages = selectChatMessages(global, chatId);
-
-  if (messageIds.length > API_GENERAL_ID_LIMIT) {
-    return {};
-  }
-
-  const messageActions = messageIds
-    .map((id) => chatMessages[id] && selectAllowedMessageActionsSlow(global, chatMessages[id], threadId))
-    .filter(Boolean);
-
-  return {
-    canDelete: messageActions.every((actions) => actions.canDelete),
-    canDeleteForAll: messageActions.every((actions) => actions.canDeleteForAll),
-  };
-}
-
-export function selectCanDeleteSelectedMessages<T extends GlobalState>(
-  global: T,
-  messageIds?: number[],
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  const { messageIds: selectedMessageIds } = selectTabState(global, tabId).selectedMessages || {};
-  const { chatId, threadId } = selectCurrentMessageList(global, tabId) || {};
-  const messageIdList = messageIds?.length ? messageIds : selectedMessageIds;
-  if (!chatId || !threadId || !messageIdList) {
-    return {};
-  }
-
-  return selectCanDeleteMessages(global, chatId, threadId, messageIdList);
-}
-
-export function selectCanReportSelectedMessages<T extends GlobalState>(
-  global: T,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  const { messageIds: selectedMessageIds } = selectTabState(global, tabId).selectedMessages || {};
-  const { chatId, threadId } = selectCurrentMessageList(global, tabId) || {};
-  const chatMessages = chatId && selectChatMessages(global, chatId);
-  if (!chatMessages || !selectedMessageIds || !threadId) {
-    return false;
-  }
-
-  const messageActions = selectedMessageIds
-    .map((id) => chatMessages[id] && selectAllowedMessageActionsSlow(global, chatMessages[id], threadId))
-    .filter(Boolean);
-
-  return messageActions.every((actions) => actions.canReport);
-}
-
-export function selectCanDownloadSelectedMessages<T extends GlobalState>(
-  global: T,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  const { messageIds: selectedMessageIds } = selectTabState(global, tabId).selectedMessages || {};
-  const { chatId, threadId } = selectCurrentMessageList(global, tabId) || {};
-  const chatMessages = chatId && selectChatMessages(global, chatId);
-  if (!chatMessages || !selectedMessageIds || !threadId) {
-    return false;
-  }
-
-  const messageActions = selectedMessageIds
-    .map((id) => chatMessages[id] && selectAllowedMessageActionsSlow(global, chatMessages[id], threadId))
-    .filter(Boolean);
-
-  return messageActions.some((actions) => actions.canDownload);
-}
-
-export function selectActiveDownloads<T extends GlobalState>(
-  global: T,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  return selectTabState(global, tabId).activeDownloads;
-}
-
-export function selectUploadProgress<T extends GlobalState>(global: T, message: ApiMessage) {
-  return global.fileUploads.byMessageKey[getMessageKey(message)]?.progress;
-}
-
 export function selectRealLastReadId<T extends GlobalState>(global: T, chatId: string, threadId: ThreadId) {
   if (threadId === MAIN_THREAD_ID) {
     const chat = selectChat(global, chatId);
@@ -996,18 +741,6 @@ export function selectIsInSelectMode<T extends GlobalState>(
   return Boolean(selectedMessages);
 }
 
-export function selectIsMessageSelected<T extends GlobalState>(
-  global: T, messageId: number,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  const { messageIds } = selectTabState(global, tabId).selectedMessages || {};
-  if (!messageIds) {
-    return false;
-  }
-
-  return messageIds.includes(messageId);
-}
-
 export function selectForwardedMessageIdsByGroupId<T extends GlobalState>(
   global: T, chatId: string, groupedId: string,
 ) {
@@ -1030,28 +763,6 @@ export function selectMessageIdsByGroupId<T extends GlobalState>(global: T, chat
   return Object.keys(chatMessages)
     .map(Number)
     .filter((id) => chatMessages[id].groupedId === groupedId);
-}
-
-export function selectIsDocumentGroupSelected<T extends GlobalState>(
-  global: T, chatId: string, groupedId: string,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  const { messageIds: selectedIds } = selectTabState(global, tabId).selectedMessages || {};
-  if (!selectedIds) {
-    return false;
-  }
-
-  const groupIds = selectMessageIdsByGroupId(global, chatId, groupedId);
-  return groupIds && groupIds.every((id) => selectedIds.includes(id));
-}
-
-export function selectSelectedMessagesCount<T extends GlobalState>(
-  global: T,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  const { messageIds } = selectTabState(global, tabId).selectedMessages || {};
-
-  return messageIds ? messageIds.length : 0;
 }
 
 export function selectNewestMessageWithBotKeyboardButtons<T extends GlobalState>(
@@ -1128,103 +839,6 @@ function selectShouldDisplayReplyKeyboard<T extends GlobalState>(global: T, mess
   return true;
 }
 
-export function selectCanAutoLoadMedia<T extends GlobalState>(
-  global: T, message: ApiMessage | ApiSponsoredMessage,
-) {
-  const chat = selectChat(global, message.chatId);
-  if (!chat) {
-    return undefined;
-  }
-
-  const sender = 'id' in message ? selectSender(global, message) : undefined;
-
-  const isPhoto = Boolean(getMessagePhoto(message) || getMessageWebPagePhoto(message));
-  const isVideo = Boolean(getMessageVideo(message) || getMessageWebPageVideo(message));
-  const isFile = Boolean(getMessageAudio(message) || getMessageVoice(message) || getMessageDocument(message));
-
-  const {
-    canAutoLoadPhotoFromContacts,
-    canAutoLoadPhotoInPrivateChats,
-    canAutoLoadPhotoInGroups,
-    canAutoLoadPhotoInChannels,
-    canAutoLoadVideoFromContacts,
-    canAutoLoadVideoInPrivateChats,
-    canAutoLoadVideoInGroups,
-    canAutoLoadVideoInChannels,
-    canAutoLoadFileFromContacts,
-    canAutoLoadFileInPrivateChats,
-    canAutoLoadFileInGroups,
-    canAutoLoadFileInChannels,
-  } = global.settings.byKey;
-
-  if (isPhoto) {
-    return canAutoLoadMedia({
-      global,
-      chat,
-      sender,
-      canAutoLoadMediaFromContacts: canAutoLoadPhotoFromContacts,
-      canAutoLoadMediaInPrivateChats: canAutoLoadPhotoInPrivateChats,
-      canAutoLoadMediaInGroups: canAutoLoadPhotoInGroups,
-      canAutoLoadMediaInChannels: canAutoLoadPhotoInChannels,
-    });
-  }
-
-  if (isVideo) {
-    return canAutoLoadMedia({
-      global,
-      chat,
-      sender,
-      canAutoLoadMediaFromContacts: canAutoLoadVideoFromContacts,
-      canAutoLoadMediaInPrivateChats: canAutoLoadVideoInPrivateChats,
-      canAutoLoadMediaInGroups: canAutoLoadVideoInGroups,
-      canAutoLoadMediaInChannels: canAutoLoadVideoInChannels,
-    });
-  }
-
-  if (isFile) {
-    return canAutoLoadMedia({
-      global,
-      chat,
-      sender,
-      canAutoLoadMediaFromContacts: canAutoLoadFileFromContacts,
-      canAutoLoadMediaInPrivateChats: canAutoLoadFileInPrivateChats,
-      canAutoLoadMediaInGroups: canAutoLoadFileInGroups,
-      canAutoLoadMediaInChannels: canAutoLoadFileInChannels,
-    });
-  }
-
-  return true;
-}
-
-function canAutoLoadMedia<T extends GlobalState>({
-  global,
-  chat,
-  sender,
-  canAutoLoadMediaFromContacts,
-  canAutoLoadMediaInPrivateChats,
-  canAutoLoadMediaInGroups,
-  canAutoLoadMediaInChannels,
-}: {
-  global: T;
-  chat: ApiChat;
-  canAutoLoadMediaFromContacts: boolean;
-  canAutoLoadMediaInPrivateChats: boolean;
-  canAutoLoadMediaInGroups: boolean;
-  canAutoLoadMediaInChannels: boolean;
-  sender?: ApiPeer;
-}) {
-  const isMediaFromContact = Boolean(sender && (
-    selectIsChatWithSelf(global, sender.id) || selectUser(global, sender.id)?.isContact
-  ));
-
-  return Boolean(
-    (isMediaFromContact && canAutoLoadMediaFromContacts)
-    || (!isMediaFromContact && canAutoLoadMediaInPrivateChats && isUserId(chat.id))
-    || (canAutoLoadMediaInGroups && isChatGroup(chat))
-    || (canAutoLoadMediaInChannels && isChatChannel(chat)),
-  );
-}
-
 export function selectLastServiceNotification<T extends GlobalState>(global: T) {
   const { serviceNotifications } = global;
   const maxId = Math.max(...serviceNotifications.map(({ id }) => id));
@@ -1232,70 +846,8 @@ export function selectLastServiceNotification<T extends GlobalState>(global: T) 
   return serviceNotifications.find(({ id, isDeleted }) => !isDeleted && id === maxId);
 }
 
-export function selectIsMessageProtected<T extends GlobalState>(global: T, message?: ApiMessage) {
-  return Boolean(message && (
-    message.isProtected || selectIsChatProtected(global, message.chatId) || hasMessageTtl(message)
-    || getMessagePaidMedia(message)
-  ));
-}
-
 export function selectIsChatProtected<T extends GlobalState>(global: T, chatId: string) {
   return selectChat(global, chatId)?.isProtected || false;
-}
-
-export function selectHasProtectedMessage<T extends GlobalState>(global: T, chatId: string, messageIds?: number[]) {
-  if (selectChat(global, chatId)?.isProtected) {
-    return true;
-  }
-
-  if (!messageIds) {
-    return false;
-  }
-
-  const messages = selectChatMessages(global, chatId);
-
-  return messageIds.some((messageId) => messages[messageId]?.isProtected);
-}
-
-export function selectCanForwardMessages<T extends GlobalState>(global: T, chatId: string, messageIds?: number[]) {
-  if (selectChat(global, chatId)?.isProtected) {
-    return false;
-  }
-
-  if (!messageIds) {
-    return false;
-  }
-
-  const messages = selectChatMessages(global, chatId);
-
-  return messageIds
-    .map((id) => messages[id])
-    .every((message) => message && !hasMessageTtl(message)
-      && (message.isForwardingAllowed || isServiceNotificationMessage(message)));
-}
-
-export function selectHasSvg<T extends GlobalState>(global: T, chatId: string, messageIds: number[]) {
-  const messages = selectChatMessages(global, chatId);
-
-  return messageIds
-    .map((id) => messages[id])
-    .some((message) => {
-      if (!message) return false;
-
-      const document = getMessageDocument(message);
-      if (!document) return false;
-
-      const extension = getDocumentExtension(document);
-      if (!extension) return false;
-
-      return SVG_EXTENSIONS.has(extension);
-    });
-}
-
-export function selectSponsoredMessage<T extends GlobalState>(global: T, chatId: string) {
-  const message = global.messages.sponsoredByChatId[chatId];
-
-  return message && message.expiresAt >= Math.round(Date.now() / 1000) ? message : undefined;
 }
 
 export function selectDefaultReaction<T extends GlobalState>(global: T, chatId: string) {
@@ -1353,55 +905,12 @@ export function selectShouldSchedule<T extends GlobalState>(
   return selectCurrentMessageList(global, tabId)?.type === 'scheduled';
 }
 
-export function selectCanSchedule<T extends GlobalState>(
-  global: T,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  const chatId = selectCurrentMessageList(global, tabId)?.chatId;
-  const paidMessagesStars = chatId ? selectPeerPaidMessagesStars(global, chatId) : undefined;
-  return !paidMessagesStars;
-}
-
 export function selectCanScheduleUntilOnline<T extends GlobalState>(global: T, id: string) {
   const isChatWithSelf = selectIsChatWithSelf(global, id);
   const chatBot = selectBot(global, id);
   const paidMessagesStars = selectPeerPaidMessagesStars(global, id);
   return Boolean(!paidMessagesStars
     && !isChatWithSelf && !chatBot && isUserId(id) && selectUserStatus(global, id)?.wasOnline);
-}
-
-export function selectCustomEmojis(message: ApiMessage) {
-  const entities = message.content.text?.entities;
-  return entities?.filter((entity): entity is ApiMessageEntityCustomEmoji => (
-    entity.type === ApiMessageEntityTypes.CustomEmoji
-  ));
-}
-
-export function selectMessageCustomEmojiSets<T extends GlobalState>(
-  global: T, message: ApiMessage,
-): ApiStickerSetInfo[] | undefined {
-  const customEmojis = selectCustomEmojis(message);
-  if (!customEmojis) return MEMO_EMPTY_ARRAY;
-  const documents = customEmojis.map((entity) => global.customEmojis.byId[entity.documentId]);
-  // If some emoji still loading, do not return empty array
-  if (!documents.every(Boolean)) return undefined;
-  const sets = documents.map((doc) => doc.stickerSetInfo);
-
-  return sets.reduce((acc, set) => {
-    if ('shortName' in set) {
-      if (acc.some((s) => 'shortName' in s && s.shortName === set.shortName)) {
-        return acc;
-      }
-    }
-
-    if ('id' in set) {
-      if (acc.some((s) => 'id' in s && s.id === set.id)) {
-        return acc;
-      }
-    }
-    acc.push(set); // Optimization
-    return acc;
-  }, [] as ApiStickerSetInfo[]);
 }
 
 export function selectForwardsContainVoiceMessages<T extends GlobalState>(
@@ -1493,33 +1002,6 @@ function сheckMessageSendingDenied(message: ApiMessage, options: IAllowedAttach
     || (isPlainText && !options.canSendPlainText);
 }
 
-export function selectCanTranslateMessage<T extends GlobalState>(
-  global: T, message: ApiMessage, detectedLanguage?: string, ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  const { canTranslate: isTranslationEnabled, doNotTranslate } = global.settings.byKey;
-
-  const canTranslateLanguage = !detectedLanguage || !doNotTranslate.includes(detectedLanguage);
-
-  const isTranslatable = isMessageTranslatable(message);
-
-  // Separate translations are disabled when chat translation enabled
-  const chatRequestedLanguage = selectRequestedChatTranslationLanguage(global, message.chatId, tabId);
-
-  return IS_TRANSLATION_SUPPORTED && isTranslationEnabled && canTranslateLanguage && isTranslatable
-    && !chatRequestedLanguage;
-}
-
-export function selectTopicLink<T extends GlobalState>(
-  global: T, chatId: string, topicId?: ThreadId,
-) {
-  const chat = selectChat(global, chatId);
-  if (!chat || !chat?.isForum) {
-    return undefined;
-  }
-
-  return getMessageLink(chat, topicId);
-}
-
 export function selectMessageReplyInfo<T extends GlobalState>(
   global: T, chatId: string, threadId: ThreadId, additionalReplyInfo?: ApiInputMessageReplyInfo,
 ) {
@@ -1544,21 +1026,4 @@ export function selectReplyMessage<T extends GlobalState>(global: T, message: Ap
     ? selectChatMessage(global, replyToPeerId || message.chatId, replyToMsgId) : undefined;
 
   return replyMessage;
-}
-
-export function selectMessageTimestampableDuration<T extends GlobalState>(
-  global: T, message: ApiMessage, noReplies?: boolean,
-) {
-  const replyMessage = !noReplies ? selectReplyMessage(global, message) : undefined;
-
-  const timestampableMedia = getTimestampableMedia(message);
-  const replyTimestampableMedia = replyMessage && getTimestampableMedia(replyMessage);
-
-  return timestampableMedia?.duration || replyTimestampableMedia?.duration;
-}
-
-export function selectMessageLastPlaybackTimestamp<T extends GlobalState>(
-  global: T, chatId: string, messageId: number,
-) {
-  return global.messages.playbackByChatId[chatId]?.byId[messageId];
 }
