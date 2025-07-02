@@ -11,7 +11,6 @@ export { default as ReactorListModal } from '../components/middle/ReactorListMod
 export { default as EmojiInteractionAnimation } from '../components/middle/EmojiInteractionAnimation';
 export { default as ChatLanguageModal } from '../components/middle/ChatLanguageModal';
 
-export { default as StickerSetModal } from '../components/common/StickerSetModal';
 export { default as CustomEmojiSetsModal } from '../components/common/CustomEmojiSetsModal';
 
 export { default as WalletPaymentModal } from '../components/payment/WalletPaymentModal';
