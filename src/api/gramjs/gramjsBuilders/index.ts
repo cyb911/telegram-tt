@@ -11,13 +11,11 @@ import type {
   ApiDisallowedGiftsSettings,
   ApiEmojiStatusType,
   ApiFormattedText,
-  ApiGroupCall,
   ApiInputPrivacyRules,
   ApiInputReplyInfo,
   ApiInputStorePaymentPurpose,
   ApiMessageEntity,
   ApiNewPoll,
-  ApiPhoneCall,
   ApiPhoto,
   ApiPoll,
   ApiPremiumGiftCodeOption,
@@ -575,20 +573,6 @@ export function buildMtpPeerId(id: string, type: 'user' | 'chat' | 'channel') {
   }
 
   return BigInt(n * -1);
-}
-
-export function buildInputGroupCall(groupCall: Partial<ApiGroupCall>) {
-  return new GramJs.InputGroupCall({
-    id: BigInt(groupCall.id!),
-    accessHash: BigInt(groupCall.accessHash!),
-  });
-}
-
-export function buildInputPhoneCall({ id, accessHash }: ApiPhoneCall) {
-  return new GramJs.InputPhoneCall({
-    id: BigInt(id),
-    accessHash: BigInt(accessHash!),
-  });
 }
 
 export function buildInputStorePaymentPurpose(purpose: ApiInputStorePaymentPurpose):

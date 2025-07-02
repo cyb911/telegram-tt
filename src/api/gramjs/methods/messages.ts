@@ -23,7 +23,6 @@ import type {
   ApiPoll,
   ApiReaction,
   ApiSendMessageAction,
-  ApiUser,
   ApiUserStatus,
   MediaContent,
 } from '../../types';
@@ -81,7 +80,6 @@ import {
   buildInputReplyTo,
   buildInputStory,
   buildInputTextWithEntities,
-  buildInputUser,
   buildMessageFromUpdate,
   buildMtpMessageEntity,
   buildPeer,

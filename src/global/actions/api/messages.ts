@@ -2,7 +2,6 @@ import type {
   ApiAttachment,
   ApiChat,
   ApiChatType,
-  ApiDraft,
   ApiError,
   ApiInputMessageReplyInfo,
   ApiInputStoryReplyInfo,
@@ -591,36 +590,16 @@ addActionHandler('saveDraft', (global, actions, payload): ActionReturnType => {
   if (chat.isMonoforum && !currentDraft?.replyInfo) {
     return; // Monoforum doesn't support drafts outside threads
   }
-
-  const newDraft: ApiDraft = {
-    text,
-    replyInfo: currentDraft?.replyInfo,
-    effectId: currentDraft?.effectId,
-  };
-
-  saveDraft({
-    global, chatId, threadId, draft: newDraft,
-  });
 });
 
 addActionHandler('clearDraft', (global, actions, payload): ActionReturnType => {
   const {
-    chatId, threadId = MAIN_THREAD_ID, isLocalOnly, shouldKeepReply,
+    chatId, threadId = MAIN_THREAD_ID,
   } = payload;
   const currentDraft = selectDraft(global, chatId, threadId);
   if (!currentDraft) {
     return;
   }
-
-  const currentReplyInfo = currentDraft.replyInfo;
-
-  const newDraft: ApiDraft | undefined = shouldKeepReply && currentReplyInfo ? {
-    replyInfo: currentReplyInfo,
-  } : undefined;
-
-  saveDraft({
-    global, chatId, threadId, draft: newDraft, isLocalOnly,
-  });
 });
 
 addActionHandler('updateDraftReplyInfo', (global, actions, payload): ActionReturnType => {
@@ -641,15 +620,6 @@ addActionHandler('updateDraftReplyInfo', (global, actions, payload): ActionRetur
   } as ApiInputMessageReplyInfo;
 
   if (!updatedReplyInfo.replyToMsgId) return;
-
-  const newDraft: ApiDraft = {
-    ...currentDraft,
-    replyInfo: updatedReplyInfo,
-  };
-
-  saveDraft({
-    global, chatId, threadId, draft: newDraft, isLocalOnly: true, noLocalTimeUpdate: true,
-  });
 });
 
 addActionHandler('resetDraftReplyInfo', (global, actions, payload): ActionReturnType => {
@@ -665,19 +635,11 @@ addActionHandler('resetDraftReplyInfo', (global, actions, payload): ActionReturn
   if (chat?.isMonoforum && !currentDraft?.replyInfo) {
     return; // Monoforum doesn't support drafts outside threads
   }
-  const newDraft: ApiDraft | undefined = !currentDraft?.text ? undefined : {
-    ...currentDraft,
-    replyInfo: undefined,
-  };
-
-  saveDraft({
-    global, chatId, threadId, draft: newDraft, isLocalOnly: Boolean(newDraft),
-  });
 });
 
 addActionHandler('saveEffectInDraft', (global, actions, payload): ActionReturnType => {
   const {
-    chatId, threadId, effectId,
+    chatId, threadId,
   } = payload;
 
   const chat = selectChat(global, chatId);
@@ -685,15 +647,6 @@ addActionHandler('saveEffectInDraft', (global, actions, payload): ActionReturnTy
   if (chat?.isMonoforum && !currentDraft?.replyInfo) {
     return; // Monoforum doesn't support drafts outside threads
   }
-
-  const newDraft = {
-    ...currentDraft,
-    effectId,
-  };
-
-  saveDraft({
-    global, chatId, threadId, draft: newDraft, isLocalOnly: true, noLocalTimeUpdate: true,
-  });
 });
 
 addActionHandler('updateInsertingPeerIdMention', (global, actions, payload): ActionReturnType => {
@@ -702,49 +655,6 @@ addActionHandler('updateInsertingPeerIdMention', (global, actions, payload): Act
     insertingPeerIdMention: peerId,
   }, tabId);
 });
-
-async function saveDraft<T extends GlobalState>({
-  global, chatId, threadId, draft, isLocalOnly, noLocalTimeUpdate,
-}: {
-  global: T; chatId: string; threadId: ThreadId; draft?: ApiDraft; isLocalOnly?: boolean; noLocalTimeUpdate?: boolean;
-}) {
-  const chat = selectChat(global, chatId);
-  const user = selectUser(global, chatId);
-  if (!chat || (user && isDeletedUser(user))) return;
-
-  const replyInfo = selectMessageReplyInfo(global, chatId, threadId, draft?.replyInfo);
-
-  const newDraft: ApiDraft | undefined = draft ? {
-    ...draft,
-    replyInfo,
-    date: Math.floor(Date.now() / 1000),
-    isLocal: true,
-  } : undefined;
-
-  global = replaceThreadParam(global, chatId, threadId, 'draft', newDraft);
-  if (!noLocalTimeUpdate) {
-    global = updateChat(global, chatId, { draftDate: newDraft?.date });
-  }
-
-  setGlobal(global);
-
-  if (isLocalOnly) return;
-
-  const result = await callApi('saveDraft', {
-    chat,
-    draft: newDraft,
-  });
-
-  if (result && newDraft) {
-    newDraft.isLocal = false;
-  }
-
-  global = getGlobal();
-  global = replaceThreadParam(global, chatId, threadId, 'draft', newDraft);
-  global = updateChat(global, chatId, { draftDate: newDraft?.date });
-
-  setGlobal(global);
-}
 
 addActionHandler('toggleMessageWebPage', (global, actions, payload): ActionReturnType => {
   const { chatId, threadId, noWebPage } = payload;
@@ -860,42 +770,6 @@ addActionHandler('deleteScheduledMessages', (global, actions, payload): ActionRe
   if (editingId && messageIds.includes(editingId)) {
     actions.setEditingId({ messageId: undefined, tabId });
   }
-});
-
-addActionHandler('deleteHistory', async (global, actions, payload): Promise<void> => {
-  const { chatId, shouldDeleteForAll, tabId = getCurrentTabId() } = payload;
-  const chat = selectChat(global, chatId);
-  if (!chat) {
-    return;
-  }
-
-  await callApi('deleteHistory', { chat, shouldDeleteForAll });
-
-  global = getGlobal();
-  const activeChat = selectCurrentMessageList(global, tabId);
-  if (activeChat && activeChat.chatId === chatId) {
-    actions.openChat({ id: undefined, tabId });
-  }
-
-  // Delete chat from folders
-  const folders = global.chatFolders.byId;
-  Object.values(folders).forEach((folder) => {
-    if (folder.includedChatIds.includes(chatId) || folder.pinnedChatIds?.includes(chatId)) {
-      const newIncludedChatIds = folder.includedChatIds.filter((id) => id !== chatId);
-      const newPinnedChatIds = folder.pinnedChatIds?.filter((id) => id !== chatId);
-
-      const updatedFolder = {
-        ...folder,
-        includedChatIds: newIncludedChatIds,
-        pinnedChatIds: newPinnedChatIds,
-      };
-
-      callApi('editChatFolder', {
-        id: folder.id,
-        folderUpdate: updatedFolder,
-      });
-    }
-  });
 });
 
 addActionHandler('deleteSavedHistory', async (global, actions, payload): Promise<void> => {
@@ -2106,25 +1980,6 @@ async function checkIfVoiceMessagesAllowed<T extends GlobalState>(
   return Boolean(!fullInfo?.noVoiceMessages);
 }
 
-function moveReplyToNewDraft<T extends GlobalState>(
-  global: T,
-  threadId: ThreadId,
-  replyInfo: ApiInputMessageReplyInfo,
-  toChatId: string,
-) {
-  const currentDraft = selectDraft(global, toChatId, threadId);
-
-  if (!replyInfo.replyToMsgId) return;
-
-  const newDraft: ApiDraft = {
-    ...currentDraft,
-    replyInfo,
-  };
-
-  saveDraft({
-    global, chatId: toChatId, threadId, draft: newDraft, isLocalOnly: true, noLocalTimeUpdate: true,
-  });
-}
 addActionHandler('openChatOrTopicWithReplyInDraft', (global, actions, payload): ActionReturnType => {
   const { chatId: toChatId, topicId, tabId = getCurrentTabId() } = payload;
 
@@ -2168,19 +2023,6 @@ addActionHandler('openChatOrTopicWithReplyInDraft', (global, actions, payload): 
   }
 
   if (!currentReplyInfo.replyToPeerId && toChatId === currentChat.id) return;
-
-  const getPeerId = () => {
-    if (!currentReplyInfo?.replyToPeerId) return currentChatId;
-    return currentReplyInfo.replyToPeerId === toChatId ? undefined : currentReplyInfo.replyToPeerId;
-  };
-  const replyToPeerId = getPeerId();
-  const newReply: ApiInputMessageReplyInfo = {
-    ...currentReplyInfo,
-    replyToPeerId,
-    type: 'message',
-  };
-
-  moveReplyToNewDraft(global, threadId, newReply, toChatId);
   actions.openThread({ chatId: toChatId, threadId, tabId });
   actions.closeMediaViewer({ tabId });
   actions.exitMessageSelectMode({ tabId });
@@ -2534,41 +2376,6 @@ addActionHandler('reportMessageDelivery', (global, actions, payload): ActionRetu
       MESSAGES_TO_REPORT_DELIVERY.clear();
     }, 500);
   }
-});
-
-addActionHandler('openPreparedInlineMessageModal', async (global, actions, payload): Promise<void> => {
-  const {
-    botId, messageId, webAppKey, tabId = getCurrentTabId(),
-  } = payload;
-
-  const bot = selectUser(global, botId);
-  if (!bot) return;
-
-  const result = await callApi('fetchPreparedInlineMessage', {
-    bot,
-    id: messageId,
-  });
-  if (!result) {
-    actions.sendWebAppEvent({
-      webAppKey,
-      event: {
-        eventType: 'prepared_message_failed',
-        eventData: { error: 'MESSAGE_EXPIRED' },
-      },
-      tabId,
-    });
-    return;
-  }
-
-  global = getGlobal();
-  global = updateTabState(global, {
-    preparedMessageModal: {
-      message: result,
-      webAppKey,
-      botId,
-    },
-  }, tabId);
-  setGlobal(global);
 });
 
 addActionHandler('openSharePreparedMessageModal', (global, actions, payload): ActionReturnType => {
