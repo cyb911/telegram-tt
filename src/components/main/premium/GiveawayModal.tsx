@@ -41,7 +41,6 @@ import CalendarModal from '../../common/CalendarModal';
 import CountryPickerModal from '../../common/CountryPickerModal';
 import GroupChatInfo from '../../common/GroupChatInfo';
 import Icon from '../../common/icons/Icon';
-import StarTopupOptionList from '../../modals/stars/StarTopupOptionList';
 import Button from '../../ui/Button';
 import ConfirmDialog from '../../ui/ConfirmDialog';
 import InputText from '../../ui/InputText';
@@ -438,10 +437,6 @@ const GiveawayModal: FC<OwnProps & StateProps> = ({
     openCountryPickerModal();
   });
 
-  const handleStarClick = useLastCallback((option) => {
-    setSelectedStarOption(option);
-  });
-
   function renderTypeOptions() {
     return (
       <div className={styles.options}>
@@ -519,18 +514,6 @@ const GiveawayModal: FC<OwnProps & StateProps> = ({
   function deleteParticipantsHandler(id: string) {
     const filteredChannelIds = selectedChannelIds.filter((channelId) => channelId !== id);
     setSelectedChannelIds(filteredChannelIds);
-  }
-
-  function renderStarOptionList() {
-    return (
-      <StarTopupOptionList
-        className={styles.starOptions}
-        options={starsGiftOptions}
-        selectedStarCount={selectedRandomUserCount}
-        selectedStarOption={selectedStarOption}
-        onClick={handleStarClick}
-      />
-    );
   }
 
   function renderGiveawayOptionList() {
@@ -806,7 +789,6 @@ const GiveawayModal: FC<OwnProps & StateProps> = ({
                     </div>
                   </div>
 
-                  {renderStarOptionList()}
                 </div>
 
                 <div className={buildClassName(styles.subscription, styles.starSubscription)}>

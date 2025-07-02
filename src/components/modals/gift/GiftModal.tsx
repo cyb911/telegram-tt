@@ -35,7 +35,6 @@ import SafeLink from '../../common/SafeLink';
 import Button from '../../ui/Button';
 import Modal from '../../ui/Modal';
 import Transition from '../../ui/Transition';
-import BalanceBlock from '../stars/BalanceBlock';
 import GiftSendingOptions from './GiftComposer';
 import GiftItemPremium from './GiftItemPremium';
 import GiftItemStar from './GiftItemStar';
@@ -457,7 +456,6 @@ const GiftModal: FC<OwnProps & StateProps> = ({
       >
         <div className={buttonClassName} />
       </Button>
-      <BalanceBlock className={styles.balance} balance={starBalance} withAddButton />
       <div className={buildClassName(
         styles.header,
         isResaleScreen && styles.resaleHeader,
