@@ -41,7 +41,7 @@ import {
   getTmpPassword,
   updateTwoFaSettings,
 } from './2fa';
-import { authFlow, checkAuthorization } from './auth';
+import { authFlow } from './auth';
 import { downloadFile } from './downloadFile';
 import { uploadFile } from './uploadFile';
 
@@ -1168,7 +1168,7 @@ class TelegramClient {
           this._log.info(`Phone migrated to ${e.newDc}`);
           const shouldRaise = e instanceof PhoneMigrateError
             || e instanceof NetworkMigrateError;
-          if (shouldRaise && await checkAuthorization(this)) {
+          if (shouldRaise) {
             state.finished.resolve();
             if (isExported) this.releaseExportedSender(sender);
             throw e;
@@ -1255,10 +1255,6 @@ class TelegramClient {
     }
 
     this.loadConfig();
-
-    if (await checkAuthorization(this, authParams.shouldThrowIfUnauthorized)) {
-      return;
-    }
 
     const apiCredentials = {
       apiId: this.apiId,

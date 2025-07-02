@@ -10,9 +10,6 @@ import type { ThreadId } from '../../types';
 import type { RegularLangFnParameters } from '../../util/localization';
 import type { ApiBotCommand, ApiBotMenuButton } from './bots';
 import type {
-  ApiGroupCall, ApiPhoneCall,
-} from './calls';
-import type {
   ApiChat,
   ApiChatFolder,
   ApiChatFullInfo,
@@ -585,17 +582,6 @@ export type ApiUpdateServerTimeOffset = {
   serverTimeOffset: number;
 };
 
-export type ApiUpdateGroupCall = {
-  '@type': 'updateGroupCall';
-  call: ApiGroupCall;
-};
-
-export type ApiUpdateGroupCallChatId = {
-  '@type': 'updateGroupCallChatId';
-  call: Partial<ApiGroupCall>;
-  chatId: string;
-};
-
 export type ApiUpdateGroupCallLeavePresentation = {
   '@type': 'updateGroupCallLeavePresentation';
 };
@@ -632,11 +618,6 @@ export type ApiUpdateGroupCallConnectionState = {
   '@type': 'updateGroupCallConnectionState';
   connectionState: GroupCallConnectionState;
   isSpeakerDisabled?: boolean;
-};
-
-export type ApiUpdatePhoneCall = {
-  '@type': 'updatePhoneCall';
-  call: ApiPhoneCall;
 };
 
 export type ApiUpdatePhoneCallSignalingData = {
@@ -853,10 +834,9 @@ export type ApiUpdate = (
   ApiUpdateTwoFaError | ApiUpdateTwoFaStateWaitCode | ApiUpdateWebViewResultSent |
   ApiUpdateDefaultNotifySettings | ApiUpdatePeerNotifySettings | ApiUpdatePeerBlocked | ApiUpdatePrivacy |
   ApiUpdateServerTimeOffset | ApiUpdateMessageReactions | ApiUpdateSavedReactionTags |
-  ApiUpdateGroupCallParticipants | ApiUpdateGroupCallConnection | ApiUpdateGroupCall | ApiUpdateGroupCallStreams |
-  ApiUpdateGroupCallConnectionState | ApiUpdateGroupCallLeavePresentation | ApiUpdateGroupCallChatId |
-  ApiUpdatePendingJoinRequests | ApiUpdatePaymentVerificationNeeded | ApiUpdatePaymentStateCompleted |
-  ApiUpdatePhoneCall | ApiUpdatePhoneCallSignalingData | ApiUpdatePhoneCallMediaState |
+  ApiUpdateGroupCallParticipants | ApiUpdateGroupCallConnection | ApiUpdateGroupCallStreams |
+  ApiUpdateGroupCallConnectionState | ApiUpdateGroupCallLeavePresentation | ApiUpdatePhoneCallSignalingData |
+  ApiUpdatePhoneCallMediaState |
   ApiUpdatePhoneCallConnectionState | ApiUpdateBotMenuButton | ApiUpdateTranscribedAudio | ApiUpdateUserEmojiStatus |
   ApiUpdateMessageExtendedMedia | ApiUpdateConfig | ApiUpdateTopicNotifySettings | ApiUpdatePinnedTopic |
   ApiUpdatePinnedTopicsOrder | ApiUpdateTopic | ApiUpdateTopics | ApiUpdateRecentEmojiStatuses |

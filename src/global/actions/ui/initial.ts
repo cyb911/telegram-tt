@@ -79,6 +79,7 @@ addActionHandler('switchMultitabRole', async (global, actions, payload): Promise
         };
         setGlobal(global);
       }
+      // 关闭Telegram客户端初始化，现在界面不要登录授权
       actions.initApi();
     }
 
