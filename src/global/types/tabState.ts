@@ -25,7 +25,6 @@ import type {
   ApiPaymentFormRegular,
   ApiPaymentFormStars,
   ApiPaymentStatus,
-  ApiPhoneCall,
   ApiPostStatistics,
   ApiPremiumGiftCodeOption,
   ApiPremiumPromo,
@@ -51,8 +50,6 @@ import type {
   ApiWebPage,
 } from '../../api/types';
 import type { ApiEmojiStatusCollectible } from '../../api/types/users';
-import type { FoldersActions } from '../../hooks/reducers/useFoldersReducer';
-import type { ReducerAction } from '../../hooks/useReducer';
 import type {
   ActiveDownloads,
   ActiveEmojiInteraction,
@@ -123,7 +120,6 @@ export type TabState = {
   shouldCloseRightColumn?: boolean;
   nextProfileTab?: ProfileTabType;
   forceScrollProfileTab?: boolean;
-  nextFoldersAction?: ReducerAction<FoldersActions>;
   shareFolderScreen?: {
     folderId: number;
     isFromSettings?: boolean;
@@ -133,7 +129,6 @@ export type TabState = {
 
   isCallPanelVisible?: boolean;
   multitabNextAction?: CallbackAction;
-  ratingPhoneCall?: ApiPhoneCall;
 
   messageLists: MessageList[];
 

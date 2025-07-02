@@ -53,7 +53,6 @@ import type {
   PrivacyVisibility,
 } from '../../api/types';
 import type { ApiEmojiStatusCollectible, ApiEmojiStatusType } from '../../api/types/users';
-import type { FoldersActions } from '../../hooks/reducers/useFoldersReducer';
 import type { ReducerAction } from '../../hooks/useReducer';
 import type { P2pMessage } from '../../lib/secret-sauce';
 import type {
@@ -2337,9 +2336,6 @@ export interface ActionPayloads {
   } & WithTabId;
   openSettingsScreen: {
     screen?: SettingsScreens;
-  } & WithTabId;
-  requestNextFoldersAction: {
-    foldersAction?: ReducerAction<FoldersActions>;
   } & WithTabId;
   sortChatFolders: { folderIds: number[] };
   closeDeleteChatFolderModal: WithTabId | undefined;
