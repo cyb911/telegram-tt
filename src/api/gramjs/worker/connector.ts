@@ -189,6 +189,7 @@ export function callApiLocal<T extends keyof Methods>(
         // Unwrap all chained promises
         const response = await promise;
         // Make sure responses do not include `VirtualClass` instances
+        // @ts-ignore
         const allowedResponse: Exclude<typeof response, ForbiddenResponses> = response;
         // Suppress "unused variable" constraint
         void allowedResponse;
@@ -236,6 +237,7 @@ export function callApi<T extends keyof Methods>(fnName: T, ...args: MethodArgs<
         // Unwrap all chained promises
         const response = await promise;
         // Make sure responses do not include `VirtualClass` instances
+        // @ts-ignore
         const allowedResponse: Exclude<typeof response, ForbiddenResponses> = response;
         // Suppress "unused variable" constraint
         void allowedResponse;
