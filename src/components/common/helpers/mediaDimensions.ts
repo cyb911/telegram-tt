@@ -5,13 +5,6 @@ import type {
 export const REM = parseInt(getComputedStyle(document.documentElement).fontSize, 10);
 export const AVATAR_FULL_DIMENSIONS = { width: 640, height: 640 };
 
-export function getPictogramDimensions(): ApiDimensions {
-  return {
-    width: 2 * REM,
-    height: 2 * REM,
-  };
-}
-
 export function getDocumentThumbnailDimensions(smaller?: boolean): ApiDimensions {
   if (smaller) {
     return {
