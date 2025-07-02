@@ -19,7 +19,6 @@ import type {
 import {
   GIVEAWAY_BOOST_PER_PREMIUM,
   GIVEAWAY_MAX_ADDITIONAL_CHANNELS,
-  GIVEAWAY_MAX_ADDITIONAL_COUNTRIES,
   GIVEAWAY_MAX_ADDITIONAL_USERS,
   STARS_CURRENCY_CODE,
 } from '../../../config';
@@ -115,9 +114,7 @@ const GiveawayModal: FC<OwnProps & StateProps> = ({
   selectedMemberList,
   selectedChannelList,
   giveawayBoostPerPremiumLimit = GIVEAWAY_BOOST_PER_PREMIUM,
-  countryList,
   prepaidGiveaway,
-  countrySelectionLimit = GIVEAWAY_MAX_ADDITIONAL_COUNTRIES,
   userSelectionLimit = GIVEAWAY_MAX_ADDITIONAL_USERS,
   isStarsGiftEnabled,
   starsGiftOptions,
@@ -130,7 +127,7 @@ const GiveawayModal: FC<OwnProps & StateProps> = ({
 
   const lang = useOldLang();
   const [isCalendarOpened, openCalendar, closeCalendar] = useFlag();
-  const [isCountryPickerModalOpen, openCountryPickerModal, closeCountryPickerModal] = useFlag();
+  const [openCountryPickerModal] = useFlag();
   const [isConfirmModalOpen, openConfirmModal, closeConfirmModal] = useFlag();
   const [isUserPickerModalOpen, openUserPickerModal, closeUserPickerModal] = useFlag();
   const [isChannelPickerModalOpen, openChannelPickerModal, closeChannelPickerModal] = useFlag();
@@ -167,7 +164,7 @@ const GiveawayModal: FC<OwnProps & StateProps> = ({
   const [selectedMonthOption, setSelectedMonthOption] = useState<number | undefined>();
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
   const [selectedChannelIds, setSelectedChannelIds] = useState<string[]>([]);
-  const [selectedCountryIds, setSelectedCountryIds] = useState<string[] | undefined>([]);
+  const [selectedCountryIds] = useState<string[] | undefined>([]);
   const [shouldShowWinners, setShouldShowWinners] = useState<boolean>(false);
   const [shouldShowPrizes, setShouldShowPrizes] = useState<boolean>(false);
   const [prizeDescription, setPrizeDescription] = useState<string | undefined>(undefined);
@@ -408,10 +405,6 @@ const GiveawayModal: FC<OwnProps & StateProps> = ({
     closeCalendar();
   });
 
-  const handleSetCountriesListChange = useLastCallback((value: string[]) => {
-    setSelectedCountryIds(value);
-  });
-
   const handleSelectedUserIdsChange = useLastCallback((newSelectedIds: string[]) => {
     setSelectedUserIds(newSelectedIds);
     if (!newSelectedIds.length) {
@@ -432,6 +425,7 @@ const GiveawayModal: FC<OwnProps & StateProps> = ({
   });
 
   const onClickActionHandler = useLastCallback(() => {
+    // @ts-ignore
     openCountryPickerModal();
   });
 
