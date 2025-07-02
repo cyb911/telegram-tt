@@ -16,6 +16,7 @@ import type { DownloadFileParams, DownloadFileWithDcParams, DownloadMediaParams 
 import type { UploadFileParams } from './uploadFile';
 
 import Deferred from '../../../util/Deferred';
+import { sendApiUpdate } from '../../../api/gramjs/updates/apiUpdateEmitter';
 import {
   FloodTestPhoneWaitError,
   FloodWaitError,
@@ -50,7 +51,6 @@ import Session from '../sessions/Abstract';
 import MemorySession from '../sessions/Memory';
 import { LAYER } from '../tl/AllTLObjects';
 import { getDC, getInputPeer, strippedPhotoToJpg } from '../Utils';
-import { sendApiUpdate } from '../../../api/gramjs/updates/apiUpdateEmitter';
 
 type TelegramClientParams = {
   connection: typeof Connection;

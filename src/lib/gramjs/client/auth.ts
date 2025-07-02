@@ -68,6 +68,7 @@ export function signInUserWithPreferredMethod(
   }
 }
 
+// 校验telegram客户端用户是否登录
 export async function checkAuthorization(client: TelegramClient, shouldThrow = false) {
   try {
     await client.invoke(new Api.updates.GetState());
