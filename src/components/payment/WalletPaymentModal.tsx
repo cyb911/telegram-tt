@@ -85,7 +85,7 @@ const WalletPaymentModal: FC<OwnProps> = ({ isOpen, orderInfo, onClose }) => {
         onClick={openPayment}
         disabled={!selectedWallet}
       >
-        打开支付
+        支付
       </button>
     </Modal>
   );

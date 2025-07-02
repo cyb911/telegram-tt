@@ -106,6 +106,7 @@ export default function useWalletPayment() {
   };
 
   const openPayment = async () => {
+    console.info('选择钱包：', selectedWallet);
     if (!selectedWallet) {
       alert('请选择付款钱包');
       return;
