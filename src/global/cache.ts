@@ -416,7 +416,6 @@ function reduceGlobal<T extends GlobalState>(global: T) {
     messages: reduceMessages(global),
     settings: reduceSettings(global),
     chatFolders: reduceChatFolders(global),
-    groupCalls: reduceGroupCalls(global),
     reactions: {
       ...pick(global.reactions, [
         'defaultTags',
@@ -729,14 +728,6 @@ function reduceSettings<T extends GlobalState>(global: T): GlobalState['settings
 function reduceChatFolders<T extends GlobalState>(global: T): GlobalState['chatFolders'] {
   return {
     ...global.chatFolders,
-  };
-}
-
-function reduceGroupCalls<T extends GlobalState>(global: T): GlobalState['groupCalls'] {
-  return {
-    ...global.groupCalls,
-    byId: {},
-    activeGroupCallId: undefined,
   };
 }
 

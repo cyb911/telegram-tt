@@ -171,10 +171,6 @@ export const INITIAL_GLOBAL_STATE: GlobalState = {
     stealthMode: {},
   },
 
-  groupCalls: {
-    byId: {},
-  },
-
   attachmentSettings: {
     shouldCompress: true,
     shouldSendGrouped: true,

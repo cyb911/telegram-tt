@@ -5,13 +5,6 @@ import { selectChatFullInfo } from './chats';
 import { selectCurrentMessageList } from './messages';
 import { selectTabState } from './tabs';
 
-export function selectStatistics<T extends GlobalState>(
-  global: T, chatId: string,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  return selectTabState(global, tabId).statistics.byChatId[chatId];
-}
-
 export function selectIsStatisticsShown<T extends GlobalState>(
   global: T,
   ...[tabId = getCurrentTabId()]: TabArgs<T>

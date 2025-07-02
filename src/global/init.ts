@@ -137,14 +137,6 @@ addActionHandler('requestMasterAndCallAction', async (
     return;
   }
 
-  if (global.phoneCall || global.groupCalls.activeGroupCallId) {
-    await loadBundle(Bundles.Calls);
-    if ('hangUp' in actions) actions.hangUp({ tabId });
-    if ('leaveGroupCall' in actions) actions.leaveGroupCall({ tabId });
-  } else {
-    reestablishMasterToSelf();
-  }
-
   global = getGlobal();
   global = updateTabState(global, {
     multitabNextAction: payload,

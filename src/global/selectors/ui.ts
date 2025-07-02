@@ -1,11 +1,9 @@
-import type { ApiMessage, ApiSponsoredMessage } from '../../api/types';
 import type { PerformanceTypeKey, ThemeKey } from '../../types';
 import type { GlobalState, TabArgs } from '../types';
 import { NewChatMembersProgress, RightColumnContent } from '../../types';
 
 import { IS_SNAP_EFFECT_SUPPORTED } from '../../util/browser/windowEnvironment';
 import { getCurrentTabId } from '../../util/establishMultitabRole';
-import { getMessageVideo, getMessageWebPageVideo } from '../helpers/messageMedia';
 import { selectCurrentManagement } from './management';
 import { selectSharedSettings } from './sharedState';
 import { selectIsStatisticsShown } from './statistics';
@@ -79,24 +77,6 @@ export function selectThemeValues<T extends GlobalState>(global: T, themeKey: Th
   return global.settings.themes[themeKey];
 }
 
-export function selectIsForumPanelOpen<T extends GlobalState>(
-  global: T,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  const tabState = selectTabState(global, tabId);
-
-  return Boolean(tabState.forumPanelChatId) && (
-    tabState.globalSearch.query === undefined || Boolean(tabState.globalSearch.isClosing)
-  );
-}
-
-export function selectIsForumPanelClosed<T extends GlobalState>(
-  global: T,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  return !selectIsForumPanelOpen(global, tabId);
-}
-
 export function selectIsReactionPickerOpen<T extends GlobalState>(
   global: T,
   ...[tabId = getCurrentTabId()]: TabArgs<T>
@@ -116,34 +96,12 @@ export function selectPerformanceSettingsValue<T extends GlobalState>(
   return selectPerformanceSettings(global)[key];
 }
 
-export function selectCanAutoPlayMedia<T extends GlobalState>(global: T, message: ApiMessage | ApiSponsoredMessage) {
-  const video = getMessageVideo(message) || getMessageWebPageVideo(message);
-  if (!video) {
-    return undefined;
-  }
-
-  const canAutoPlayVideos = selectPerformanceSettingsValue(global, 'autoplayVideos');
-  const canAutoPlayGifs = selectPerformanceSettingsValue(global, 'autoplayGifs');
-
-  const asGif = video.isGif || video.isRound;
-
-  return (canAutoPlayVideos && !asGif) || (canAutoPlayGifs && asGif);
-}
-
-export function selectShouldLoopStickers<T extends GlobalState>(global: T) {
-  return selectPerformanceSettingsValue(global, 'loopAnimatedStickers');
-}
-
 export function selectCanPlayAnimatedEmojis<T extends GlobalState>(global: T) {
   return selectPerformanceSettingsValue(global, 'animatedEmoji');
 }
 
 export function selectCanAnimateInterface<T extends GlobalState>(global: T) {
   return selectPerformanceSettingsValue(global, 'pageTransitions');
-}
-
-export function selectIsContextMenuTranslucent<T extends GlobalState>(global: T) {
-  return selectPerformanceSettingsValue(global, 'contextMenuBlur');
 }
 
 export function selectIsSynced<T extends GlobalState>(global: T) {
@@ -167,16 +125,4 @@ export function selectActiveWebApp<T extends GlobalState>(
   if (!activeWebAppKey) return undefined;
 
   return selectWebApp(global, activeWebAppKey, tabId);
-}
-
-export function selectLeftColumnContentKey<T extends GlobalState>(
-  global: T, ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  return selectTabState(global, tabId).leftColumn.contentKey;
-}
-
-export function selectSettingsScreen<T extends GlobalState>(
-  global: T, ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  return selectTabState(global, tabId).leftColumn.settingsScreen;
 }

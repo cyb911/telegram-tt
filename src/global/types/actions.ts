@@ -53,7 +53,6 @@ import type {
   PrivacyVisibility,
 } from '../../api/types';
 import type { ApiEmojiStatusCollectible, ApiEmojiStatusType } from '../../api/types/users';
-import type { ReducerAction } from '../../hooks/useReducer';
 import type { P2pMessage } from '../../lib/secret-sauce';
 import type {
   AccountSettings,

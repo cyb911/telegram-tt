@@ -12,7 +12,6 @@ import type {
   ApiCountry,
   ApiCountryCode,
   ApiEmojiStatusType,
-  ApiGroupCall,
   ApiMessage,
   ApiNotifyPeerType,
   ApiPaidReactionPrivacyType,
@@ -20,7 +19,6 @@ import type {
   ApiPeerNotifySettings,
   ApiPeerPhotos,
   ApiPeerStories,
-  ApiPhoneCall,
   ApiPoll,
   ApiPrivacyKey,
   ApiPrivacySettings,
@@ -252,11 +250,6 @@ export type GlobalState = {
     stealthMode: ApiStealthMode;
   };
 
-  groupCalls: {
-    byId: Record<string, ApiGroupCall>;
-    activeGroupCallId?: string;
-  };
-
   scheduledMessages: {
     byChatId: Record<string, {
       byId: Record<number, ApiMessage>;
@@ -274,8 +267,6 @@ export type GlobalState = {
     invites: Record<number, ApiChatlistExportedInvite[]>;
     recommended?: ApiChatFolder[];
   };
-
-  phoneCall?: ApiPhoneCall;
 
   fileUploads: {
     byMessageKey: Record<string, {

@@ -43,10 +43,6 @@ export function selectIsPremiumPurchaseBlocked<T extends GlobalState>(global: T)
   return global.appConfig?.isPremiumPurchaseBlocked ?? true;
 }
 
-export function selectIsGiveawayGiftsPurchaseAvailable<T extends GlobalState>(global: T) {
-  return global.appConfig?.isGiveawayGiftsPurchaseAvailable ?? true;
-}
-
 /**
  * Slow, not to be used in `withGlobal`
  */
