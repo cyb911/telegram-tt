@@ -38,7 +38,6 @@ import useLastCallback from '../../../hooks/useLastCallback';
 import useOldLang from '../../../hooks/useOldLang';
 
 import CalendarModal from '../../common/CalendarModal';
-import CountryPickerModal from '../../common/CountryPickerModal';
 import Icon from '../../common/icons/Icon';
 import Button from '../../ui/Button';
 import ConfirmDialog from '../../ui/ConfirmDialog';
@@ -825,13 +824,6 @@ const GiveawayModal: FC<OwnProps & StateProps> = ({
         onSubmit={handleExpireDateChange}
         selectedAt={customExpireDate}
         submitButtonLabel={lang('Save')}
-      />
-      <CountryPickerModal
-        isOpen={isCountryPickerModalOpen}
-        onClose={closeCountryPickerModal}
-        countryList={countryList}
-        onSubmit={handleSetCountriesListChange}
-        selectionLimit={countrySelectionLimit}
       />
       <GiveawayUserPickerModal
         isOpen={isUserPickerModalOpen}
