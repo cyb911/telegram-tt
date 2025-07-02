@@ -6,22 +6,6 @@ interface ActionMediaType {
   mediaType: 'action';
 }
 
-export interface ApiMessageActionChatCreate extends ActionMediaType {
-  type: 'chatCreate';
-  title: string;
-  userIds: string[];
-}
-
-export interface ApiMessageActionChatEditTitle extends ActionMediaType {
-  type: 'chatEditTitle';
-  title: string;
-}
-
-export interface ApiMessageActionChatEditPhoto extends ActionMediaType {
-  type: 'chatEditPhoto';
-  photo?: ApiPhoto;
-}
-
 export interface ApiMessageActionChatDeletePhoto extends ActionMediaType {
   type: 'chatDeletePhoto';
 }
@@ -281,12 +265,7 @@ export interface ApiMessageActionPaidMessagesPrice extends ActionMediaType {
   isAllowedInChannel?: boolean;
 }
 
-export interface ApiMessageActionUnsupported extends ActionMediaType {
-  type: 'unsupported';
-}
-
-export type ApiMessageAction = ApiMessageActionUnsupported | ApiMessageActionChatCreate | ApiMessageActionChatEditTitle
-  | ApiMessageActionChatEditPhoto | ApiMessageActionChatDeletePhoto | ApiMessageActionChatAddUser
+export type ApiMessageAction = ApiMessageActionChatDeletePhoto | ApiMessageActionChatAddUser
   | ApiMessageActionChatDeleteUser | ApiMessageActionChatJoinedByLink | ApiMessageActionChannelCreate
   | ApiMessageActionChatMigrateTo | ApiMessageActionChannelMigrateFrom | ApiMessageActionPinMessage
   | ApiMessageActionHistoryClear | ApiMessageActionGameScore | ApiMessageActionPaymentSent | ApiMessageActionPhoneCall
