@@ -16,7 +16,6 @@ import './api/reactions';
 import './api/statistics';
 import './api/stories';
 import './ui/initial';
-import './ui/chats';
 import './ui/bots';
 import './ui/messages';
 import './ui/globalSearch';
