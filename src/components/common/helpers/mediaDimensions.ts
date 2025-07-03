@@ -3,7 +3,6 @@ import type {
 } from '../../../api/types';
 
 export const REM = parseInt(getComputedStyle(document.documentElement).fontSize, 10);
-export const AVATAR_FULL_DIMENSIONS = { width: 640, height: 640 };
 
 export function getDocumentThumbnailDimensions(smaller?: boolean): ApiDimensions {
   if (smaller) {
@@ -18,4 +17,3 @@ export function getDocumentThumbnailDimensions(smaller?: boolean): ApiDimensions
     height: 3.375 * REM,
   };
 }
-
