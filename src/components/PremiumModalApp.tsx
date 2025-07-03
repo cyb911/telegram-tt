@@ -7,7 +7,7 @@ import type { TabState } from '../global/types';
 import { selectTabState } from '../global/selectors';
 
 import PremiumMainModal from './main/premium/PremiumMainModal.async';
-import WalletPaymentModal from './payment/WalletPaymentModal.async';
+import WalletPaymentPage from './payment/WalletPaymentPage.async';
 
 interface StateProps {
   isOpen: boolean;
@@ -20,7 +20,7 @@ const PremiumModalApp: FC<StateProps> = ({ isOpen, walletModal }) => {
   return (
     <>
       <PremiumMainModal isOpen={isOpen} />
-      <WalletPaymentModal
+      <WalletPaymentPage
         isOpen={Boolean(walletModal)}
         orderInfo={walletModal?.invoice as any}
         onClose={actions.closeWalletPaymentModal}

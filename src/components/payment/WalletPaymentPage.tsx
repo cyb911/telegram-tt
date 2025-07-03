@@ -1,9 +1,8 @@
 import type { FC } from '../../lib/teact/teact';
 import useWalletPayment from '../../hooks/useWalletPayment';
 
-import Modal from '../ui/Modal';
-
-import '../payment/WalletPaymentModal.scss';
+import Icon from '../common/icons/Icon';
+import Button from '../ui/Button';
 
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -22,7 +21,7 @@ export type OwnProps = {
   onClose: () => void;
 };
 
-const WalletPaymentModal: FC<OwnProps> = ({ isOpen, orderInfo, onClose }) => {
+const WalletPaymentPage: FC<OwnProps> = ({ isOpen, orderInfo, onClose }) => {
   const {
     selectedWallet,
     setSelectedWallet,
@@ -30,7 +29,16 @@ const WalletPaymentModal: FC<OwnProps> = ({ isOpen, orderInfo, onClose }) => {
   } = useWalletPayment();
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} contentClassName="payment-modal">
+    <div className="wallet-payment-page">
+      <Button
+        className="back-button"
+        round
+        color="translucent"
+        size="smaller"
+        onClick={onClose}
+      >
+        <Icon name="close" />
+      </Button>
       {isMobile && !window.ethereum && (
         <p style={{ color: 'red', fontWeight: 'bold' }}>
           您尚未安装
@@ -87,8 +95,8 @@ const WalletPaymentModal: FC<OwnProps> = ({ isOpen, orderInfo, onClose }) => {
       >
         支付
       </button>
-    </Modal>
+    </div>
   );
 };
 
-export default WalletPaymentModal;
+export default WalletPaymentPage;

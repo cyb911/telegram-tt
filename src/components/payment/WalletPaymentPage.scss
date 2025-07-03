@@ -1,4 +1,16 @@
-/* WalletPaymentModal.css */
+/* WalletPaymentPage.css */
+.wallet-payment-page {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  padding: 1rem;
+  background-color: #fff;
+}
+
+.back-button {
+  margin-bottom: 1rem;
+}
+
 .payment-modal {
   width: 90%;
   max-width: 500px;

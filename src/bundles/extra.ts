@@ -12,5 +12,5 @@ export { default as EmojiInteractionAnimation } from '../components/middle/Emoji
 
 export { default as CustomEmojiSetsModal } from '../components/common/CustomEmojiSetsModal';
 
-export { default as WalletPaymentModal } from '../components/payment/WalletPaymentModal';
+export { default as WalletPaymentModal } from '../components/payment/WalletPaymentPage';
 export { default as OneTimeMediaModal } from '../components/modals/oneTimeMedia/OneTimeMediaModal';
