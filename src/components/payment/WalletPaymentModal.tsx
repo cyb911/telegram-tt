@@ -30,7 +30,12 @@ const WalletPaymentModal: FC<OwnProps> = ({ isOpen, orderInfo, onClose }) => {
   } = useWalletPayment();
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} contentClassName="payment-modal">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      className="WalletPaymentModal"
+      contentClassName="payment-modal"
+    >
       {isMobile && !window.ethereum && (
         <p style={{ color: 'red', fontWeight: 'bold' }}>
           您尚未安装
