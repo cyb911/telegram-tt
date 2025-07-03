@@ -11,7 +11,6 @@ import type { MenuPositionOptions } from '../../hooks/useMenuPosition';
 import { IS_BACKDROP_BLUR_SUPPORTED } from '../../util/browser/windowEnvironment';
 import buildClassName from '../../util/buildClassName';
 import captureEscKeyListener from '../../util/captureEscKeyListener';
-import { preventMessageInputBlurWithBubbling } from '../middle/helpers/preventMessageInputBlur';
 
 import useAppLayout from '../../hooks/useAppLayout';
 import useEffectWithPrevDeps from '../../hooks/useEffectWithPrevDeps';
@@ -151,7 +150,6 @@ const Menu: FC<OwnProps> = ({
         // This only prevents click events triggering on underlying elements
         <div
           className="backdrop"
-          onMouseDown={preventMessageInputBlurWithBubbling}
           onMouseEnter={onMouseEnterBackdrop}
         />
       )}
