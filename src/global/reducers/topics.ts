@@ -122,14 +122,6 @@ export function deleteTopic<T extends GlobalState>(
   return global;
 }
 
-export function updateTopicLastMessageId<T extends GlobalState>(
-  global: T, chatId: string, threadId: number, lastMessageId: number,
-) {
-  return updateTopic(global, chatId, threadId, {
-    lastMessageId,
-  });
-}
-
 export function replacePinnedTopicIds<T extends GlobalState>(
   global: T, chatId: string, pinnedTopicIds: number[],
 ) {

@@ -1,42 +1,13 @@
 import type { ApiChat, ApiMessage, ApiReactionWithPaid } from '../../api/types';
 import type { GlobalState } from '../types';
 
-import { MIN_SCREEN_WIDTH_FOR_STATIC_LEFT_COLUMN, MIN_SCREEN_WIDTH_FOR_STATIC_RIGHT_COLUMN } from '../../config';
-import windowSize from '../../util/windowSize';
-import {
-  MIN_LEFT_COLUMN_WIDTH,
-  SIDE_COLUMN_MAX_WIDTH,
-} from '../../components/middle/helpers/calculateMiddleFooterTransforms';
 import { updateReactionCount } from '../helpers';
-import { selectIsChatWithSelf, selectSendAs, selectTabState } from '../selectors';
+import { selectIsChatWithSelf, selectSendAs } from '../selectors';
 import { updateChat } from './chats';
 import { updateChatMessage } from './messages';
 
-import { getIsMobile } from '../../hooks/useAppLayout';
-
-function getLeftColumnWidth(windowWidth: number) {
-  if (windowWidth > MIN_SCREEN_WIDTH_FOR_STATIC_RIGHT_COLUMN) {
-    return Math.min(
-      Math.max(windowWidth * 0.25, MIN_LEFT_COLUMN_WIDTH),
-      windowWidth * 0.33,
-    );
-  }
-
-  if (windowWidth > MIN_SCREEN_WIDTH_FOR_STATIC_LEFT_COLUMN) {
-    return Math.min(
-      Math.max(windowWidth * 0.33, MIN_LEFT_COLUMN_WIDTH),
-      windowWidth * 0.4,
-    );
-  }
-
-  return SIDE_COLUMN_MAX_WIDTH;
-}
-
 export function subtractXForEmojiInteraction(global: GlobalState, x: number) {
-  const tabState = selectTabState(global);
-  return x - ((tabState.isLeftColumnShown && !getIsMobile())
-    ? global.leftColumnWidth || getLeftColumnWidth(windowSize.get().width)
-    : 0);
+  return x;
 }
 
 export function addMessageReaction<T extends GlobalState>(

@@ -6,10 +6,7 @@ import type {
   ApiRequestInputSavedStarGift,
   ApiStarsAmount,
   ApiStarsTransaction,
-  ApiStarsTransactionPeer,
-  ApiStarsTransactionPeerPeer,
 } from '../../api/types';
-import type { CustomPeer } from '../../types';
 import type { LangFn } from '../../util/localization';
 import type { GlobalState } from '../types';
 
@@ -253,88 +250,6 @@ export function getRequestInputSavedStarGift<T extends GlobalState>(
   }
 
   return undefined;
-}
-
-export function buildStarsTransactionCustomPeer(
-  peer: Exclude<ApiStarsTransactionPeer, ApiStarsTransactionPeerPeer>,
-): CustomPeer {
-  if (peer.type === 'appStore') {
-    return {
-      avatarIcon: 'star',
-      isCustomPeer: true,
-      titleKey: 'Stars.Intro.Transaction.AppleTopUp.Title',
-      subtitleKey: 'Stars.Intro.Transaction.AppleTopUp.Subtitle',
-      peerColorId: 5,
-    };
-  }
-
-  if (peer.type === 'playMarket') {
-    return {
-      avatarIcon: 'star',
-      isCustomPeer: true,
-      titleKey: 'Stars.Intro.Transaction.GoogleTopUp.Title',
-      subtitleKey: 'Stars.Intro.Transaction.GoogleTopUp.Subtitle',
-      peerColorId: 3,
-    };
-  }
-
-  if (peer.type === 'fragment') {
-    return {
-      avatarIcon: 'star',
-      isCustomPeer: true,
-      titleKey: 'Stars.Intro.Transaction.FragmentTopUp.Title',
-      subtitleKey: 'Stars.Intro.Transaction.FragmentTopUp.Subtitle',
-      customPeerAvatarColor: '#000000',
-    };
-  }
-
-  if (peer.type === 'premiumBot') {
-    return {
-      avatarIcon: 'star',
-      isCustomPeer: true,
-      titleKey: 'Stars.Intro.Transaction.PremiumBotTopUp.Title',
-      subtitleKey: 'Stars.Intro.Transaction.PremiumBotTopUp.Subtitle',
-      peerColorId: 1,
-      withPremiumGradient: true,
-    };
-  }
-
-  if (peer.type === 'ads') {
-    return {
-      avatarIcon: 'star',
-      isCustomPeer: true,
-      titleKey: 'Stars.Intro.Transaction.TelegramAds.Title',
-      subtitleKey: 'Stars.Intro.Transaction.TelegramAds.Subtitle',
-      peerColorId: 2,
-    };
-  }
-
-  if (peer.type === 'api') {
-    return {
-      avatarIcon: 'bots',
-      isCustomPeer: true,
-      titleKey: 'Stars.Intro.Transaction.TelegramBotApi.Title',
-      subtitleKey: 'Stars.Intro.Transaction.TelegramBotApi.Subtitle',
-      peerColorId: 4,
-    };
-  }
-
-  return {
-    avatarIcon: 'star',
-    isCustomPeer: true,
-    titleKey: 'Stars.Intro.Transaction.Unsupported.Title',
-    subtitleKey: 'Stars.Intro.Transaction.Unsupported.Title',
-    peerColorId: 0,
-  };
-}
-
-export function formatStarsTransactionAmount(lang: LangFn, starsAmount: ApiStarsAmount) {
-  const amount = starsAmount.amount + starsAmount.nanos / 1e9;
-  if (amount < 0) {
-    return `- ${lang.number(Math.abs(amount))}`;
-  }
-
-  return `+ ${lang.number(amount)}`;
 }
 
 export function formatStarsAmount(lang: LangFn, starsAmount: ApiStarsAmount) {

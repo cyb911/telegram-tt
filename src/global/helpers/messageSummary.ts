@@ -105,11 +105,6 @@ export function getMessageSummaryEmoji(message: ApiMessage) {
   return undefined;
 }
 
-export function getMediaContentTypeDescription(
-  lang: OldLangFn, content: MediaContent, statefulContent: StatefulMediaContent | undefined,
-) {
-  return getSummaryDescription(lang, content, statefulContent);
-}
 export function getMessageSummaryDescription(
   lang: OldLangFn,
   message: ApiMessage,

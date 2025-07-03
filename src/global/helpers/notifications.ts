@@ -20,25 +20,6 @@ export function getIsChatMuted(
   return getServerTime() < settings.mutedUntil;
 }
 
-export function getIsChatSilent(
-  chat: ApiChat,
-  notifyDefaults?: Record<ApiNotifyPeerType, ApiPeerNotifySettings>,
-  notifyException?: ApiPeerNotifySettings,
-) {
-  const settings = getChatNotifySettings(chat, notifyDefaults, notifyException);
-  if (!settings) return false;
-  return !settings.hasSound;
-}
-
-export function getShouldShowMessagePreview(
-  chat: ApiChat,
-  notifyDefaults?: Record<ApiNotifyPeerType, ApiPeerNotifySettings>,
-  notifyException?: ApiPeerNotifySettings,
-) {
-  const settings = getChatNotifySettings(chat, notifyDefaults, notifyException);
-  return Boolean(settings?.shouldShowPreviews);
-}
-
 export function getChatNotifySettings(
   chat: ApiChat,
   notifyDefaults?: Record<ApiNotifyPeerType, ApiPeerNotifySettings>,

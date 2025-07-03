@@ -9,18 +9,11 @@ import type {
 } from '../../api/types';
 import type { GlobalState } from '../types';
 
-export function getMessageRecentReaction(message: Partial<ApiMessage>) {
-  return message.isOutgoing ? message.reactions?.recentReactions?.[0] : undefined;
-}
 export function checkIfHasUnreadReactions(global: GlobalState, reactions: ApiReactions) {
   const { currentUserId } = global;
   return reactions?.recentReactions?.some(
     ({ isUnread, isOwn, peerId }) => isUnread && !isOwn && currentUserId !== peerId,
   );
-}
-
-export function areReactionsEmpty(reactions: ApiReactions) {
-  return !reactions.results.some(({ count, localAmount }) => count || localAmount);
 }
 
 export function getReactionKey(reaction: ApiReactionWithPaid): ApiReactionKey {
@@ -61,27 +54,6 @@ export function canSendReaction(reaction: ApiReactionWithPaid, chatReactions: Ap
   }
 
   return false;
-}
-
-export function sortReactions<T extends ApiAvailableReaction | ApiReactionWithPaid>(
-  reactions: T[],
-  topReactions?: ApiReactionWithPaid[],
-): T[] {
-  return reactions.slice().sort((left, right) => {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- TS Bug?
-    const reactionOne = left ? ('reaction' in left ? left.reaction : left as ApiReactionWithPaid) : undefined;
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- TS Bug?
-    const reactionTwo = right ? ('reaction' in right ? right.reaction : right as ApiReactionWithPaid) : undefined;
-
-    if (reactionOne?.type === 'paid') return -1;
-    if (reactionTwo?.type === 'paid') return 1;
-
-    const indexOne = topReactions?.findIndex((reaction) => isSameReaction(reaction, reactionOne)) || 0;
-    const indexTwo = topReactions?.findIndex((reaction) => isSameReaction(reaction, reactionTwo)) || 0;
-    return (
-      (indexOne > -1 ? indexOne : Infinity) - (indexTwo > -1 ? indexTwo : Infinity)
-    );
-  });
 }
 
 export function getUserReactions(message: ApiMessage): ApiReactionWithPaid[] {
