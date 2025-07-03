@@ -3,10 +3,6 @@ import type { WebApp } from '../../types/webapp';
 
 import { REPLIES_USER_ID, VERIFICATION_CODES_USER_ID } from '../../config';
 
-export function getBotCoverMediaHash(photo: ApiPhoto) {
-  return `photo${photo.id}?size=x`;
-}
-
 export function convertToApiChatType(type: string): ApiChatType | undefined {
   if (type === 'channels') return 'channels';
   if (type === 'chats' || type === 'groups') return 'chats';

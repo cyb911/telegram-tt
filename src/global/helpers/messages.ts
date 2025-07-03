@@ -1,36 +1,23 @@
 import type {
-  ApiAttachment,
   ApiMessage,
-  ApiMessageEntityTextUrl,
-  ApiPeer,
   ApiStory,
   ApiTypeStory,
 } from '../../api/types';
 import type {
   ApiPoll, MediaContainer, StatefulMediaContent,
 } from '../../api/types/messages';
-import type { ThreadId } from '../../types';
 import type { GlobalState } from '../types';
-import { ApiMessageEntityTypes, MAIN_THREAD_ID } from '../../api/types';
+import { ApiMessageEntityTypes } from '../../api/types';
 
 import {
   CONTENT_NOT_SUPPORTED,
-  LOTTIE_STICKER_MIME_TYPE,
   RE_LINK_TEMPLATE,
   SERVICE_NOTIFICATIONS_USER_ID,
-  SUPPORTED_AUDIO_CONTENT_TYPES,
-  SUPPORTED_PHOTO_CONTENT_TYPES,
-  SUPPORTED_VIDEO_CONTENT_TYPES,
-  TME_LINK_PREFIX,
   VERIFICATION_CODES_USER_ID,
-  VIDEO_STICKER_MIME_TYPE,
 } from '../../config';
-import { getCleanPeerId, isUserId } from '../../util/entities/ids';
 import { areSortedArraysIntersecting, unique } from '../../util/iteratees';
 import { isLocalMessageId } from '../../util/keys/messageKey';
-import { getServerTime } from '../../util/serverTime';
 import { getGlobal } from '../index';
-import { getMainUsername } from './users';
 
 const RE_LINK = new RegExp(RE_LINK_TEMPLATE, 'i');
 
@@ -84,41 +71,6 @@ export function getMessageText(message: MediaContainer) {
   return hasMessageText(message) ? message.content.text || { text: CONTENT_NOT_SUPPORTED } : undefined;
 }
 
-export function getFirstLinkInMessage(message: ApiMessage) {
-  const { text } = message.content;
-
-  let match: RegExpMatchArray | null | undefined;
-  if (text?.entities) {
-    const firstTextUrl = text.entities.find((entity): entity is ApiMessageEntityTextUrl => (
-      entity.type === ApiMessageEntityTypes.TextUrl
-    ));
-    if (firstTextUrl) {
-      match = firstTextUrl.url.match(RE_LINK);
-    }
-
-    if (!match) {
-      const firstUrl = text.entities.find((entity) => entity.type === ApiMessageEntityTypes.Url);
-      if (firstUrl) {
-        const { offset, length } = firstUrl;
-        match = text.text.substring(offset, offset + length).match(RE_LINK);
-      }
-    }
-  }
-
-  if (!match && text) {
-    match = text.text.match(RE_LINK);
-  }
-
-  if (!match) {
-    return undefined;
-  }
-
-  return {
-    url: match[0],
-    domain: match[3],
-  };
-}
-
 export function matchLinkInMessageText(message: ApiMessage) {
   const { text } = message.content;
   const match = text && text.text.match(RE_LINK);
@@ -149,18 +101,6 @@ export function isServiceNotificationMessage(message: ApiMessage) {
   return message.chatId === SERVICE_NOTIFICATIONS_USER_ID && Math.round(message.id) !== message.id;
 }
 
-export function isAnonymousOwnMessage(message: ApiMessage) {
-  return Boolean(message.senderId) && !isUserId(message.senderId) && isOwnMessage(message);
-}
-
-export function getSendingState(message: ApiMessage) {
-  if (!message.sendingState) {
-    return 'succeeded';
-  }
-
-  return message.sendingState === 'messageSendingStateFailed' ? 'failed' : 'pending';
-}
-
 export function isMessageLocal(message: ApiMessage) {
   return isLocalMessageId(message.id);
 }
@@ -171,23 +111,6 @@ export function isMessageFailed(message: ApiMessage) {
 
 export function isHistoryClearMessage(message: ApiMessage) {
   return message.content.action && message.content.action.type === 'historyClear';
-}
-
-export function isMessageTranslatable(message: ApiMessage, allowOutgoing?: boolean) {
-  const { text, game } = message.content;
-
-  const isLocal = isMessageLocal(message);
-  const isServiceNotification = isServiceNotificationMessage(message);
-  const isAction = isActionMessage(message);
-
-  return Boolean(text?.text.length && !message.emojiOnlyCount && !game && (allowOutgoing || !message.isOutgoing)
-    && !isLocal && !isServiceNotification && !isAction && !message.isScheduled);
-}
-
-export function getMessageSingleInlineButton(message: ApiMessage) {
-  return message.inlineButtons?.length === 1
-    && message.inlineButtons[0].length === 1
-    && message.inlineButtons[0][0];
 }
 
 export function orderHistoryIds(listedIds: number[]) {
@@ -285,40 +208,6 @@ export function isExpiredMessage(message: ApiMessage) {
 
 export function hasMessageTtl(message: ApiMessage) {
   return message.content?.ttlSeconds !== undefined;
-}
-
-export function getAttachmentMediaType(attachment: ApiAttachment) {
-  if (SUPPORTED_AUDIO_CONTENT_TYPES.has(attachment.mimeType)) {
-    return 'audio';
-  }
-
-  if (attachment.shouldSendAsFile) return 'file';
-
-  if (SUPPORTED_PHOTO_CONTENT_TYPES.has(attachment.mimeType)) {
-    return 'photo';
-  }
-
-  if (SUPPORTED_VIDEO_CONTENT_TYPES.has(attachment.mimeType)) {
-    return 'video';
-  }
-
-  return 'file';
-}
-
-export function isUploadingFileSticker(attachment: ApiAttachment) {
-  return attachment ? (attachment.mimeType === 'image/webp' || attachment.mimeType === LOTTIE_STICKER_MIME_TYPE
-    || attachment.mimeType === VIDEO_STICKER_MIME_TYPE) : undefined;
-}
-
-export function getMessageLink(peer: ApiPeer, topicId?: ThreadId, messageId?: number) {
-  const chatUsername = getMainUsername(peer);
-
-  const normalizedId = getCleanPeerId(peer.id);
-
-  const chatPart = chatUsername || `c/${normalizedId}`;
-  const topicPart = topicId && topicId !== MAIN_THREAD_ID ? `/${topicId}` : '';
-  const messagePart = messageId ? `/${messageId}` : '';
-  return `${TME_LINK_PREFIX}${chatPart}${topicPart}${messagePart}`;
 }
 
 export function splitMessagesForForwarding(messages: ApiMessage[], limit: number): ApiMessage[][] {

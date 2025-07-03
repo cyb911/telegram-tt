@@ -16,15 +16,6 @@ const TOPIC_MAPPING: Record<number, [string, string]> = {
   0xFB6F5F: [red, 'red'],
 };
 
-export function getTopicColors() {
-  return Object.keys(TOPIC_MAPPING).map((key) => parseInt(key, 10));
-}
-
 export function getTopicDefaultIcon(iconColor?: number) {
   return (iconColor && TOPIC_MAPPING[iconColor][0]) || grey;
-}
-
-export function getTopicColorCssVariable(iconColor?: number) {
-  const color = (iconColor && TOPIC_MAPPING[iconColor][1]) || 'grey';
-  return `--color-topic-${color}`;
 }

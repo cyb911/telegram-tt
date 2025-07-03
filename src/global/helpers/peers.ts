@@ -110,20 +110,3 @@ export function getPeerFullTitle(lang: OldLangFn | LangFn, peer: ApiPeer | Custo
   }
   return isApiPeerUser(peer) ? getUserFullName(peer) : getChatTitle(lang, peer);
 }
-
-export function getMessageSenderName(lang: OldLangFn, chatId: string, sender: ApiPeer) {
-  // Hide sender name for private chats
-  if (isUserId(chatId)) return undefined;
-
-  if (isApiPeerChat(sender)) {
-    if (chatId === sender.id) return undefined;
-
-    return sender.title;
-  }
-
-  if (sender.isSelf) {
-    return lang('FromYou');
-  }
-
-  return getPeerTitle(lang, sender);
-}

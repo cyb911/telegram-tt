@@ -1,7 +1,7 @@
 import type { ApiPeer, ApiUser, ApiUserStatus } from '../../api/types';
 import type { OldLangFn } from '../../hooks/useOldLang';
 
-import { ANONYMOUS_USER_ID, SERVICE_NOTIFICATIONS_USER_ID } from '../../config';
+import { SERVICE_NOTIFICATIONS_USER_ID } from '../../config';
 import { formatFullDate, formatTime } from '../../util/dates/dateFormat';
 import { DAY } from '../../util/dates/units';
 import { orderBy } from '../../util/iteratees';
@@ -191,10 +191,6 @@ export function isDeletedUser(user: ApiUser) {
 
 export function isUserBot(user: ApiUser) {
   return user.type === 'userTypeBot';
-}
-
-export function getCanAddContact(user: ApiUser) {
-  return !user.isSelf && !user.isContact && !isUserBot(user) && user.id !== ANONYMOUS_USER_ID;
 }
 
 export function sortUserIds(

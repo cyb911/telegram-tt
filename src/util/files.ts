@@ -1,6 +1,3 @@
-import { CONTENT_TYPES_WITH_PREVIEW } from '../config';
-import { pause } from './schedulers';
-
 // Polyfill for Safari: `File` is not available in web worker
 if (typeof File === 'undefined') {
   self.File = class extends Blob {
@@ -20,24 +17,6 @@ if (typeof File === 'undefined') {
   } as typeof File;
 }
 
-export function blobToDataUri(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = (e: ProgressEvent<FileReader>) => {
-      const { result } = e.target || {};
-      if (typeof result === 'string') {
-        resolve(result);
-      }
-
-      reject(new Error('Failed to read blob'));
-    };
-
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
-}
-
 export function blobToFile(blob: Blob, fileName: string) {
   return new File([blob], fileName, {
     lastModified: Date.now(),
@@ -52,47 +31,6 @@ export function preloadImage(url: string): Promise<HTMLImageElement> {
     img.onerror = reject;
     img.src = url;
   });
-}
-
-export function preloadVideo(url: string): Promise<HTMLVideoElement> {
-  return new Promise((resolve, reject) => {
-    const video = document.createElement('video');
-    video.volume = 0;
-    video.onloadedmetadata = () => resolve(video);
-    video.onerror = reject;
-    video.src = url;
-  });
-}
-
-export async function createPosterForVideo(url: string): Promise<string | undefined> {
-  try {
-    const video = await preloadVideo(url);
-
-    return await Promise.race([
-      pause(2000) as Promise<undefined>,
-      new Promise<string | undefined>((resolve, reject) => {
-        video.onseeked = () => {
-          if (!video.videoWidth || !video.videoHeight) {
-            resolve(undefined);
-          }
-
-          const canvas = document.createElement('canvas');
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          const ctx = canvas.getContext('2d')!;
-          ctx.drawImage(video, 0, 0);
-
-          canvas.toBlob((blob) => {
-            resolve(blob ? URL.createObjectURL(blob) : undefined);
-          });
-        };
-        video.onerror = reject;
-        video.currentTime = Math.min(video.duration, 1);
-      }),
-    ]);
-  } catch (e) {
-    return undefined;
-  }
 }
 
 export async function fetchBlob(blobUrl: string) {
@@ -114,10 +52,6 @@ export function imgToCanvas(img: HTMLImageElement) {
   ctx.drawImage(img, 0, 0);
 
   return canvas;
-}
-
-export function hasPreview(file: File) {
-  return CONTENT_TYPES_WITH_PREVIEW.has(file.type);
 }
 
 export function validateFiles(files: File[] | FileList | null): File[] | undefined {

@@ -1,4 +1,4 @@
-import { IS_TEST, PRODUCTION_HOSTNAME } from '../../config';
+import { IS_TEST } from '../../config';
 
 export function getPlatform() {
   const { userAgent, platform } = window.navigator;
@@ -23,7 +23,6 @@ export function getPlatform() {
   return undefined;
 }
 
-export const IS_PRODUCTION_HOST = window.location.host === PRODUCTION_HOSTNAME;
 export const PLATFORM_ENV = getPlatform();
 export const IS_MAC_OS = PLATFORM_ENV === 'macOS';
 export const IS_WINDOWS = PLATFORM_ENV === 'Windows';
@@ -32,7 +31,6 @@ export const IS_IOS = PLATFORM_ENV === 'iOS';
 export const IS_ANDROID = PLATFORM_ENV === 'Android';
 export const IS_MOBILE = IS_IOS || IS_ANDROID;
 export const IS_SAFARI = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-export const IS_YA_BROWSER = navigator.userAgent.includes('YaBrowser');
 export const IS_FIREFOX = navigator.userAgent.toLowerCase().includes('firefox')
   || navigator.userAgent.toLowerCase().includes('iceweasel')
   || navigator.userAgent.toLowerCase().includes('icecat');
@@ -74,9 +72,7 @@ export const IS_OPUS_SUPPORTED = Boolean((new Audio()).canPlayType('audio/ogg; c
 export const IS_CANVAS_FILTER_SUPPORTED = (
   !IS_TEST && 'filter' in (document.createElement('canvas').getContext('2d') || {})
 );
-export const IS_REQUEST_FULLSCREEN_SUPPORTED = 'requestFullscreen' in document.createElement('div');
 export const ARE_CALLS_SUPPORTED = true;
-export const LAYERS_ANIMATION_NAME = IS_ANDROID ? 'slideFade' : IS_IOS ? 'slideLayers' : 'pushSlide';
 
 export const IS_WAVE_TRANSFORM_SUPPORTED = !IS_MOBILE
   && !IS_FIREFOX // https://bugzilla.mozilla.org/show_bug.cgi?id=1961378
@@ -84,13 +80,11 @@ export const IS_WAVE_TRANSFORM_SUPPORTED = !IS_MOBILE
 export const IS_SNAP_EFFECT_SUPPORTED = !IS_MOBILE
   && !IS_FIREFOX // https://bugzilla.mozilla.org/show_bug.cgi?id=1896504
   && !IS_SAFARI;
-export const IS_FLUID_BACKGROUND_SUPPORTED = !IS_FIREFOX;
 
 const TEST_VIDEO = document.createElement('video');
 
 export const IS_WEBM_SUPPORTED = Boolean(TEST_VIDEO.canPlayType('video/webm; codecs="vp9"').replace('no', ''));
 
-export const MASK_IMAGE_DISABLED = true;
 export const IS_OPFS_SUPPORTED = Boolean(navigator.storage?.getDirectory);
 if (IS_OPFS_SUPPORTED) {
   // Clear old contents
@@ -107,25 +101,9 @@ if (IS_OPFS_SUPPORTED) {
 export const IS_OFFSET_PATH_SUPPORTED = CSS.supports('offset-rotate: 0deg');
 export const IS_BACKDROP_BLUR_SUPPORTED = CSS.supports('backdrop-filter: blur()')
   || CSS.supports('-webkit-backdrop-filter: blur()');
-export const IS_INSTALL_PROMPT_SUPPORTED = 'onbeforeinstallprompt' in window;
 export const IS_OPEN_IN_NEW_TAB_SUPPORTED = !(IS_PWA && IS_MOBILE);
 export const IS_TRANSLATION_SUPPORTED = !IS_TEST;
 export const IS_VIEW_TRANSITION_SUPPORTED = 'ViewTransition' in window;
-
-export const MESSAGE_LIST_SENSITIVE_AREA = 750;
-
-export const SCROLLBAR_WIDTH = (() => {
-  const el = document.createElement('div');
-  el.style.cssText = 'overflow:scroll; visibility:hidden; position:absolute;';
-  el.classList.add('custom-scroll');
-  document.body.appendChild(el);
-  const width = el.offsetWidth - el.clientWidth;
-  el.remove();
-
-  document.documentElement.style.setProperty('--scrollbar-width', `${width}px`);
-
-  return width;
-})();
 
 export const MAX_BUFFER_SIZE = (IS_MOBILE ? 512 : 2000) * 1024 ** 2; // 512 OR 2000 MB
 
