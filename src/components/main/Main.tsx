@@ -16,10 +16,7 @@ import { BASE_EMOJI_KEYWORD_LANG, DEBUG, INACTIVE_MARKER } from '../../config';
 import { requestNextMutation } from '../../lib/fasterdom/fasterdom';
 import {
   selectCanAnimateInterface,
-  selectChatFolder,
-  selectChatMessage,
   selectCurrentMessageList,
-  selectIsCurrentUserFrozen,
   selectIsCurrentUserPremium,
   selectIsForwardModalOpen,
   selectIsMediaViewerOpen,
@@ -27,11 +24,9 @@ import {
   selectIsRightColumnShown,
   selectIsServiceChatReady,
   selectIsStoryViewerOpen,
-  selectPerformanceSettingsValue,
   selectTabState,
   selectUser,
 } from '../../global/selectors';
-import { selectSharedSettings } from '../../global/selectors/sharedState';
 import { IS_ANDROID, IS_ELECTRON } from '../../util/browser/windowEnvironment';
 import buildClassName from '../../util/buildClassName';
 import { waitForTransitionEnd } from '../../util/cssAnimationEndListeners';
@@ -487,18 +482,7 @@ const Main = ({
 export default memo(withGlobal<OwnProps>(
   (global, { isMobile }): StateProps => {
     const {
-      currentUserId,
-    } = global;
-
-    const {
       botTrustRequest,
-      requestedAttachBotInChat,
-      requestedDraft,
-      safeLinkModalUrl,
-      openedStickerSetShortName,
-      openedCustomEmojiSetIds,
-      shouldSkipHistoryAnimations,
-      openedGame,
       isLeftColumnShown,
       historyCalendarSelectedAt,
       notifications,
@@ -508,25 +492,13 @@ export default memo(withGlobal<OwnProps>(
       giveawayModal,
       deleteMessageModal,
       starsGiftingPickerModal,
-      isMasterTab,
       payment,
       limitReachedModal,
-      deleteFolderDialogModal,
     } = selectTabState(global);
 
-    const { wasTimeFormatSetManually } = selectSharedSettings(global);
-
-    const gameMessage = openedGame && selectChatMessage(global, openedGame.chatId, openedGame.messageId);
-    const gameTitle = gameMessage?.content.game?.title;
     const { chatId } = selectCurrentMessageList(global) || {};
-    const noRightColumnAnimation = !selectPerformanceSettingsValue(global, 'rightColumnAnimations')
-      || !selectCanAnimateInterface(global);
-
-    const deleteFolderDialog = deleteFolderDialogModal ? selectChatFolder(global, deleteFolderDialogModal) : undefined;
-    const isAccountFrozen = selectIsCurrentUserFrozen(global);
 
     return {
-      currentUserId,
       isLeftColumnOpen: isLeftColumnShown,
       isMiddleColumnOpen: Boolean(chatId),
       isRightColumnOpen: selectIsRightColumnShown(global, isMobile),
@@ -536,23 +508,14 @@ export default memo(withGlobal<OwnProps>(
       isReactionPickerOpen: selectIsReactionPickerOpen(global),
       hasNotifications: Boolean(notifications.length),
       hasDialogs: Boolean(dialogs.length),
-      safeLinkModalUrl,
       isHistoryCalendarOpen: Boolean(historyCalendarSelectedAt),
-      shouldSkipHistoryAnimations,
-      openedStickerSetShortName,
-      openedCustomEmojiSetIds,
       isServiceChatReady: selectIsServiceChatReady(global),
       withInterfaceAnimations: selectCanAnimateInterface(global),
-      wasTimeFormatSetManually,
       addedSetIds: global.stickers.added.setIds,
       addedCustomEmojiIds: global.customEmojis.added.setIds,
       newContactUserId: newContact?.userId,
       newContactByPhoneNumber: newContact?.isByPhoneNumber,
-      openedGame,
-      gameTitle,
-      botTrustRequest,
       botTrustRequestBot: botTrustRequest && selectUser(global, botTrustRequest.botId),
-      requestedAttachBotInChat,
       isCurrentUserPremium: selectIsCurrentUserPremium(global),
       isPremiumModalOpen: premiumModal?.isOpen,
       isGiveawayModalOpen: giveawayModal?.isOpen,
@@ -561,12 +524,7 @@ export default memo(withGlobal<OwnProps>(
       limitReached: limitReachedModal?.limit,
       isPaymentModalOpen: payment.isPaymentModalOpen,
       isReceiptModalOpen: Boolean(payment.receipt),
-      deleteFolderDialog,
-      isMasterTab,
-      requestedDraft,
-      noRightColumnAnimation,
       isSynced: global.isSynced,
-      isAccountFrozen,
       isAppConfigLoaded: global.isAppConfigLoaded,
     };
   },
