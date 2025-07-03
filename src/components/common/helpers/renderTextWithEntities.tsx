@@ -2,7 +2,7 @@ import type { ElementRef } from '../../../lib/teact/teact';
 import type React from '../../../lib/teact/teact';
 import { getActions } from '../../../global';
 
-import type { ApiFormattedText, ApiMessageEntity } from '../../../api/types';
+import type { ApiMessageEntity } from '../../../api/types';
 import type { ObserveFn } from '../../../hooks/useIntersectionObserver';
 import type { TextPart, ThreadId } from '../../../types';
 import type { TextFilter } from './renderText';
@@ -223,25 +223,6 @@ export function renderTextWithEntities({
     result.push(...renderResult);
     index = entityEndIndex;
   });
-
-  return result;
-}
-
-export function getTextWithEntitiesAsHtml(formattedText?: ApiFormattedText) {
-  const { text, entities } = formattedText || {};
-  if (!text) {
-    return '';
-  }
-
-  const result = renderTextWithEntities({
-    text,
-    entities,
-    shouldRenderAsHtml: true,
-  }) as string[];
-
-  if (Array.isArray(result)) {
-    return result.join('');
-  }
 
   return result;
 }
@@ -469,9 +450,6 @@ function processEntity({
   function renderNestedMessagePart() {
     return renderMessagePart({
       content: renderedContent,
-      highlight,
-      emojiSize,
-      asPreview,
     });
   }
 
