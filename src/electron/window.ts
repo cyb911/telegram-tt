@@ -7,14 +7,13 @@ import path from 'path';
 import type { WindowButtonsPosition } from '../types/electron';
 import { ElectronAction, ElectronEvent } from '../types/electron';
 
-import setupAutoUpdates, { AUTO_UPDATE_SETTING_KEY, getIsAutoUpdateEnabled } from './autoUpdates';
 import { processDeeplink } from './deeplink';
 import { captureLocalStorage, restoreLocalStorage } from './localStorage';
 import tray from './tray';
 import {
-  checkIsWebContentsUrlAllowed, forceQuit, getAppTitle, getCurrentWindow, getLastWindow,
-  hasExtraWindows, IS_FIRST_RUN, IS_MAC_OS, IS_PREVIEW, IS_PRODUCTION, IS_WINDOWS,
-  reloadWindows, store, WINDOW_BUTTONS_POSITION, windows,
+  checkIsWebContentsUrlAllowed, getAppTitle, getCurrentWindow,
+  IS_PREVIEW, IS_PRODUCTION, IS_WINDOWS,
+  reloadWindows, WINDOW_BUTTONS_POSITION, windows,
 } from './utils';
 import windowStateKeeper from './windowState';
 
@@ -64,10 +63,6 @@ export function createWindow(url?: string) {
       preload: path.join(__dirname, 'preload.cjs'),
       devTools: !IS_PRODUCTION,
     },
-    ...(IS_MAC_OS && {
-      titleBarStyle: 'hidden',
-      trafficLightPosition: WINDOW_BUTTONS_POSITION.standard,
-    }),
   });
 
   windowState.manage(window);
@@ -100,25 +95,9 @@ export function createWindow(url?: string) {
   });
 
   window.on('close', (event) => {
-    if (IS_MAC_OS || (IS_WINDOWS && tray.isEnabled)) {
-      if (forceQuit.isEnabled) {
-        app.exit(0);
-        forceQuit.disable();
-      } else if (hasExtraWindows()) {
-        windows.delete(window);
-        windowState.unmanage();
-      } else {
-        event.preventDefault();
-        window.hide();
-      }
-    }
   });
 
   windowState.clearLastUrlHash();
-
-  if (!IS_MAC_OS) {
-    window.removeMenu();
-  }
 
   if (IS_WINDOWS && tray.isEnabled) {
     tray.setupListeners(window);
@@ -127,17 +106,6 @@ export function createWindow(url?: string) {
 
   window.webContents.once('dom-ready', async () => {
     processDeeplink();
-
-    if (IS_PRODUCTION) {
-      setupAutoUpdates(windowState);
-    }
-
-    if (!IS_FIRST_RUN && getIsAutoUpdateEnabled() === undefined) {
-      store.set(AUTO_UPDATE_SETTING_KEY, true);
-      await captureLocalStorage();
-      reloadWindows();
-    }
-
     window.show();
   });
 
@@ -151,11 +119,6 @@ function loadWindowUrl(window: BrowserWindow, url?: string, hash?: string): void
   } else if (!app.isPackaged) {
     window.loadURL(`http://localhost:1234${hash}`);
     window.webContents.openDevTools();
-  } else if (getIsAutoUpdateEnabled()) {
-    window.loadURL(`${process.env.BASE_URL}${hash}`);
-  } else if (getIsAutoUpdateEnabled() === undefined && IS_FIRST_RUN) {
-    store.set(AUTO_UPDATE_SETTING_KEY, true);
-    window.loadURL(`${process.env.BASE_URL}${hash}`);
   } else {
     window.loadURL(`file://${__dirname}/index.html${hash}`);
   }
@@ -190,10 +153,6 @@ export function setupElectronActionHandlers() {
   });
 
   ipcMain.handle(ElectronAction.SET_WINDOW_BUTTONS_POSITION, (_, position: WindowButtonsPosition) => {
-    if (!IS_MAC_OS) {
-      return;
-    }
-
     getCurrentWindow()?.setWindowButtonPosition(WINDOW_BUTTONS_POSITION[position]);
   });
 
@@ -201,14 +160,8 @@ export function setupElectronActionHandlers() {
     if (IS_PREVIEW) {
       return;
     }
-
-    store.set(AUTO_UPDATE_SETTING_KEY, isAutoUpdateEnabled);
     await captureLocalStorage();
     reloadWindows(isAutoUpdateEnabled);
-  });
-
-  ipcMain.handle(ElectronAction.GET_IS_AUTO_UPDATE_ENABLED, () => {
-    return getIsAutoUpdateEnabled();
   });
 
   ipcMain.handle(ElectronAction.SET_IS_TRAY_ICON_ENABLED, (_, isTrayIconEnabled: boolean) => {
@@ -225,28 +178,11 @@ export function setupElectronActionHandlers() {
 }
 
 export function setupCloseHandlers() {
-  app.on('window-all-closed', () => {
-    if (!IS_MAC_OS) {
-      app.quit();
-    }
-  });
-
-  app.on('before-quit', (event) => {
-    if (IS_MAC_OS && !forceQuit.isEnabled) {
-      event.preventDefault();
-      forceQuit.enable();
-      app.quit();
-    }
-  });
-
   app.on('activate', () => {
     const hasActiveWindow = BrowserWindow.getAllWindows().length > 0;
 
     if (!hasActiveWindow) {
       createWindow();
-    } else if (IS_MAC_OS) {
-      forceQuit.disable();
-      getLastWindow()?.show();
     }
   });
 }
