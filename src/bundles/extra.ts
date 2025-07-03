@@ -10,4 +10,3 @@ export { default as SeenByModal } from '../components/common/SeenByModal';
 export { default as CustomEmojiSetsModal } from '../components/common/CustomEmojiSetsModal';
 
 export { default as WalletPaymentModal } from '../components/payment/WalletPaymentModal';
-export { default as OneTimeMediaModal } from '../components/modals/oneTimeMedia/OneTimeMediaModal';

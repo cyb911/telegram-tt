@@ -13,7 +13,6 @@ import {
   selectChat, selectCurrentMessageList, selectIsCurrentUserFrozen,
   selectTabState, selectUser,
 } from '../../selectors';
-import { ensureIsSuperGroup } from './chats';
 
 addActionHandler('checkPublicLink', async (global, actions, payload): Promise<void> => {
   const { username, tabId = getCurrentTabId() } = payload;
@@ -49,37 +48,6 @@ addActionHandler('checkPublicLink', async (global, actions, payload): Promise<vo
   if (result === undefined) {
     actions.openLimitReachedModal({ limit: 'channelsPublic', tabId });
   }
-});
-
-addActionHandler('updatePublicLink', async (global, actions, payload): Promise<void> => {
-  const { username, shouldDisableUsernames, tabId = getCurrentTabId() } = payload;
-
-  const { chatId } = selectCurrentMessageList(global, tabId) || {};
-  if (!chatId) {
-    return;
-  }
-
-  const chat = await ensureIsSuperGroup(global, actions, chatId, tabId);
-  if (!chat) return;
-
-  global = getGlobal();
-
-  global = updateManagementProgress(global, ManagementProgress.InProgress, tabId);
-  setGlobal(global);
-
-  const result = await callApi('setChatUsername', { chat, username });
-  if (shouldDisableUsernames) {
-    await callApi('deactivateAllUsernames', { chat });
-  }
-
-  global = getGlobal();
-  global = updateManagementProgress(global, result ? ManagementProgress.Complete : ManagementProgress.Error, tabId);
-  global = updateManagement(global, chat.id, {
-    isUsernameAvailable: undefined,
-    checkedUsername: undefined,
-    error: undefined,
-  }, tabId);
-  setGlobal(global);
 });
 
 addActionHandler('updatePrivateLink', (global, actions, payload): ActionReturnType => {
