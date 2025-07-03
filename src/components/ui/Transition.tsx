@@ -61,9 +61,6 @@ const CLASSES = {
   inactive: 'Transition_slide-inactive',
 };
 
-export const ACTIVE_SLIDE_CLASS_NAME = CLASSES.active;
-export const TO_SLIDE_CLASS_NAME = CLASSES.to;
-
 const DISABLEABLE_ANIMATIONS = new Set<AnimationName>([
   'slide', 'slideRtl', 'slideFade', 'zoomFade', 'zoomBounceSemiFade', 'slideLayers', 'pushSlide', 'reveal',
   'slideOptimized', 'slideOptimizedRtl', 'slideVertical', 'slideVerticalFade',
