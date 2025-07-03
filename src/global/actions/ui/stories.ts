@@ -17,7 +17,6 @@ import {
   selectStoryListForViewer,
   selectTabState,
 } from '../../selectors';
-import { fetchChatByUsername } from '../api/chats';
 import { getPeerStarsForMessage } from '../api/messages';
 
 addActionHandler('openStoryViewer', async (global, actions, payload): Promise<void> => {
@@ -65,17 +64,11 @@ addActionHandler('openStoryViewer', async (global, actions, payload): Promise<vo
 
 addActionHandler('openStoryViewerByUsername', async (global, actions, payload): Promise<void> => {
   const {
-    username, storyId, origin, tabId = getCurrentTabId(),
+    storyId, origin, tabId = getCurrentTabId(),
   } = payload;
 
-  const chat = await fetchChatByUsername(global, username);
-
-  if (!chat) {
-    return;
-  }
-
   actions.openStoryViewer({
-    peerId: chat.id,
+    peerId: '',
     storyId,
     isSinglePeer: true,
     isSingleStory: true,
