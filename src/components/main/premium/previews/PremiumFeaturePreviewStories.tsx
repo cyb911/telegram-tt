@@ -26,7 +26,7 @@ const STORY_FEATURE_TITLES = {
   stories_order: 'PremiumStoriesPriority',
   stories_stealth: 'PremiumStoriesStealth',
   stories_views: 'PremiumStoriesViews',
-  stories_timer: 'lng_premium_stories_subtitle_expiration',
+  stories_timer: 'PremiumStoriesExpiration',
   stories_save: 'PremiumStoriesSaveToGallery',
   stories_caption: 'lng_premium_stories_subtitle_caption',
   stories_link: 'lng_premium_stories_subtitle_links',

@@ -2033,3 +2033,9 @@
 "UpgradedStories" = "高级动态";
 "PremiumStoriesPriority" = "优先显示";
 "PremiumStoriesPriorityDescription" = "您的动态将会优先显示，因此可以获得更多浏览量。";
+"PremiumStoriesStealth" = "影身模式";
+"PremiumStoriesStealthDescription" = "隐藏您在查看其他人的动态时的查看记录。";
+"PremiumStoriesViews" = "永久查看记录";
+"PremiumStoriesViewsDescription" = "查看谁查看过您的动态 - 即使在动态过期后仍能查看。";
+"PremiumStoriesExpiration" = "过期选项";
+"PremiumStoriesExpirationDescription" = "可自定义您的动态的过期时间，比如 6 小时或48小时。";
