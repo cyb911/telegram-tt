@@ -24,16 +24,8 @@ class IdbStore {
     return set(key, value, this.store);
   }
 
-  public setMany(entries: [string, any][]) {
-    return setMany(entries, this.store);
-  }
-
   public get<T = unknown>(key: string) {
     return get<T>(key, this.store);
-  }
-
-  public getMany<T = unknown>(keys: string[]) {
-    return getMany<T>(keys, this.store);
   }
 
   public clear() {
@@ -42,10 +34,6 @@ class IdbStore {
 
   public del(key: string) {
     return del(key, this.store);
-  }
-
-  public delMany(keys: string[]) {
-    return delMany(keys, this.store);
   }
 
   public entries() {

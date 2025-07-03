@@ -75,17 +75,6 @@ export function formatCountdownShort(lang: OldLangFn, msLeft: number): string {
   }
 }
 
-export function formatLocationLastUpdate(lang: OldLangFn, currentTime: number, lastUpdated = currentTime) {
-  const seconds = currentTime - lastUpdated;
-  if (seconds < 60) {
-    return lang('LiveLocationUpdated.JustNow');
-  } else if (seconds < 60 * 60) {
-    return lang('LiveLocationUpdated.MinutesAgo', Math.floor(seconds / 60));
-  } else {
-    return lang('LiveLocationUpdated.TodayAt', formatTime(lang, lastUpdated));
-  }
-}
-
 export function formatHumanDate(
   lang: OldLangFn,
   datetime: number | Date,
@@ -288,10 +277,6 @@ export function formatShortDuration(lang: LangFn, duration: number) {
 
   const count = Math.ceil(duration / (60 * 60 * 24));
   return lang('Days', { count }, { pluralValue: count });
-}
-
-export function timestampPlusDay(timestamp: number) {
-  return timestamp + MILLISECONDS_IN_DAY / 1000;
 }
 
 function lowerFirst(str: string) {

@@ -144,22 +144,10 @@ export function getOrderedIds(folderId: number) {
   return results.orderedIdsByFolderId[folderId];
 }
 
-export function getChatsCount() {
-  if (!inited) init();
-
-  return results.chatsCountByFolderId;
-}
-
 export function getUnreadCounters() {
   if (!inited) init();
 
   return results.unreadCountersByFolderId;
-}
-
-export function getUnreadChatsByFolderId() {
-  if (!inited) init();
-
-  return results.unreadChatIdsByFolderId;
 }
 
 export function getAllNotificationsCount() {
@@ -179,16 +167,6 @@ export function addOrderedIdsCallback(folderId: number, callback: (orderedIds: s
   }
 
   return callbacks.orderedIdsByFolderId[folderId].addCallback(callback);
-}
-
-export function addChatsCountCallback(callback: (chatsCount: typeof results.chatsCountByFolderId) => void) {
-  return callbacks.chatsCountByFolderId.addCallback(callback);
-}
-
-export function addUnreadChatsByFolderIdCallback(
-  callback: (unreadChats: typeof results.unreadChatIdsByFolderId) => void,
-) {
-  return callbacks.unreadChatIdsByFolderId.addCallback(callback);
 }
 
 export function addUnreadCountersCallback(callback: (unreadCounters: typeof results.unreadCountersByFolderId) => void) {
