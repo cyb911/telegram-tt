@@ -6,7 +6,6 @@ export { default as PremiumLimitReachedModal } from '../components/main/premium/
 export { default as LocationAccessModal } from '../components/modals/locationAccess/LocationAccessModal';
 export { default as CalendarModal } from '../components/common/CalendarModal';
 export { default as SeenByModal } from '../components/common/SeenByModal';
-export { default as PrivacySettingsNoticeModal } from '../components/common/PrivacySettingsNoticeModal';
 
 export { default as CustomEmojiSetsModal } from '../components/common/CustomEmojiSetsModal';
 
