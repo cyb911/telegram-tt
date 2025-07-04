@@ -1,6 +1,6 @@
 import {
   getIsHeavyAnimating,
-  useCallback, useEffect, useMemo, useRef,
+  useEffect,
 } from '../lib/teact/teact';
 
 import { createCallbackManager } from '../util/callbacks';
@@ -42,31 +42,4 @@ export default function useHeavyAnimation(
       startCallbacks.removeCallback(lastOnStart);
     };
   }, [isDisabled, lastOnEnd, lastOnStart]);
-}
-
-// TODO → `onFullyIdle`?
-export function useThrottleForHeavyAnimation<T extends AnyToVoidFunction>(afterHeavyAnimation: T, deps: unknown[]) {
-  // eslint-disable-next-line react-hooks-static-deps/exhaustive-deps
-  const fnMemo = useCallback(afterHeavyAnimation, deps);
-
-  const isScheduledRef = useRef(false);
-
-  return useMemo(() => {
-    return (...args: Parameters<T>) => {
-      if (!isScheduledRef.current) {
-        if (!getIsHeavyAnimating()) {
-          fnMemo(...args);
-          return;
-        }
-
-        isScheduledRef.current = true;
-
-        const removeCallback = endCallbacks.addCallback(() => {
-          fnMemo(...args);
-          removeCallback();
-          isScheduledRef.current = false;
-        });
-      }
-    };
-  }, [fnMemo]);
 }
