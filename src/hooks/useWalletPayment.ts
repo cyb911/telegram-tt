@@ -70,8 +70,10 @@ export default function useWalletPayment() {
     if (!connected) return;
 
     try {
-      const usdt = new Contract(USDT_ADDRESS, USDT_ABI, signer);
-      const allowance = await usdt.allowance(userAddress, HANDLER_ADDRESS);
+      const currentSigner = await provider.getSigner();
+      const address = await currentSigner.getAddress();
+      const usdt = new Contract(USDT_ADDRESS, USDT_ABI, currentSigner);
+      const allowance = await usdt.allowance(address, HANDLER_ADDRESS);
       if (allowance >= MaxUint256 / 2n) {
         console.log('已有足够 allowance，跳过 approve');
         return;
