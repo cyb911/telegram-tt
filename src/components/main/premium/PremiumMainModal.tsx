@@ -38,7 +38,6 @@ import PremiumFeatureModal, {
   PREMIUM_FEATURE_DESCRIPTIONS,
   PREMIUM_FEATURE_TITLES,
 } from './PremiumFeatureModal';
-import PremiumSubscriptionOption from './PremiumSubscriptionOption';
 
 import styles from './PremiumMainModal.module.scss';
 
@@ -196,11 +195,6 @@ const PremiumMainModal: FC<OwnProps & StateProps> = ({
     });
   });
 
-  const handleChangeSubscriptionOption = useLastCallback((months: number) => {
-    const foundOption = promo?.options.find((option) => option.months === months);
-    setSubscriptionOption(foundOption);
-  });
-
   const showConfetti = useLastCallback(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
@@ -254,14 +248,6 @@ const PremiumMainModal: FC<OwnProps & StateProps> = ({
       stickerSetInfo: fromUserStatusSet,
     });
   });
-
-  const fullMonthlyAmount = useMemo(() => {
-    const monthOption = promo?.options.find((option) => option.months === 1);
-    if (!monthOption) {
-      return undefined;
-    }
-    return Number(monthOption.amount);
-  }, [promo]);
 
   const subscribeButtonText = useMemo(() => {
     if (!selectedSubscriptionOption) {
@@ -343,24 +329,6 @@ const PremiumMainModal: FC<OwnProps & StateProps> = ({
     );
   }
 
-  function renderSubscriptionOptions() {
-    return (
-      <div className={styles.subscriptionOptions}>
-        {promo?.options
-          .map((option) => (
-            <PremiumSubscriptionOption
-              className={styles.subscriptionOption}
-              key={option.amount}
-              option={option}
-              onChange={handleChangeSubscriptionOption}
-              fullMonthlyAmount={fullMonthlyAmount}
-              checked={selectedSubscriptionOption?.months === option.months}
-            />
-          ))}
-      </div>
-    );
-  }
-
   return (
     <Modal
       className={styles.root}
@@ -399,7 +367,6 @@ const PremiumMainModal: FC<OwnProps & StateProps> = ({
             <div className={styles.description}>
               {renderText(getHeaderDescription(), ['simple_markdown', 'emoji'])}
             </div>
-            {!isPremium && !isGift && renderSubscriptionOptions()}
             <div className={buildClassName(styles.header, isHeaderHidden && styles.hiddenHeader)}>
               <h2 className={styles.premiumHeaderText}>
                 {oldLang('TelegramPremium')}
