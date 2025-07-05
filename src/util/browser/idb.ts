@@ -2,13 +2,10 @@ import {
   clear,
   createStore,
   del,
-  delMany,
   entries as getEntries,
   get,
-  getMany,
   keys as getKeys,
   set,
-  setMany,
   update,
   values as getValues,
 } from 'idb-keyval';

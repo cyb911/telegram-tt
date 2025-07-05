@@ -1,5 +1,5 @@
 import type {
-  ApiLimitType, ApiLimitTypeForPromo, ApiPremiumSection, ApiReactionEmoji,
+  ApiLimitType, ApiLimitTypeForPromo, ApiPremiumSection,
 } from './api/types';
 import type {
   GiftProfileFilterOptions,
@@ -22,7 +22,6 @@ export const IS_PACKAGED_ELECTRON = process.env.IS_PACKAGED_ELECTRON;
 export const USE_STATIC_PREMIUM_PROMO = process.env.USE_STATIC_PREMIUM_PROMO === '1';
 
 export const ELECTRON_WINDOW_DRAG_EVENT_START = 'tt-electron-window-drag-start';
-export const ELECTRON_WINDOW_DRAG_EVENT_END = 'tt-electron-window-drag-end';
 
 export const DEBUG = process.env.APP_ENV !== 'production';
 export const DEBUG_MORE = false;
@@ -71,14 +70,10 @@ export const UPLOAD_WORKERS = 16;
 
 const isBigScreen = typeof window !== 'undefined' && window.innerHeight >= 900;
 
-export const MIN_PASSWORD_LENGTH = 1;
-
 export const MESSAGE_LIST_SLICE = isBigScreen ? 60 : 40;
 export const MESSAGE_LIST_VIEWPORT_LIMIT = MESSAGE_LIST_SLICE * 2;
 
 export const CHAT_HEIGHT_PX = 72;
-export const PEER_PICKER_ITEM_HEIGHT_PX = 56;
-export const CHAT_LIST_LOAD_SLICE = 100;
 export const SHARED_MEDIA_SLICE = 42;
 export const CHAT_MEDIA_SLICE = 42;
 export const MESSAGE_SEARCH_SLICE = 42;
@@ -88,8 +83,6 @@ export const STORY_LIST_LIMIT = 100;
 export const API_GENERAL_ID_LIMIT = 100;
 export const STATISTICS_PUBLIC_FORWARDS_LIMIT = 50;
 export const RESALE_GIFTS_LIMIT = 50;
-
-export const GLOBAL_SUGGESTED_CHANNELS_ID = 'global';
 
 // As in Telegram for Android
 // https://github.com/DrKLO/Telegram/blob/51e9947527/TMessagesProj/src/main/java/org/telegram/messenger/MediaDataController.java#L7799
@@ -101,16 +94,11 @@ export const RECENT_REACTIONS_LIMIT = 50;
 export const REACTION_LIST_LIMIT = 100;
 export const REACTION_UNREAD_SLICE = 100;
 export const MENTION_UNREAD_SLICE = 100;
-export const TOPICS_SLICE = 20;
-export const TOPICS_SLICE_SECOND_LOAD = 500;
-
-export const TOP_CHAT_MESSAGES_PRELOAD_LIMIT = 20;
 
 export const SPONSORED_MESSAGE_CACHE_MS = 300000; // 5 min
 
 export const DEFAULT_VOLUME = 1;
 export const DEFAULT_PLAYBACK_RATE = 1;
-export const PLAYBACK_RATE_FOR_AUDIO_MIN_DURATION = 20 * 60; // 20 min
 
 export const ANIMATION_LEVEL_MAX = 2;
 export const ANIMATION_LEVEL_DEFAULT = ANIMATION_LEVEL_MAX;
@@ -124,21 +112,9 @@ export const SEND_MESSAGE_ACTION_INTERVAL = 3000; // 3s
 export const APP_CONFIG_REFETCH_INTERVAL = 10000 * 1000;
 export const GENERAL_REFETCH_INTERVAL = 60 * 60 * 1000; // 1h
 
-export const EDITABLE_INPUT_ID = 'editable-message-text';
-export const EDITABLE_INPUT_MODAL_ID = 'editable-message-text-modal';
-// eslint-disable-next-line @stylistic/max-len
-export const EDITABLE_INPUT_CSS_SELECTOR = `.messages-layout .Transition_slide-active #${EDITABLE_INPUT_ID}, .messages-layout .Transition > .Transition_slide-to #${EDITABLE_INPUT_ID}`;
-
-export const MESSAGE_CONTENT_CLASS_NAME = 'message-content';
-export const VIEW_TRANSITION_CLASS_NAME = 'active-view-transition';
-
-export const RESIZE_HANDLE_CLASS_NAME = 'resizeHandle';
-export const RESIZE_HANDLE_SELECTOR = `.${RESIZE_HANDLE_CLASS_NAME}`;
-
 export const STARS_ICON_PLACEHOLDER = '⭐';
 export const STARS_CURRENCY_CODE = 'XTR';
 
-export const MIN_SCREEN_WIDTH_FOR_STATIC_RIGHT_COLUMN = 1275; // px
 export const MIN_SCREEN_WIDTH_FOR_STATIC_LEFT_COLUMN = 925; // px
 export const MOBILE_SCREEN_MAX_WIDTH = 600; // px
 export const MOBILE_SCREEN_LANDSCAPE_MAX_WIDTH = 950; // px
@@ -168,19 +144,11 @@ export const API_THROTTLE_RESET_UPDATES = new Set([
 
 export const LOCK_SCREEN_ANIMATION_DURATION_MS = 200;
 
-export const STICKER_SIZE_AUTH = 160;
-export const STICKER_SIZE_AUTH_MOBILE = 120;
 export const STICKER_SIZE_PICKER = 72;
 export const EMOJI_SIZE_PICKER = 36;
-export const STICKER_SIZE_PICKER_HEADER = 32;
-export const STICKER_PICKER_MAX_SHARED_COVERS = 20;
-export const STICKER_SIZE_MODAL = 72;
-export const EMOJI_SIZE_MODAL = 36;
-export const STICKER_SIZE_TWO_FA = 160;
 export const RECENT_STICKERS_LIMIT = 20;
 export const RECENT_STATUS_LIMIT = 20;
 export const EMOJI_STATUS_LOOP_LIMIT = 2;
-export const TOP_SYMBOL_SET_ID = 'top';
 export const POPULAR_SYMBOL_SET_ID = 'popular';
 export const RECENT_SYMBOL_SET_ID = 'recent';
 export const COLLECTIBLE_STATUS_SET_ID = 'collectibleStatus';
@@ -192,13 +160,10 @@ export const DEFAULT_STATUS_ICON_ID = 'status-default-icon';
 
 export const BASE_EMOJI_KEYWORD_LANG = 'en';
 
-export const SLIDE_TRANSITION_DURATION = 450;
-
 export const BIRTHDAY_NUMBERS_SET = 'FestiveFontEmoji';
 export const RESTRICTED_EMOJI_SET = 'RestrictedEmoji';
 
 export const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
-export const SVG_EXTENSIONS = new Set(['svg', 'svgz']);
 
 export const VIDEO_WEBM_TYPE = 'video/webm';
 export const GIF_MIME_TYPE = 'image/gif';
@@ -226,31 +191,7 @@ export const SUPPORTED_AUDIO_CONTENT_TYPES = new Set([
   'audio/x-m4a',
 ]);
 
-export const CONTENT_TYPES_WITH_PREVIEW = new Set([
-  ...SUPPORTED_PHOTO_CONTENT_TYPES,
-  ...SUPPORTED_VIDEO_CONTENT_TYPES,
-]);
-
 export const CONTENT_NOT_SUPPORTED = 'The message is not supported on this version of Telegram.';
-
-// Taken from https://github.com/telegramdesktop/tdesktop/blob/41d9a9fcbd0c809c60ddbd9350791b1436aff7d9/Telegram/SourceFiles/ui/boxes/choose_language_box.cpp#L28
-export const SUPPORTED_TRANSLATION_LANGUAGES = [
-  // Official
-  'en', 'ar', 'be', 'ca', 'zh', 'nl', 'fr', 'de', 'id',
-  'it', 'ja', 'ko', 'pl', 'pt', 'ru', 'es', 'uk',
-  // Unofficial
-  'af', 'sq', 'am', 'hy', 'az', 'eu', 'bn', 'bs', 'bg',
-  'ceb', 'zh-CN', 'zh-TW', 'co', 'hr', 'cs', 'da', 'eo',
-  'et', 'fi', 'fy', 'gl', 'ka', 'el', 'gu', 'ht', 'ha',
-  'haw', 'he', 'iw', 'hi', 'hmn', 'hu', 'is', 'ig', 'ga',
-  'jv', 'kn', 'kk', 'km', 'rw', 'ku', 'ky', 'lo', 'la',
-  'lv', 'lt', 'lb', 'mk', 'mg', 'ms', 'ml', 'mt', 'mi',
-  'mr', 'mn', 'my', 'ne', 'no', 'ny', 'or', 'ps', 'fa',
-  'pa', 'ro', 'sm', 'gd', 'sr', 'st', 'sn', 'sd', 'si',
-  'sk', 'sl', 'so', 'su', 'sw', 'sv', 'tl', 'tg', 'ta',
-  'tt', 'te', 'th', 'tr', 'tk', 'ur', 'ug', 'uz', 'vi',
-  'cy', 'xh', 'yi', 'yo', 'zu',
-];
 
 // eslint-disable-next-line @stylistic/max-len
 export const RE_LINK_TEMPLATE = '((ftp|https?):\\/\\/)?((www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z][-a-zA-Z0-9]{1,62})\\b([-a-zA-Z0-9()@:%_+.,~#?&/=]*)';
@@ -259,11 +200,9 @@ export const RE_TG_LINK = /^tg:(\/\/)?/i;
 export const RE_TME_LINK = /^(https?:\/\/)?([-a-zA-Z0-9@:%_+~#=]{1,32}\.)?t\.me/i;
 export const RE_TELEGRAM_LINK = /^(https?:\/\/)?telegram\.org\//i;
 export const TME_LINK_PREFIX = 'https://t.me/';
-export const BOT_FATHER_USERNAME = 'botfather';
 export const USERNAME_PURCHASE_ERROR = 'USERNAME_PURCHASE_AVAILABLE';
 export const MESSAGE_ID_REQUIRED_ERROR = 'MESSAGE_ID_REQUIRED';
 export const ACCEPTABLE_USERNAME_ERRORS = new Set([USERNAME_PURCHASE_ERROR, 'USERNAME_INVALID']);
-export const TME_WEB_DOMAINS = new Set(['t.me', 'web.t.me', 'a.t.me', 'k.t.me', 'z.t.me']);
 export const WEB_APP_PLATFORM = 'weba';
 export const LANG_PACK = 'weba';
 
@@ -271,11 +210,6 @@ export const LANG_PACK = 'weba';
 export const COUNTRIES_WITH_12H_TIME_FORMAT = new Set(['AU', 'BD', 'CA', 'CO', 'EG', 'HN', 'IE', 'IN', 'JO', 'MX', 'MY', 'NI', 'NZ', 'PH', 'PK', 'SA', 'SV', 'US']);
 
 export const API_CHAT_TYPES = ['bots', 'channels', 'chats', 'users', 'groups'] as const;
-
-export const HEART_REACTION: ApiReactionEmoji = {
-  type: 'emoji',
-  emoticon: '❤',
-};
 
 // MTProto constants
 export const SERVICE_NOTIFICATIONS_USER_ID = '777000';
@@ -296,10 +230,6 @@ export const LANG_PACKS = ['android', 'ios', 'tdesktop', 'macos'] as const;
 export const GENERAL_TOPIC_ID = 1;
 export const STORY_EXPIRE_PERIOD = 86400; // 1 day
 export const STORY_VIEWERS_EXPIRE_PERIOD = 86400; // 1 day
-export const GIVEAWAY_BOOST_PER_PREMIUM = 4;
-export const GIVEAWAY_MAX_ADDITIONAL_CHANNELS = 10;
-export const GIVEAWAY_MAX_ADDITIONAL_USERS = 10;
-export const GIVEAWAY_MAX_ADDITIONAL_COUNTRIES = 10;
 
 export const DEFAULT_PATTERN_COLOR = '#4A8E3A8C';
 export const DARK_THEME_PATTERN_COLOR = '#0A0A0A8C';
@@ -330,9 +260,6 @@ export const DEFAULT_LIMITS: Record<ApiLimitType, readonly [number, number]> = {
   savedDialogsPinned: [5, 100],
   moreAccounts: [3, MULTIACCOUNT_MAX_SLOTS],
 };
-export const DEFAULT_MAX_MESSAGE_LENGTH = 4096;
-
-export const ONE_TIME_MEDIA_TTL_SECONDS = 2147483647;
 
 // Premium
 export const PREMIUM_FEATURE_SECTIONS = [

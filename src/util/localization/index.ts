@@ -1,12 +1,7 @@
-import type { TeactNode } from '../../lib/teact/teact';
+import type {TeactNode} from '@teact';
 
-import type {
-  ApiLanguage,
-  CachedLangData,
-  LangPack,
-  LangPackStringValue,
-} from '../../api/types';
-import type { LangKey, LangVariable } from '../../types/language';
+import type {ApiLanguage, CachedLangData, LangPack, LangPackStringValue,} from '../../api/types';
+import type {LangKey, LangVariable} from '../../types/language';
 import {
   type AdvancedLangFnOptions,
   type AdvancedLangFnOptionsWithPlural,
@@ -22,19 +17,17 @@ import {
   type RegularLangFnParameters,
 } from './types';
 
-import { DEBUG, LANG_PACK } from '../../config';
-import { callApi } from '../../api/gramjs';
+import {DEBUG, LANG_PACK} from '../../config';
+import {callApi} from '../../api/gramjs';
 import renderText from '../../components/common/helpers/renderText';
-import { IS_INTL_LIST_FORMAT_SUPPORTED } from '../browser/globalEnvironment';
-import { MAIN_IDB_STORE } from '../browser/idb';
-import { getBasicListFormat } from '../browser/intlListFormat';
-import { notifyLangpackUpdate } from '../browser/multitab';
-import { createCallbackManager } from '../callbacks';
+import {MAIN_IDB_STORE} from '../browser/idb';
+import {notifyLangpackUpdate} from '../browser/multitab';
+import {createCallbackManager} from '../callbacks';
 import readFallbackStrings from '../data/readFallbackStrings';
-import { initialEstablishmentPromise, isCurrentTabMaster } from '../establishMultitabRole';
-import { omit, unique } from '../iteratees';
-import { replaceInStringsWithTeact } from '../replaceWithTeact';
-import { fastRaf } from '../schedulers';
+import {initialEstablishmentPromise, isCurrentTabMaster} from '../establishMultitabRole';
+import {omit, unique} from '../iteratees';
+import {replaceInStringsWithTeact} from '../replaceWithTeact';
+import {fastRaf} from '../schedulers';
 
 import Deferred from '../Deferred';
 import LimitedMap from '../primitives/LimitedMap';
@@ -57,7 +50,6 @@ let translationFn = createTranslationFn();
 
 const {
   addCallback,
-  removeCallback,
   runCallbacks,
 } = createCallbackManager();
 
@@ -156,10 +148,9 @@ function updateLanguage(newLang: ApiLanguage) {
 function createFormatters() {
   if (!language) return;
   const langCode = language.pluralCode;
-  const listFormatFallback = getBasicListFormat();
 
   function createListFormat(lang: string, type: 'conjunction' | 'disjunction') {
-    return IS_INTL_LIST_FORMAT_SUPPORTED ? new Intl.ListFormat(lang, { type }) : listFormatFallback;
+    return new Intl.ListFormat(lang, { type });
   }
 
   try {
@@ -348,11 +339,9 @@ function getString(langKey: LangKey, count: number) {
 
   const pluralSuffix = formatters?.pluralRules.select(count) || 'other';
 
-  const string = isPluralLangString(langPackStringValue)
+  return isPluralLangString(langPackStringValue)
     ? (langPackStringValue[pluralSuffix] || langPackStringValue.other)
     : langPackStringValue;
-
-  return string;
 }
 
 function processTranslation(
@@ -438,11 +427,8 @@ function processTranslationAdvanced(
   }, tempResult);
 }
 
-export const localizationReadyPromise = localizationReady.promise;
-
 export {
   addCallback as addLocalizationCallback,
-  removeCallback as removeLocalizationCallback,
 };
 
 export type {
