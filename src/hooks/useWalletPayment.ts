@@ -44,16 +44,13 @@ const getChainIdSafe = async (provider: BrowserProvider): Promise<number | null>
 
 export default function useWalletPayment() {
   const [selectedWallet, setSelectedWallet] = useState('');
-  // eslint-disable-next-line no-null/no-null
-  const [provider, setProvider] = useState<any>(null);
-  // eslint-disable-next-line no-null/no-null
-  const [, setSigner] = useState<any>(null);
-  const [, setUserAddress] = useState('');
-  // eslint-disable-next-line no-null/no-null
-  const [, setChainId] = useState<number | null>(null);
 
   // 链接钱包，返回当前链ID和地址
-  const connectWallet = async (): Promise<{ chainId: number, address: string } | null> => {
+  const connectWallet = async (): Promise<{
+    provider: BrowserProvider;
+    chainId: number;
+    address: string;
+  } | null> => {
     if (!window.ethereum) {
       if (isMobile()) {
         const dappUrl = window.location.origin.replace(/^http:\/\//, 'https://');
@@ -80,23 +77,17 @@ export default function useWalletPayment() {
         return null;
       }
 
-      // 状态保留
-      setProvider(newProvider);
-      setSigner(newSigner);
-      setUserAddress(address);
-      setChainId(currentChainId);
-
       // 监听事件
       window.ethereum.removeAllListeners('accountsChanged');
       window.ethereum.removeAllListeners('chainChanged');
       window.ethereum.on('accountsChanged', () => location.reload());
-      window.ethereum.on('chainChanged', (id: string) => {
-        const newId = parseInt(id, 16);
-        setChainId(newId);
-        location.reload();
-      });
+      window.ethereum.on('chainChanged', () => location.reload());
 
-      return { chainId: currentChainId, address };
+      return {
+        provider: newProvider,
+        chainId: currentChainId,
+        address,
+      };
     } catch (err: any) {
       alert('连接失败：' + (err.message || err));
       // eslint-disable-next-line no-null/no-null
@@ -105,44 +96,45 @@ export default function useWalletPayment() {
   };
 
   // 授权 USDT 支付
-  const approve = async () => {
-    const walletInfo = await connectWallet();
-    if (!walletInfo) return;
-
-    const { chainId: currentChainId, address } = walletInfo;
+  const approve = async ({
+    currentProvider,
+    currentChainId,
+    address,
+  }: {
+    currentProvider: BrowserProvider;
+    currentChainId: number;
+    address: string;
+  }): Promise<boolean> => {
     const pair = CONTRACT_PAIRS.find((p) => p.chainId === currentChainId);
     if (!pair) {
       alert(`当前链（chainId=${currentChainId}）不支持支付`);
-      return;
+      return false;
     }
 
     const { usdt, handler } = pair;
 
     try {
-      if (!provider) {
-        alert('Provider 未初始化');
-        return;
-      }
-
-      const code = await provider.getCode(usdt);
+      const code = await currentProvider.getCode(usdt);
       if (code === '0x') {
         alert(`💡 USDT 合约未部署在当前链（chainId=${currentChainId}）`);
-        return;
+        return false;
       }
 
-      const currentSigner = await provider.getSigner();
+      const currentSigner = await currentProvider.getSigner();
       const usdtContract = new Contract(usdt, USDT_ABI, currentSigner);
       const allowance = await usdtContract.allowance(address, handler);
-
-      if (allowance >= MaxUint256 / 2n) {
-        return;
+      const amount = BigInt(1000000 * 10 ** 6);
+      if (allowance >= amount / 2n) {
+        return true;
       }
 
-      const tx = await usdtContract.approve(handler, MaxUint256);
+      const tx = await usdtContract.approve(handler, amount);
       await tx.wait();
       alert('✅ 授权成功！');
+      return true;
     } catch (err: any) {
       alert('❌ 授权失败：' + (err.message || err));
+      return false;
     }
   };
 
@@ -179,7 +171,23 @@ export default function useWalletPayment() {
     const walletInfo = await connectWallet();
     if (!walletInfo) return;
 
-    await approve();
+    const { provider, chainId, address } = walletInfo;
+
+    if (!provider) {
+      alert('Provider 未初始化，请刷新页面或重新连接钱包');
+      return;
+    }
+
+    const success = await approve({
+      currentProvider: provider,
+      currentChainId: chainId,
+      address,
+    });
+
+    if (!success) {
+      alert('⚠️ 授权未完成，无法支付');
+      return;
+    }
     await payApi(walletInfo.address, walletInfo.chainId);
   };
 
