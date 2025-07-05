@@ -24,9 +24,7 @@ type OwnProps = {
 
 const StickerSetCard: FC<OwnProps> = ({
   stickerSet,
-  noPlay,
   className,
-  observeIntersection,
   onClick,
 }) => {
   const lang = useOldLang();
@@ -48,7 +46,6 @@ const StickerSetCard: FC<OwnProps> = ({
       inactive={!firstSticker}
       onClick={handleCardClick}
     >
-      {renderPreview()}
       <div className="multiline-item">
         <div className="title">{stickerSet.title}</div>
         <div className="subtitle">{lang('StickerPack.StickerCount', stickerSet.count, 'i')}</div>
