@@ -26,13 +26,6 @@ export function animateSingle(tick: TickFunction, schedulerFn: Scheduler, instan
   }
 }
 
-export function cancelSingleAnimation() {
-  const dumbScheduler = (cb: AnyFunction) => cb;
-  const dumbCb = () => undefined;
-
-  animateSingle(dumbCb, dumbScheduler);
-}
-
 export function animate(tick: TickFunction, schedulerFn: Scheduler) {
   schedulerFn(() => {
     if (tick()) {
@@ -62,9 +55,6 @@ type AnimateNumberProps<T extends number | number[]> = {
 
 export const timingFunctions = {
   linear: (t: number) => t,
-  easeIn: (t: number) => t ** 1.675,
-  easeOut: (t: number) => -1 * t ** 1.675,
-  easeInOut: (t: number) => 0.5 * (Math.sin((t - 0.5) * Math.PI) + 1),
   easeInQuad: (t: number) => t * t,
   easeOutQuad: (t: number) => t * (2 - t),
   easeInOutQuad: (t: number) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),

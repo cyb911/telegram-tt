@@ -1,19 +1,16 @@
 import type {
   ApiMessage,
-  ApiStory,
   ApiTypeStory,
 } from '../../api/types';
 import type {
   ApiPoll, MediaContainer, StatefulMediaContent,
 } from '../../api/types/messages';
 import type { GlobalState } from '../types';
-import { ApiMessageEntityTypes } from '../../api/types';
 
 import {
   CONTENT_NOT_SUPPORTED,
   RE_LINK_TEMPLATE,
   SERVICE_NOTIFICATIONS_USER_ID,
-  VERIFICATION_CODES_USER_ID,
 } from '../../config';
 import { areSortedArraysIntersecting, unique } from '../../util/iteratees';
 import { isLocalMessageId } from '../../util/keys/messageKey';
@@ -152,54 +149,6 @@ export function mergeIdRanges(ranges: number[][], idsUpdate: number[]): number[]
   }
 
   return newOutlyingLists;
-}
-
-export function extractMessageText(message: ApiMessage | ApiStory, inChatList = false) {
-  const contentText = message.content.text;
-  if (!contentText) return undefined;
-
-  const { text } = contentText;
-  let { entities } = contentText;
-
-  if (text && 'chatId' in message) {
-    if (message.chatId === SERVICE_NOTIFICATIONS_USER_ID) {
-      const authCode = text.match(/^\D*([\d-]{5,7})\D/)?.[1];
-      if (authCode) {
-        entities = [
-          ...entities || [],
-          {
-            type: inChatList ? ApiMessageEntityTypes.Spoiler : ApiMessageEntityTypes.Code,
-            offset: text.indexOf(authCode),
-            length: authCode.length,
-          },
-        ];
-        entities.sort((a, b) => (a.offset > b.offset ? 1 : -1));
-      }
-    }
-
-    if (inChatList && message.chatId === VERIFICATION_CODES_USER_ID && entities) {
-      // Wrap code entities in spoiler
-      const hasCodeEntities = entities.some((entity) => entity.type === ApiMessageEntityTypes.Code);
-      if (hasCodeEntities) {
-        const oldEntities = entities;
-        entities = [];
-
-        for (let i = 0; i < oldEntities.length; i++) {
-          const entity = oldEntities[i];
-          if (entity.type === ApiMessageEntityTypes.Code) {
-            entities.push({
-              type: ApiMessageEntityTypes.Spoiler,
-              offset: entity.offset,
-              length: entity.length,
-            });
-          }
-          entities.push(entity);
-        }
-      }
-    }
-  }
-
-  return { text, entities };
 }
 
 export function isExpiredMessage(message: ApiMessage) {

@@ -8,8 +8,6 @@ import { createConnector } from './PostMessageConnector';
 
 const WORKER_INIT_DELAY = 4000;
 
-const DEFAULT_THRESHOLD = 0.2;
-
 let worker: Connector<FastTextApi> | undefined;
 const initializationDeferred = new Deferred();
 
@@ -24,10 +22,4 @@ function initWorker() {
     );
     initializationDeferred.resolve();
   }
-}
-
-export async function detectLanguage(text: string, threshold = DEFAULT_THRESHOLD) {
-  if (!worker) await initializationDeferred.promise;
-  const result = await worker!.request({ name: 'detectLanguage', args: [text, threshold] });
-  return result;
 }

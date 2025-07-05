@@ -38,14 +38,6 @@ export function getMessageContent(message: MediaContainer) {
   return message.content;
 }
 
-export function canEditMedia(message: MediaContainer) {
-  const {
-    video, ...otherMedia
-  } = message.content;
-
-  return !video?.isRound && !Object.keys(otherMedia).length;
-}
-
 export function getMessagePhoto(message: MediaContainer) {
   return message.content.photo;
 }
@@ -56,16 +48,6 @@ export function getMessageActionPhoto(message: MediaContainer) {
 
 export function getMessageVideo(message: MediaContainer) {
   return message.content.video;
-}
-
-export function getMessageRoundVideo(message: MediaContainer) {
-  const { video } = message.content;
-
-  return video?.isRound ? video : undefined;
-}
-
-export function getMessageAction(message: MediaContainer) {
-  return message.content.action;
 }
 
 export function getMessageAudio(message: MediaContainer) {
@@ -99,14 +81,6 @@ export function isDocumentVideo(document: ApiDocument) {
 export function isMessageDocumentSticker(message: MediaContainer) {
   const document = getMessageDocument(message);
   return document ? document.mimeType === 'image/webp' : undefined;
-}
-
-export function getMessageContact(message: MediaContainer) {
-  return message.content.contact;
-}
-
-export function getMessagePollId(message: MediaContainer) {
-  return message.content.pollId;
 }
 
 export function getMessageInvoice(message: MediaContainer) {
@@ -163,59 +137,6 @@ export function getMessageMediaThumbDataUri(message: MediaContainer) {
   return getMessageMediaThumbnail(message)?.dataUri;
 }
 
-export function getMediaThumbUri(media: MediaWithThumbs) {
-  return media.thumbnail?.dataUri;
-}
-
-export function getMessageIsSpoiler(message: MediaContainer) {
-  const media = getMessagePhoto(message)
-    || getMessageVideo(message);
-
-  const invoiceMedia = getMessageInvoice(message)?.extendedMedia;
-  return Boolean(invoiceMedia || media?.isSpoiler);
-}
-
-export function getMessageMediaHash(
-  message: MediaContainer,
-  target: Target,
-) {
-  const {
-    video, sticker, audio, voice, document,
-  } = message.content;
-
-  const messagePhoto = getMessagePhoto(message) || getMessageWebPagePhoto(message);
-  const actionPhoto = getMessageActionPhoto(message);
-  const messageVideo = video || getMessageWebPageVideo(message);
-  const messageDocument = document || getMessageWebPageDocument(message);
-  const messageAudio = audio || getMessageWebPageAudio(message);
-
-  if (messageVideo) {
-    return getVideoMediaHash(messageVideo, target);
-  }
-
-  if (messagePhoto || actionPhoto) {
-    return getPhotoMediaHash(messagePhoto || actionPhoto!, target, Boolean(actionPhoto));
-  }
-
-  if (messageDocument) {
-    return getDocumentMediaHash(messageDocument, target);
-  }
-
-  if (sticker) {
-    return getStickerMediaHash(sticker, target);
-  }
-
-  if (messageAudio) {
-    return getAudioMediaHash(messageAudio, target);
-  }
-
-  if (voice) {
-    return getVoiceMediaHash(voice, target);
-  }
-
-  return undefined;
-}
-
 export function getPhotoMediaHash(photo: ApiPhoto | ApiDocument, target: Target, isAction?: boolean) {
   const base = `photo${photo.id}`;
   const isVideo = photo.mediaType === 'photo' && photo.isVideo;
@@ -258,10 +179,6 @@ export function getVideoMediaHash(video: ApiVideo | ApiDocument, target: Target)
     default:
       return appendProgressiveQueryParameters(video, base);
   }
-}
-
-export function getVideoPreviewMediaHash(video: ApiVideo) {
-  return video.hasVideoPreview ? `document${video.id}?size=v` : undefined;
 }
 
 export function getDocumentMediaHash(document: ApiDocument, target: Target) {
@@ -432,17 +349,6 @@ export function getChatMediaMessageIds(
   messages: Record<number, ApiMessage>, listedIds: number[], isFromSharedMedia = false,
 ) {
   return getMessageContentIds(messages, listedIds, isFromSharedMedia ? 'media' : 'inlineMedia');
-}
-
-export function getMediaTransferState(
-  progress?: number, isLoadNeeded = false, isUploading = false,
-) {
-  const isTransferring = isUploading || isLoadNeeded;
-  const transferProgress = Number(progress);
-
-  return {
-    isUploading, isTransferring, transferProgress,
-  };
 }
 
 export function getMessageContentIds(

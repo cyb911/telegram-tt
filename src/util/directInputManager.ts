@@ -7,7 +7,3 @@ export function disableDirectTextInput() {
 export function enableDirectTextInput() {
   counter -= 1;
 }
-
-export function getIsDirectTextInputDisabled() {
-  return counter > 0;
-}

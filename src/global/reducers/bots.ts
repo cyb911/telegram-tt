@@ -1,4 +1,3 @@
-import type { InlineBotSettings } from '../../types';
 import type { WebApp, WebAppModalStateType } from '../../types/webapp';
 import type {
   GlobalState, TabArgs,
@@ -8,34 +7,6 @@ import { getCurrentTabId } from '../../util/establishMultitabRole';
 import { getWebAppKey } from '../helpers/bots';
 import { selectActiveWebApp, selectTabState } from '../selectors';
 import { updateTabState } from './tabs';
-
-export function replaceInlineBotSettings<T extends GlobalState>(
-  global: T, username: string, inlineBotSettings: InlineBotSettings | false,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-): T {
-  const tabState = selectTabState(global, tabId);
-  return updateTabState(global, {
-    inlineBots: {
-      ...tabState.inlineBots,
-      byUsername: {
-        ...tabState.inlineBots.byUsername,
-        [username]: inlineBotSettings,
-      },
-    },
-  }, tabId);
-}
-
-export function replaceInlineBotsIsLoading<T extends GlobalState>(
-  global: T, isLoading: boolean,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-): T {
-  return updateTabState(global, {
-    inlineBots: {
-      ...selectTabState(global, tabId).inlineBots,
-      isLoading,
-    },
-  }, tabId);
-}
 
 export function updateWebApp<T extends GlobalState>(
   global: T, key: string, webAppUpdate: Partial<WebApp>,
@@ -63,29 +34,6 @@ export function updateWebApp<T extends GlobalState>(
         ...openedWebApps,
         [updatedWebAppKey]: updatedValue,
       },
-    },
-  }, tabId);
-
-  return global;
-}
-
-export function activateWebAppIfOpen<T extends GlobalState>(
-  global: T, webAppKey: string,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-): T {
-  const currentTabState = selectTabState(global, tabId);
-  const openedWebApps = currentTabState.webApps.openedWebApps;
-
-  if (!openedWebApps[webAppKey]) {
-    return global;
-  }
-
-  global = updateTabState(global, {
-    webApps: {
-      ...currentTabState.webApps,
-      isMoreAppsTabActive: false,
-      activeWebAppKey: webAppKey,
-      modalState: 'maximized',
     },
   }, tabId);
 

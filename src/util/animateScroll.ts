@@ -10,11 +10,11 @@ import {
   SCROLL_MIN_DURATION,
   SCROLL_SHORT_TRANSITION_MAX_DISTANCE,
 } from '../config';
-import { requestMeasure, requestMutation } from '../lib/fasterdom/fasterdom';
+import { requestMutation } from '../lib/fasterdom/fasterdom';
 import { selectCanAnimateInterface } from '../global/selectors';
 import { IS_ANDROID } from './browser/windowEnvironment';
 import getOffsetToContainer from './visibility/getOffsetToContainer';
-import { animateSingle, cancelSingleAnimation } from './animation';
+import { animateSingle } from './animation';
 
 export type AnimateScrollArgs = {
   container: HTMLElement;
@@ -29,11 +29,9 @@ export type AnimateScrollArgs = {
 };
 
 let isAnimating = false;
-let currentArgs: AnimateScrollArgs | undefined;
 let onHeavyAnimationEnd: NoneToVoidFunction | undefined;
 
 export default function animateScroll(args: AnimateScrollArgs) {
-  currentArgs = args;
   const mutate = createMutateFunction(args);
 
   if (args.shouldReturnMutationFn) {
@@ -42,18 +40,6 @@ export default function animateScroll(args: AnimateScrollArgs) {
 
   requestMutation(mutate);
   return undefined;
-}
-
-export function restartCurrentScrollAnimation() {
-  if (!isAnimating) {
-    return;
-  }
-
-  cancelSingleAnimation();
-
-  requestMeasure(() => {
-    requestMutation(createMutateFunction(currentArgs!));
-  });
 }
 
 function createMutateFunction(args: AnimateScrollArgs) {
@@ -154,8 +140,6 @@ function createMutateFunction(args: AnimateScrollArgs) {
       isAnimating = t < 1 && newScrollTop !== target;
 
       if (!isAnimating) {
-        currentArgs = undefined;
-
         onHeavyAnimationEnd?.();
         onHeavyAnimationEnd = undefined;
       }
