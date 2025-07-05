@@ -6,8 +6,6 @@ import {
   type FC, memo, useEffect, useRef,
 } from '../../lib/teact/teact';
 
-import type { MenuPositionOptions } from '../../hooks/useMenuPosition';
-
 import { IS_BACKDROP_BLUR_SUPPORTED } from '../../util/browser/windowEnvironment';
 import buildClassName from '../../util/buildClassName';
 import captureEscKeyListener from '../../util/captureEscKeyListener';
@@ -17,15 +15,12 @@ import useEffectWithPrevDeps from '../../hooks/useEffectWithPrevDeps';
 import useHistoryBack from '../../hooks/useHistoryBack';
 import useKeyboardListNavigation from '../../hooks/useKeyboardListNavigation';
 import useLastCallback from '../../hooks/useLastCallback';
-import useMenuPosition from '../../hooks/useMenuPosition';
 import useShowTransition from '../../hooks/useShowTransition';
 import useVirtualBackdrop from '../../hooks/useVirtualBackdrop';
 
 import Portal from './Portal';
 
 import './Menu.scss';
-
-export type { MenuPositionOptions } from '../../hooks/useMenuPosition';
 
 type OwnProps =
   {
@@ -49,8 +44,7 @@ type OwnProps =
     onMouseLeave?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     withPortal?: boolean;
     children?: React.ReactNode;
-  }
-  & MenuPositionOptions;
+  };
 
 const ANIMATION_DURATION = 200;
 
@@ -85,8 +79,6 @@ const Menu: FC<OwnProps> = ({
     ref: externalRef,
     onCloseAnimationEnd,
   });
-
-  useMenuPosition(isOpen, containerRef, bubbleRef, positionOptions);
 
   useEffect(
     () => (isOpen ? captureEscKeyListener(onClose) : undefined),
