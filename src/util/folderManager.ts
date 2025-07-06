@@ -159,20 +159,6 @@ export function getOrderKey(chatId: string, isForSaved?: boolean) {
   return isForSaved ? summary.orderInSaved : summary.orderInAll;
 }
 
-/* Callback managers */
-
-export function addOrderedIdsCallback(folderId: number, callback: (orderedIds: string[]) => void) {
-  if (!callbacks.orderedIdsByFolderId[folderId]) {
-    callbacks.orderedIdsByFolderId[folderId] = createCallbackManager();
-  }
-
-  return callbacks.orderedIdsByFolderId[folderId].addCallback(callback);
-}
-
-export function addUnreadCountersCallback(callback: (unreadCounters: typeof results.unreadCountersByFolderId) => void) {
-  return callbacks.unreadCountersByFolderId.addCallback(callback);
-}
-
 /* Global update handlers */
 
 function updateFolderManager(global: GlobalState) {

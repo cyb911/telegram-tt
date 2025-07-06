@@ -1,7 +1,6 @@
 import type { ApiUser } from '../../api/types';
 
 import { SERVICE_NOTIFICATIONS_USER_ID } from '../../config';
-import { formatPhoneNumber } from '../../util/phoneNumber';
 
 export function getUserFirstOrLastName(user?: ApiUser) {
   if (!user) {
@@ -48,11 +47,6 @@ export function getUserFullName(user?: ApiUser) {
       if (user.lastName) {
         return user.lastName;
       }
-
-      if (user.phoneNumber) {
-        return `+${formatPhoneNumber(user.phoneNumber)}`;
-      }
-
       break;
     }
   }

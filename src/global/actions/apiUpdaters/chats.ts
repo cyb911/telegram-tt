@@ -444,23 +444,6 @@ addActionHandler('apiUpdate', (global, actions, update): ActionReturnType => {
       return global;
     }
 
-    case 'updatePendingJoinRequests': {
-      const { chatId, requestsPending, recentRequesterIds } = update;
-      const chat = global.chats.byId[chatId];
-      if (!chat) {
-        return undefined;
-      }
-
-      global = updateChatFullInfo(global, chatId, {
-        requestsPending,
-        recentRequesterIds,
-      });
-      setGlobal(global);
-
-      actions.loadChatJoinRequests({ chatId });
-      return undefined;
-    }
-
     case 'updatePinnedTopic': {
       const { chatId, topicId, isPinned } = update;
 

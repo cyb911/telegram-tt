@@ -95,17 +95,6 @@ export function writeSlotSession(slot: number | undefined, data: SharedSessionDa
   localStorage.setItem(`${SESSION_ACCOUNT_PREFIX}${slot || 1}`, JSON.stringify(data));
 }
 
-export function getAccountSlotUrl(slot: number, forLogin?: boolean) {
-  const url = new URL(globalThis.location.href);
-  if (slot !== 1) {
-    url.searchParams.set(ACCOUNT_QUERY, String(slot));
-  } else {
-    url.searchParams.delete(ACCOUNT_QUERY);
-  }
-  url.hash = forLogin ? 'login' : '';
-  return url.toString();
-}
-
 // Validate current version across all tabs to avoid conflicts
 if (typeof window === 'object') {
   const versionChannel = new BroadcastChannel('tt-version');
