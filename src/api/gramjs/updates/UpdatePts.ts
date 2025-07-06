@@ -9,7 +9,3 @@ export class LocalUpdateChannelPts {
 }
 
 export type UpdatePts = LocalUpdatePts | LocalUpdateChannelPts;
-
-export function buildLocalUpdatePts(pts: number, ptsCount: number, channelId?: BigInteger) {
-  return channelId ? new LocalUpdateChannelPts(channelId, pts, ptsCount) : new LocalUpdatePts(pts, ptsCount);
-}

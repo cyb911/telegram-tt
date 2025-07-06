@@ -4,10 +4,7 @@ import { generateRandomBytes, readBigIntFromBuffer } from '../../../lib/gramjs/H
 
 import type {
   ApiBotApp,
-  ApiChatAdminRights,
-  ApiChatBannedRights,
   ApiChatFolder,
-  ApiChatReactions,
   ApiDisallowedGiftsSettings,
   ApiEmojiStatusType,
   ApiFormattedText,
@@ -111,10 +108,6 @@ export function buildInputChannel(channelId: string, accessHash?: string): GramJ
     channelId: buildMtpPeerId(channelId, 'channel'),
     accessHash: BigInt(accessHash),
   });
-}
-
-export function buildInputChat(chatId: string) {
-  return BigInt(chatId.slice(1));
 }
 
 export function buildInputPaidReactionPrivacy(isPrivate?: boolean, peerId?: string): GramJs.TypePaidReactionPrivacy {
@@ -336,10 +329,6 @@ export function generateRandomTimestampedBigInt() {
   return readBigIntFromBuffer(buffer, true, true);
 }
 
-export function generateRandomInt() {
-  return readBigIntFromBuffer(generateRandomBytes(4), true, true).toJSNumber();
-}
-
 export function buildMessageFromUpdate(
   id: number,
   chatId: string,
@@ -397,19 +386,6 @@ export function buildMtpMessageEntity(entity: ApiMessageEntity): GramJs.TypeMess
   }
 }
 
-export function buildChatPhotoForLocalDb(photo: GramJs.TypePhoto) {
-  if (photo instanceof GramJs.PhotoEmpty) {
-    return new GramJs.ChatPhotoEmpty();
-  }
-
-  const { dcId, id: photoId } = photo;
-
-  return new GramJs.ChatPhoto({
-    dcId,
-    photoId,
-  });
-}
-
 export function buildInputPhoto(photo: ApiPhoto) {
   const localPhoto = localDb.photos[photo?.id];
 
@@ -439,22 +415,6 @@ export function buildInputContact({
     firstName,
     lastName,
   });
-}
-
-export function buildChatBannedRights(
-  bannedRights: ApiChatBannedRights,
-  untilDate = 0,
-) {
-  return new GramJs.ChatBannedRights({
-    ...bannedRights,
-    untilDate,
-  });
-}
-
-export function buildChatAdminRights(
-  adminRights: ApiChatAdminRights,
-) {
-  return new GramJs.ChatAdminRights(adminRights);
 }
 
 export function buildShippingInfo(info: GramJs.PaymentRequestedInfo) {
@@ -768,22 +728,6 @@ export function buildInputReaction(reaction?: ApiReactionWithPaid) {
     default:
       return new GramJs.ReactionEmpty();
   }
-}
-
-export function buildInputChatReactions(chatReactions?: ApiChatReactions) {
-  if (chatReactions?.type === 'all') {
-    return new GramJs.ChatReactionsAll({
-      allowCustom: chatReactions.areCustomAllowed,
-    });
-  }
-
-  if (chatReactions?.type === 'some') {
-    return new GramJs.ChatReactionsSome({
-      reactions: chatReactions.allowed.map(buildInputReaction),
-    });
-  }
-
-  return new GramJs.ChatReactionsNone();
 }
 
 export function buildInputEmojiStatus(emojiStatus: ApiEmojiStatusType) {

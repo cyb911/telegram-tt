@@ -84,13 +84,6 @@ export function log(suffix: keyof typeof LOG_SUFFIX, ...data: any) {
   /* eslint-enable @stylistic/max-len */
 }
 
-export function isResponseUpdate<T extends GramJs.AnyRequest>(result: T['__response']): result is GramJs.TypeUpdate {
-  return result instanceof GramJs.UpdatesTooLong || result instanceof GramJs.UpdateShortMessage
-    || result instanceof GramJs.UpdateShortChatMessage || result instanceof GramJs.UpdateShort
-    || result instanceof GramJs.UpdatesCombined || result instanceof GramJs.Updates
-    || result instanceof GramJs.UpdateShortSentMessage;
-}
-
 export function checkErrorType(error: unknown): error is Error {
   if (!(error instanceof Error)) {
     // eslint-disable-next-line no-console
