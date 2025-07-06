@@ -4,8 +4,8 @@ import {
   beginHeavyAnimation,
   memo, useEffect, useLayoutEffect,
   useRef, useState,
-} from '../../lib/teact/teact';
-import { addExtraClass } from '../../lib/teact/teact-dom';
+} from '@teact';
+import { addExtraClass } from '@teact/teact-dom.ts';
 import { getActions, getGlobal, withGlobal } from '../../global';
 
 import type { ApiChatFolder, ApiLimitTypeWithModal, ApiUser } from '../../api/types';
@@ -30,9 +30,8 @@ import {
 import { IS_ANDROID, IS_ELECTRON } from '../../util/browser/windowEnvironment';
 import buildClassName from '../../util/buildClassName';
 import { waitForTransitionEnd } from '../../util/cssAnimationEndListeners';
-import { processDeepLink } from '../../util/deeplink';
 import { Bundles, loadBundle } from '../../util/moduleLoader';
-import { parseInitialLocationHash, parseLocationHash } from '../../util/routing';
+import { parseLocationHash } from '../../util/routing';
 import updateIcon from '../../util/updateIcon';
 
 import useInterval from '../../hooks/schedulers/useInterval';
@@ -47,6 +46,7 @@ import useSyncEffect from '../../hooks/useSyncEffect';
 import useBackgroundMode from '../../hooks/window/useBackgroundMode';
 import useBeforeUnload from '../../hooks/window/useBeforeUnload';
 import { useFullscreenStatus } from '../../hooks/window/useFullscreen';
+
 import PremiumMainModal from './premium/PremiumMainModal.async';
 
 import './Main.scss';
@@ -58,7 +58,6 @@ export interface OwnProps {
 type StateProps = {
   isMasterTab?: boolean;
   currentUserId?: string;
-  isLeftColumnOpen: boolean;
   isMiddleColumnOpen: boolean;
   isRightColumnOpen: boolean;
   isMediaViewerOpen: boolean;
@@ -347,18 +346,7 @@ const Main = ({
   useEffect(() => {
     if (!isSynced) return;
     updatePageTitle();
-
-    const parsedInitialLocationHash = parseInitialLocationHash();
-    if (parsedInitialLocationHash?.tgaddr) {
-      processDeepLink(decodeURIComponent(parsedInitialLocationHash.tgaddr));
-    }
   }, [isSynced]);
-
-  useEffect(() => {
-    return window.electron?.on(ElectronEvent.DEEPLINK, (link: string) => {
-      processDeepLink(decodeURIComponent(link));
-    });
-  }, []);
 
   useEffect(() => {
     const parsedLocationHash = parseLocationHash(currentUserId);
@@ -483,7 +471,6 @@ export default memo(withGlobal<OwnProps>(
   (global, { isMobile }): StateProps => {
     const {
       botTrustRequest,
-      isLeftColumnShown,
       historyCalendarSelectedAt,
       notifications,
       dialogs,
@@ -499,7 +486,6 @@ export default memo(withGlobal<OwnProps>(
     const { chatId } = selectCurrentMessageList(global) || {};
 
     return {
-      isLeftColumnOpen: isLeftColumnShown,
       isMiddleColumnOpen: Boolean(chatId),
       isRightColumnOpen: selectIsRightColumnShown(global, isMobile),
       isMediaViewerOpen: selectIsMediaViewerOpen(global),

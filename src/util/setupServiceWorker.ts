@@ -2,8 +2,6 @@ import { getActions } from '../global';
 
 import { DEBUG, DEBUG_MORE, IS_TEST } from '../config';
 import { IS_ANDROID, IS_IOS, IS_SERVICE_WORKER_SUPPORTED } from './browser/windowEnvironment';
-import { formatShareText } from './deeplink';
-import { validateFiles } from './files';
 
 type WorkerAction = {
   type: string;
@@ -24,12 +22,6 @@ function handleWorkerMessage(e: MessageEvent) {
   switch (action.type) {
     case 'focusMessage':
       dispatch.focusMessage?.(payload as any);
-      break;
-    case 'share':
-      dispatch.openChatWithDraft({
-        text: formatShareText(payload.url, payload.text, payload.title),
-        files: validateFiles(payload.files),
-      });
       break;
   }
 }
