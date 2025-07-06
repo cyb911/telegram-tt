@@ -36,7 +36,6 @@ import {
 } from '../../../config';
 import { ensureProtocol, isMixedScriptUrl } from '../../../util/browser/url';
 import { IS_IOS } from '../../../util/browser/windowEnvironment';
-import { copyTextToClipboardFromPromise } from '../../../util/clipboard';
 import { isDeepLink } from '../../../util/deepLinkParser';
 import { getCurrentTabId } from '../../../util/establishMultitabRole';
 import {
@@ -83,13 +82,10 @@ import {
   updateChat,
   updateChatFullInfo,
   updateChatMessage,
-  updateGlobalSearch,
   updateListedIds,
   updateMessageTranslation,
   updateOutlyingLists,
   updatePeerFullInfo,
-  updateQuickReplies,
-  updateQuickReplyMessages,
   updateRequestedMessageTranslation,
   updateScheduledMessages,
   updateSponsoredMessage,
@@ -1802,10 +1798,6 @@ addActionHandler('reportSponsored', async (global, actions, payload): Promise<vo
     global = getGlobal();
     if (peerId) {
       global = deleteSponsoredMessage(global, peerId);
-    } else {
-      global = updateGlobalSearch(global, {
-        sponsoredPeer: undefined,
-      }, tabId);
     }
     setGlobal(global);
     return;
@@ -2166,71 +2158,6 @@ addActionHandler('translateMessages', (global, actions, payload): ActionReturnTy
   return global;
 });
 
-// https://github.com/telegramdesktop/tdesktop/blob/11906297d82b6ff57b277da5251d2e6eb3d8b6d0/Telegram/SourceFiles/api/api_views.cpp#L22
-const SEND_VIEWS_TIMEOUT = 1000;
-let viewsIncrementTimeout: number | undefined;
-let idsToIncrementViews: Record<string, Set<number>> = {};
-
-function incrementViews() {
-  if (viewsIncrementTimeout) {
-    clearTimeout(viewsIncrementTimeout);
-    viewsIncrementTimeout = undefined;
-  }
-
-  const { loadMessageViews } = getActions();
-  Object.entries(idsToIncrementViews).forEach(([chatId, ids]) => {
-    loadMessageViews({ chatId, ids: Array.from(ids), shouldIncrement: true });
-  });
-
-  idsToIncrementViews = {};
-}
-addActionHandler('scheduleForViewsIncrement', (global, actions, payload): ActionReturnType => {
-  const { ids, chatId } = payload;
-
-  if (!viewsIncrementTimeout) {
-    setTimeout(incrementViews, SEND_VIEWS_TIMEOUT);
-  }
-
-  if (!idsToIncrementViews[chatId]) {
-    idsToIncrementViews[chatId] = new Set();
-  }
-
-  ids.forEach((id) => {
-    idsToIncrementViews[chatId].add(id);
-  });
-});
-
-addActionHandler('loadMessageViews', async (global, actions, payload): Promise<void> => {
-  const { chatId, ids, shouldIncrement } = payload;
-
-  if (selectIsCurrentUserFrozen(global)) return;
-
-  const chat = selectChat(global, chatId);
-  if (!chat) return;
-
-  const result = await callApi('fetchMessageViews', {
-    chat,
-    ids,
-    shouldIncrement,
-  });
-
-  if (!result) return;
-
-  global = getGlobal();
-  result.viewsInfo.forEach((update) => {
-    global = updateChatMessage(global, chatId, update.id, {
-      viewsCount: update.views,
-      forwardsCount: update.forwards,
-    }, true);
-
-    if (update.threadInfo) {
-      global = updateThreadInfo(global, chatId, update.id, update.threadInfo);
-    }
-  });
-
-  setGlobal(global);
-});
-
 addActionHandler('loadFactChecks', async (global, actions, payload): Promise<void> => {
   const { chatId, ids } = payload;
 
@@ -2294,87 +2221,6 @@ addActionHandler('loadOutboxReadDate', async (global, actions, payload): Promise
       global = updateChatMessage(global, chatId, messageId, { readDate: undefined });
       setGlobal(global);
     }
-  }
-});
-
-addActionHandler('loadQuickReplies', async (global): Promise<void> => {
-  const result = await callApi('fetchQuickReplies');
-  if (!result) return;
-
-  global = getGlobal();
-  global = updateQuickReplyMessages(global, buildCollectionByKey(result.messages, 'id'));
-  global = updateQuickReplies(global, result.quickReplies);
-
-  setGlobal(global);
-});
-
-addActionHandler('sendQuickReply', (global, actions, payload): ActionReturnType => {
-  const { chatId, quickReplyId } = payload;
-  const chat = selectChat(global, chatId);
-  if (!chat) return global;
-  callApi('sendQuickReply', {
-    chat,
-    shortcutId: quickReplyId,
-  });
-
-  return global;
-});
-
-addActionHandler('copyMessageLink', async (global, actions, payload): Promise<void> => {
-  const {
-    chatId, messageId, shouldIncludeThread, shouldIncludeGrouped, tabId = getCurrentTabId(),
-  } = payload;
-  const chat = selectChat(global, chatId);
-  if (!chat) {
-    actions.showNotification({
-      message: oldTranslate('ErrorOccurred'),
-      tabId,
-    });
-    return;
-  }
-  const showErrorOccurredNotification = () => actions.showNotification({
-    message: oldTranslate('ErrorOccurred'),
-    tabId,
-  });
-
-  if (!isChatChannel(chat) && !isChatSuperGroup(chat)) {
-    showErrorOccurredNotification();
-    return;
-  }
-  const showLinkCopiedNotification = () => actions.showNotification({
-    message: oldTranslate('LinkCopied'),
-    tabId,
-  });
-  const callApiExportMessageLinkPromise = callApi('exportMessageLink', {
-    chat, id: messageId, shouldIncludeThread, shouldIncludeGrouped,
-  });
-  await copyTextToClipboardFromPromise(
-    callApiExportMessageLinkPromise, showLinkCopiedNotification, showErrorOccurredNotification,
-  );
-});
-
-const MESSAGES_TO_REPORT_DELIVERY = new Map<string, number[]>();
-let reportDeliveryTimeout: number | undefined;
-addActionHandler('reportMessageDelivery', (global, actions, payload): ActionReturnType => {
-  const { chatId, messageId } = payload;
-  const currentIds = MESSAGES_TO_REPORT_DELIVERY.get(chatId) || [];
-  currentIds.push(messageId);
-  MESSAGES_TO_REPORT_DELIVERY.set(chatId, currentIds);
-
-  if (!reportDeliveryTimeout) {
-    // Slightly unsafe in the multitab environment, but there is no better way to do it now.
-    // Not critical if user manages to close the tab in a show window before the report is sent.
-    reportDeliveryTimeout = window.setTimeout(() => {
-      reportDeliveryTimeout = undefined;
-
-      MESSAGES_TO_REPORT_DELIVERY.forEach((messageIds, cId) => {
-        const chat = selectChat(global, cId);
-        if (!chat) return;
-
-        callApi('reportMessagesDelivery', { chat, messageIds });
-      });
-      MESSAGES_TO_REPORT_DELIVERY.clear();
-    }, 500);
   }
 });
 

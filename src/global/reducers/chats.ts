@@ -1,5 +1,5 @@
 import type {
-  ApiChat, ApiChatFullInfo, ApiChatMember,
+  ApiChat, ApiChatFullInfo,
 } from '../../api/types';
 import type { ChatListType } from '../../types';
 import type { GlobalState } from '../types';
@@ -7,7 +7,7 @@ import type { GlobalState } from '../types';
 import { ARCHIVED_FOLDER_ID } from '../../config';
 import { areDeepEqual } from '../../util/areDeepEqual';
 import {
-  areSortedArraysEqual, buildCollectionByKey, omit, omitUndefined, pick, unique,
+  omit, omitUndefined, pick, unique,
 } from '../../util/iteratees';
 import { selectChatFullInfo } from '../selectors';
 
@@ -30,25 +30,6 @@ export function replaceChatListIds<T extends GlobalState>(
   };
 }
 
-export function replaceChatListLoadingParameters<T extends GlobalState>(
-  global: T, type: ChatListType, nextOffsetId?: number, nextOffsetPeerId?: string, nextOffsetDate?: number,
-): T {
-  return {
-    ...global,
-    chats: {
-      ...global.chats,
-      loadingParameters: {
-        ...global.chats.loadingParameters,
-        [type]: {
-          nextOffsetId,
-          nextOffsetPeerId,
-          nextOffsetDate,
-        },
-      },
-    },
-  };
-}
-
 export function updateChatLastMessageId<T extends GlobalState>(
   global: T, chatId: string, lastMessageId: number, listType?: ChatListType,
 ): T {
@@ -62,25 +43,6 @@ export function updateChatLastMessageId<T extends GlobalState>(
         [key]: {
           ...global.chats.lastMessageIds[key],
           [chatId]: lastMessageId,
-        },
-      },
-    },
-  };
-}
-
-export function updateChatsLastMessageId<T extends GlobalState>(
-  global: T, messageIds: Record<string, number>, listType?: ChatListType,
-): T {
-  const key = listType === 'saved' ? 'saved' : 'all';
-  return {
-    ...global,
-    chats: {
-      ...global.chats,
-      lastMessageIds: {
-        ...global.chats.lastMessageIds,
-        [key]: {
-          ...global.chats.lastMessageIds[key],
-          ...messageIds,
         },
       },
     },
@@ -200,25 +162,6 @@ export function updateChatFullInfo<T extends GlobalState>(
       fullInfoById: {
         ...global.chats.fullInfoById,
         [chatId]: updatedFullInfo,
-      },
-    },
-  };
-}
-
-export function replaceChatFullInfo<T extends GlobalState>(global: T, chatId: string, fullInfo: ApiChatFullInfo): T {
-  const currentFullInfo = selectChatFullInfo(global, chatId);
-
-  if (areDeepEqual(currentFullInfo, fullInfo)) {
-    return global;
-  }
-
-  return {
-    ...global,
-    chats: {
-      ...global.chats,
-      fullInfoById: {
-        ...global.chats.fullInfoById,
-        [chatId]: fullInfo,
       },
     },
   };
@@ -350,34 +293,6 @@ export function updateChatListType<T extends GlobalState>(
   return global;
 }
 
-export function updateChatListSecondaryInfo<T extends GlobalState>(
-  global: T,
-  type: ChatListType,
-  info: {
-    orderedPinnedIds?: string[];
-    totalChatCount: number;
-  },
-): T {
-  const totalCountKey = type === 'active' ? 'all' : type;
-
-  return {
-    ...global,
-    chats: {
-      ...global.chats,
-      ...(info.orderedPinnedIds && {
-        orderedPinnedIds: {
-          ...global.chats.orderedPinnedIds,
-          [type]: info.orderedPinnedIds,
-        },
-      }),
-      totalCount: {
-        ...global.chats.totalCount,
-        [totalCountKey]: info.totalChatCount,
-      },
-    },
-  };
-}
-
 export function leaveChat<T extends GlobalState>(global: T, leftChatId: string): T {
   global = removeChatFromChatLists(global, leftChatId);
 
@@ -396,89 +311,4 @@ export function removeChatFromChatLists<T extends GlobalState>(
   });
 
   return global;
-}
-
-export function addChatMembers<T extends GlobalState>(global: T, chat: ApiChat, membersToAdd: ApiChatMember[]): T {
-  const currentMembers = selectChatFullInfo(global, chat.id)?.members;
-  const newMemberIds = new Set(membersToAdd.map((m) => m.userId));
-  const updatedMembers = [
-    ...currentMembers?.filter(({ userId }) => !newMemberIds.has(userId)) || [],
-    ...membersToAdd,
-  ];
-  const currentIds = currentMembers?.map(({ userId }) => userId) || [];
-  const updatedIds = updatedMembers.map(({ userId }) => userId);
-
-  if (areSortedArraysEqual(currentIds, updatedIds)) {
-    return global;
-  }
-
-  const adminMembers = updatedMembers.filter(({ isAdmin, isOwner }) => isAdmin || isOwner);
-
-  return updateChatFullInfo(global, chat.id, {
-    members: updatedMembers,
-    adminMembersById: buildCollectionByKey(adminMembers, 'userId'),
-  });
-}
-
-export function replaceSimilarChannels<T extends GlobalState>(
-  global: T,
-  chatId: string,
-  similarChannelIds: string[],
-  count?: number,
-) {
-  return {
-    ...global,
-    chats: {
-      ...global.chats,
-      similarChannelsById: {
-        ...global.chats.similarChannelsById,
-        [chatId]: {
-          similarChannelIds,
-          count: count || similarChannelIds.length,
-        },
-      },
-    },
-  };
-}
-
-export function toggleSimilarChannels<T extends GlobalState>(
-  global: T,
-  chatId: string,
-) {
-  const similarChannels = global.chats.similarChannelsById[chatId];
-
-  return {
-    ...global,
-    chats: {
-      ...global.chats,
-      similarChannelsById: {
-        ...global.chats.similarChannelsById,
-        [chatId]: {
-          ...similarChannels,
-          isExpanded: !similarChannels?.isExpanded,
-        },
-      },
-    },
-  };
-}
-
-export function addSimilarBots<T extends GlobalState>(
-  global: T,
-  chatId: string,
-  similarBotsIds: string[],
-  count?: number,
-) {
-  return {
-    ...global,
-    chats: {
-      ...global.chats,
-      similarBotsById: {
-        ...global.chats.similarBotsById,
-        [chatId]: {
-          similarBotsIds,
-          count,
-        },
-      },
-    },
-  };
 }

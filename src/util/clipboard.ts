@@ -1,6 +1,3 @@
-
-export const CLIPBOARD_ITEM_SUPPORTED = window.navigator.clipboard && window.ClipboardItem;
-
 const textCopyEl = document.createElement('textarea');
 textCopyEl.setAttribute('readonly', '');
 textCopyEl.tabIndex = -1;
@@ -38,49 +35,4 @@ export const copyHtmlToClipboard = (html: string, text: string): void => {
       'text/html': new Blob([html], { type: 'text/html' }),
     }),
   ]);
-};
-
-export const copyTextToClipboardFromPromise = async (
-  getTextPromise: Promise<string | undefined>,
-  onSuccess: NoneToVoidFunction,
-  onFailure: NoneToVoidFunction,
-) => {
-  const copyTextToClipboardFallback = async () => {
-    try {
-      const text = await getTextPromise;
-      if (text) {
-        copyTextToClipboard(text);
-      } else {
-        onFailure();
-      }
-      return Boolean(text);
-    } catch {
-      onFailure();
-      return false;
-    }
-  };
-  if (!CLIPBOARD_ITEM_SUPPORTED || !navigator.clipboard.write) {
-    if (await copyTextToClipboardFallback()) onSuccess();
-    return;
-  }
-  try {
-    let hasGetDataError = false;
-    const rejectGetDataError = () => Promise.reject(new Error('GET_DATA_ERROR'));
-
-    const clipboardTextItem = new ClipboardItem({
-      'text/plain': getTextPromise.then((text) => text || rejectGetDataError()).catch(() => {
-        hasGetDataError = true;
-        return '';
-      }),
-    });
-    await navigator.clipboard.write([clipboardTextItem]);
-    if (hasGetDataError) {
-      onFailure();
-      return;
-    }
-  } catch {
-    // Promises in ClipboardItem aren't supported in older Chrome versions
-    if (!await copyTextToClipboardFallback()) return;
-  }
-  onSuccess();
 };
