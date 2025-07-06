@@ -9,7 +9,6 @@ import type { ObserveFn } from '../../../hooks/useIntersectionObserver';
 import { EMOJI_SIZE_PICKER } from '../../../config';
 import { getDocumentMediaHash, isSameReaction } from '../../../global/helpers';
 import buildClassName from '../../../util/buildClassName';
-import { LOCAL_TGS_URLS } from '../helpers/animatedAssets';
 
 import useContextMenuHandlers from '../../../hooks/useContextMenuHandlers';
 import useCoordsInSharedCanvas from '../../../hooks/useCoordsInSharedCanvas';
@@ -78,7 +77,7 @@ const ReactionEmoji: FC<OwnProps> = ({
     }
   }, [handleContextMenuClose, onContextMenu, handleContextMenuHide, isContextMenuOpen, reaction]);
 
-  const tgsUrl = reaction.type === 'paid' ? LOCAL_TGS_URLS.StarReaction : mediaData;
+  const tgsUrl = mediaData;
   const handleClick = useLastCallback(() => {
     onClick(reaction);
   });

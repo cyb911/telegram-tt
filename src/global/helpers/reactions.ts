@@ -1,5 +1,4 @@
 import type {
-  ApiAvailableReaction,
   ApiChatReactions,
   ApiMessage,
   ApiReactionCount,

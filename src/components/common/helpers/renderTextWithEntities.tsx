@@ -15,7 +15,6 @@ import renderText from './renderText';
 
 import Blockquote from '../Blockquote';
 import CustomEmoji from '../CustomEmoji';
-import SafeLink from '../SafeLink';
 import Spoiler from '../spoiler/Spoiler';
 
 interface IOrganizedEntity {
@@ -516,15 +515,6 @@ function processEntity({
     case ApiMessageEntityTypes.Strike:
       return <del data-entity-type={entity.type}>{renderNestedMessagePart()}</del>;
     case ApiMessageEntityTypes.TextUrl:
-    case ApiMessageEntityTypes.Url:
-      return (
-        <SafeLink
-          url={getLinkUrl(entityText, entity)}
-          text={entityText}
-        >
-          {renderNestedMessagePart()}
-        </SafeLink>
-      );
     case ApiMessageEntityTypes.Underline:
       return <ins data-entity-type={entity.type}>{renderNestedMessagePart()}</ins>;
     case ApiMessageEntityTypes.Timestamp:
