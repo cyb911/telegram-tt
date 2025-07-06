@@ -1,7 +1,6 @@
 import './api/initial';
 import './api/messages';
 import './api/symbols';
-import './api/middleSearch';
 import './api/management';
 import './api/sync';
 import './api/accounts';
