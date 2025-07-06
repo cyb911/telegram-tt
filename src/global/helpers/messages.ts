@@ -18,11 +18,6 @@ import { getGlobal } from '../index';
 
 const RE_LINK = new RegExp(RE_LINK_TEMPLATE, 'i');
 
-export function getMessageHtmlId(messageId: number, index?: number) {
-  const parts = ['message', messageId.toString().replace('.', '-'), index].filter(Boolean);
-  return parts.join('-');
-}
-
 export function getMessageTranscription(message: ApiMessage) {
   const { transcriptionId } = message;
   const global = getGlobal();

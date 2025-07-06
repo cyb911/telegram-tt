@@ -1,9 +1,7 @@
 import type {
   ApiAudio,
   ApiDocument,
-  ApiMediaExtendedPreview,
   ApiMessage,
-  ApiMessageSearchType,
   ApiPhoto,
   ApiSticker,
   ApiVideo,
@@ -21,9 +19,7 @@ import {
   MAX_BUFFER_SIZE,
 } from '../../util/browser/windowEnvironment';
 import { getDocumentHasPreview } from '../../components/common/helpers/documentInfo';
-import { matchLinkInMessageText } from './messages';
 
-export type MediaWithThumbs = ApiPhoto | ApiVideo | ApiDocument | ApiSticker | ApiMediaExtendedPreview;
 export type DownloadableMedia = ApiPhoto | ApiVideo | ApiDocument | ApiSticker | ApiAudio | ApiVoice | ApiWebDocument;
 
 type Target =
@@ -40,10 +36,6 @@ export function getMessageContent(message: MediaContainer) {
 
 export function getMessagePhoto(message: MediaContainer) {
   return message.content.photo;
-}
-
-export function getMessageActionPhoto(message: MediaContainer) {
-  return message.content.action?.type === 'suggestProfilePhoto' ? message.content.action.photo : undefined;
 }
 
 export function getMessageVideo(message: MediaContainer) {
@@ -64,10 +56,6 @@ export function getMessageSticker(message: MediaContainer) {
 
 export function getMessageDocument(message: MediaContainer) {
   return message.content.document;
-}
-
-export function getMessageWebPageDocument(message: MediaContainer) {
-  return getMessageWebPage(message)?.document;
 }
 
 export function isDocumentPhoto(document: ApiDocument) {
@@ -343,70 +331,6 @@ export function hasMediaLocalBlobUrl(media: ApiPhoto | ApiVideo | ApiDocument) {
   }
 
   return false;
-}
-
-export function getChatMediaMessageIds(
-  messages: Record<number, ApiMessage>, listedIds: number[], isFromSharedMedia = false,
-) {
-  return getMessageContentIds(messages, listedIds, isFromSharedMedia ? 'media' : 'inlineMedia');
-}
-
-export function getMessageContentIds(
-  messages: Record<number, ApiMessage>, messageIds: number[], contentType: ApiMessageSearchType | 'inlineMedia',
-) {
-  let validator: (message: ApiMessage) => unknown;
-
-  switch (contentType) {
-    case 'media':
-      validator = (message: ApiMessage) => {
-        const video = getMessageVideo(message);
-        return getMessagePhoto(message) || (video && !video.isRound && !video.isGif);
-      };
-      break;
-
-    case 'documents':
-      validator = getMessageDocument;
-      break;
-
-    case 'links':
-      validator = (message: ApiMessage) => getMessageWebPage(message) || matchLinkInMessageText(message);
-      break;
-
-    case 'audio':
-      validator = getMessageAudio;
-      break;
-
-    case 'voice':
-      validator = (message: ApiMessage) => {
-        const video = getMessageVideo(message);
-        return getMessageVoice(message) || (video && video.isRound);
-      };
-      break;
-
-    case 'inlineMedia':
-      validator = (message: ApiMessage) => {
-        const video = getMessageVideo(message);
-        const document = getMessageDocument(message);
-        return (
-          getMessagePhoto(message)
-          || (video && !video.isRound && !video.isGif)
-          || (document && isDocumentPhoto(document))
-          || (document && isDocumentVideo(document))
-        );
-      };
-      break;
-
-    default:
-      return [] as Array<number>;
-  }
-
-  return messageIds.reduce((result, messageId) => {
-    if (messages[messageId] && validator(messages[messageId])) {
-      result.push(messageId);
-    }
-
-    return result;
-  }, [] as Array<number>);
 }
 
 export function isMediaLoadableInViewer(newMessage: ApiMessage) {
