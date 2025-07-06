@@ -20,7 +20,6 @@ import Button from './Button';
 import Menu from './Menu';
 import MenuItem from './MenuItem';
 import MenuSeparator from './MenuSeparator';
-import RippleEffect from './RippleEffect';
 
 import './ListItem.scss';
 
@@ -237,9 +236,6 @@ const ListItem: FC<OwnProps> = ({
         onMouseDown={handleMouseDown}
         onContextMenu={onContextMenu || ((!inactive && contextActions) ? handleContextMenu : undefined)}
       >
-        {!disabled && !inactive && ripple && (
-          <RippleEffect />
-        )}
         {leftElement}
         {icon && (
           <Icon name={icon} className={buildClassName('ListItem-main-icon', iconClassName)} />

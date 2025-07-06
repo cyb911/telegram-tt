@@ -1,7 +1,7 @@
 import type { MouseEvent as ReactMouseEvent } from 'react';
-import type { ElementRef, FC } from '../../lib/teact/teact';
+import type { ElementRef, FC } from '@teact';
+import { useRef, useState } from '@teact';
 import type React from '../../lib/teact/teact';
-import { useRef, useState } from '../../lib/teact/teact';
 
 import { IS_TOUCH_ENV, MouseButton } from '../../util/browser/windowEnvironment';
 import buildClassName from '../../util/buildClassName';
@@ -11,7 +11,6 @@ import useLastCallback from '../../hooks/useLastCallback';
 import useOldLang from '../../hooks/useOldLang';
 
 import Sparkles from '../common/Sparkles';
-import RippleEffect from './RippleEffect';
 import Spinner from './Spinner';
 
 import './Button.scss';
@@ -182,9 +181,6 @@ const Button: FC<OwnProps> = ({
           <Spinner color={isText ? 'blue' : 'white'} />
         </div>
       ) : children}
-      {!isNotInteractive && ripple && (
-        <RippleEffect />
-      )}
     </>
   );
 
