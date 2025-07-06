@@ -42,9 +42,3 @@ export function disableDebugConsole() {
   });
   DEBUG_LOGS = [];
 }
-
-export function getDebugLogs() {
-  return JSON.stringify(DEBUG_LOGS, (key, value) => (typeof value === 'bigint'
-    ? value.toString()
-    : value));
-}

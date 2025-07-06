@@ -34,9 +34,3 @@ export default function searchWords(haystack: string, needle: string | string[])
     return haystackWords.some((haystackWord) => haystackWord.startsWith(needleWord));
   });
 }
-
-export function prepareSearchWordsForNeedle(needle: string) {
-  const needleWords = needle.toLowerCase().split(RE_NOT_LETTER);
-
-  return (haystack: string) => searchWords(haystack, needleWords);
-}

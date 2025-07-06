@@ -168,20 +168,6 @@ class ConnectorClass<T extends InputRequestTypes> {
     return promise;
   }
 
-  cancelCallback(progressCallback: CancellableCallback) {
-    progressCallback.isCanceled = true;
-
-    const { messageId } = this.requestStatesByCallback.get(progressCallback) || {};
-    if (!messageId) {
-      return;
-    }
-
-    this.postMessageOnTickEnd({
-      type: 'cancelProgress',
-      messageId,
-    });
-  }
-
   onMessage(data: WorkerMessageData) {
     const { requestStates, channel } = this;
     if (data.channel !== channel) {

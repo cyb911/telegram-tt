@@ -18,22 +18,6 @@ const renderCountersThrottled = throttle(renderCounters, 500, false);
 
 let loggerEl: HTMLDivElement;
 
-export function debugToOverlay(text: string) {
-  if (!loggerEl) {
-    setupOverlay();
-  }
-
-  const date = new Date();
-  const dateFormatted = `${date.toLocaleTimeString()}.${date.getMilliseconds()}`;
-  const wasAtBottom = loggerEl.scrollTop + 10 >= loggerEl.scrollHeight - loggerEl.offsetHeight;
-
-  loggerEl.innerHTML += `${dateFormatted}: ${text}<br/>`;
-
-  if (wasAtBottom) {
-    loggerEl.scrollTop = loggerEl.scrollHeight;
-  }
-}
-
 export function incrementOverlayCounter(key: string, value = 1) {
   const now = Date.now();
   if (!counters[key]) {
