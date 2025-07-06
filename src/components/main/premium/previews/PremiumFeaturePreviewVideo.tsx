@@ -1,5 +1,5 @@
-import type { FC } from '../../../../lib/teact/teact';
-import { memo } from '../../../../lib/teact/teact';
+import type { FC } from '@teact';
+import { memo } from '@teact';
 
 import type { ApiThumbnail } from '../../../../api/types';
 
@@ -22,6 +22,7 @@ type OwnProps = {
   videoThumbnail: ApiThumbnail;
   index: number;
   isActive: boolean;
+  fileUrl: string;
 };
 
 const PremiumFeaturePreviewVideo: FC<OwnProps> = ({
@@ -31,6 +32,7 @@ const PremiumFeaturePreviewVideo: FC<OwnProps> = ({
   videoThumbnail,
   index,
   isActive,
+  fileUrl,
 }) => {
   const mediaData = useMedia(`document${videoId}`);
   const thumbnailRef = useCanvasBlur(videoThumbnail.dataUri);
@@ -51,7 +53,7 @@ const PremiumFeaturePreviewVideo: FC<OwnProps> = ({
         <OptimizedVideo
           canPlay={isActive}
           className={buildClassName(styles.video, transitionClassNames)}
-          src={mediaData}
+          src={fileUrl}
           disablePictureInPicture
           playsInline
           muted

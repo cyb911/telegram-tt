@@ -300,6 +300,7 @@ const PremiumFeatureModal: FC<OwnProps> = ({
                   isDown={PREMIUM_BOTTOM_VIDEOS.includes(section)}
                   index={index}
                   isReverseAnimation={index === reverseAnimationSlideIndex}
+                  fileUrl={promo.videos[i].fileUrl}
                 />
               </div>
               <h1 className={styles.title}>
