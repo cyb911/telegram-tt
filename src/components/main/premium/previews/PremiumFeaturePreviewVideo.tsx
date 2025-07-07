@@ -35,6 +35,7 @@ const PremiumFeaturePreviewVideo: FC<OwnProps> = ({
   fileUrl,
 }) => {
   const mediaData = useMedia(`document${videoId}`);
+  console.info(mediaData);
   const thumbnailRef = useCanvasBlur(videoThumbnail.dataUri);
   const transitionClassNames = useMediaTransitionDeprecated(mediaData);
 

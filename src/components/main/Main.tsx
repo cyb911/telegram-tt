@@ -13,7 +13,6 @@ import type { TabState } from '../../global/types';
 import { ElectronEvent } from '../../types/electron';
 
 import { BASE_EMOJI_KEYWORD_LANG, DEBUG, INACTIVE_MARKER } from '../../config';
-import { requestNextMutation } from '../../lib/fasterdom/fasterdom';
 import {
   selectCanAnimateInterface,
   selectCurrentMessageList,
@@ -27,7 +26,7 @@ import {
   selectTabState,
   selectUser,
 } from '../../global/selectors';
-import { IS_ANDROID, IS_ELECTRON } from '../../util/browser/windowEnvironment';
+import { IS_ELECTRON } from '../../util/browser/windowEnvironment';
 import buildClassName from '../../util/buildClassName';
 import { waitForTransitionEnd } from '../../util/cssAnimationEndListeners';
 import { Bundles, loadBundle } from '../../util/moduleLoader';
@@ -36,7 +35,6 @@ import updateIcon from '../../util/updateIcon';
 
 import useInterval from '../../hooks/schedulers/useInterval';
 import useTimeout from '../../hooks/schedulers/useTimeout';
-import useAppLayout from '../../hooks/useAppLayout';
 import useForceUpdate from '../../hooks/useForceUpdate';
 import useLang from '../../hooks/useLang';
 import useLastCallback from '../../hooks/useLastCallback';
@@ -109,7 +107,6 @@ let DEBUG_isLogged = false;
 
 const Main = ({
   isMobile,
-  isLeftColumnOpen,
   isMiddleColumnOpen,
   isRightColumnOpen,
   isMediaViewerOpen,
@@ -159,7 +156,6 @@ const Main = ({
     loadGenericEmojiEffects,
     checkAppVersion,
     openThread,
-    toggleLeftColumn,
     loadRecentEmojiStatuses,
     loadUserCollectibleStatuses,
     updatePageTitle,
@@ -198,17 +194,6 @@ const Main = ({
   }, CALL_BUNDLE_LOADING_DELAY_MS);
 
   const containerRef = useRef<HTMLDivElement>();
-
-  const { isDesktop } = useAppLayout();
-  useEffect(() => {
-    if (!isLeftColumnOpen && !isMiddleColumnOpen && !isDesktop) {
-      // Always display at least one column
-      toggleLeftColumn();
-    } else if (isLeftColumnOpen && isMiddleColumnOpen && isMobile) {
-      // Can't have two active columns at the same time
-      toggleLeftColumn();
-    }
-  }, [isDesktop, isLeftColumnOpen, isMiddleColumnOpen, isMobile, toggleLeftColumn]);
 
   useInterval(checkAppVersion, isMasterTab ? APP_OUTDATED_TIMEOUT_MS : undefined, true);
 
@@ -369,7 +354,7 @@ const Main = ({
 
   useShowTransition({
     ref: containerRef,
-    isOpen: isLeftColumnOpen,
+    isOpen: false,
     noCloseTransition: shouldSkipHistoryAnimations,
     prefix: 'left-column-',
   });
@@ -378,17 +363,11 @@ const Main = ({
 
   // Handle opening middle column
   useSyncEffect(([prevIsLeftColumnOpen]) => {
-    if (prevIsLeftColumnOpen === undefined || isLeftColumnOpen === prevIsLeftColumnOpen || !withInterfaceAnimations) {
+    if (prevIsLeftColumnOpen === undefined || !withInterfaceAnimations) {
       return;
     }
 
     willAnimateLeftColumnRef.current = true;
-
-    if (IS_ANDROID) {
-      requestNextMutation(() => {
-        document.body.classList.toggle('android-left-blackout-open', !isLeftColumnOpen);
-      });
-    }
 
     const endHeavyAnimation = beginHeavyAnimation();
 
@@ -397,7 +376,8 @@ const Main = ({
       willAnimateLeftColumnRef.current = false;
       forceUpdate();
     });
-  }, [isLeftColumnOpen, withInterfaceAnimations, forceUpdate]);
+    // eslint-disable-next-line react-hooks-static-deps/exhaustive-deps
+  }, [false, withInterfaceAnimations, forceUpdate]);
 
   useShowTransition({
     ref: containerRef,
