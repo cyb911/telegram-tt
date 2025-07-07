@@ -73,10 +73,6 @@ const isBigScreen = typeof window !== 'undefined' && window.innerHeight >= 900;
 export const MESSAGE_LIST_SLICE = isBigScreen ? 60 : 40;
 export const MESSAGE_LIST_VIEWPORT_LIMIT = MESSAGE_LIST_SLICE * 2;
 
-export const CHAT_HEIGHT_PX = 72;
-export const SHARED_MEDIA_SLICE = 42;
-export const CHAT_MEDIA_SLICE = 42;
-export const MESSAGE_SEARCH_SLICE = 42;
 export const PINNED_MESSAGES_LIMIT = 50;
 export const BLOCKED_LIST_LIMIT = 100;
 export const STORY_LIST_LIMIT = 100;
@@ -144,18 +140,9 @@ export const API_THROTTLE_RESET_UPDATES = new Set([
 
 export const LOCK_SCREEN_ANIMATION_DURATION_MS = 200;
 
-export const STICKER_SIZE_PICKER = 72;
 export const EMOJI_SIZE_PICKER = 36;
 export const RECENT_STICKERS_LIMIT = 20;
 export const RECENT_STATUS_LIMIT = 20;
-export const EMOJI_STATUS_LOOP_LIMIT = 2;
-export const POPULAR_SYMBOL_SET_ID = 'popular';
-export const RECENT_SYMBOL_SET_ID = 'recent';
-export const COLLECTIBLE_STATUS_SET_ID = 'collectibleStatus';
-export const FAVORITE_SYMBOL_SET_ID = 'favorite';
-export const EFFECT_STICKERS_SET_ID = 'effectStickers';
-export const EFFECT_EMOJIS_SET_ID = 'effectEmojis';
-export const DEFAULT_TOPIC_ICON_STICKER_ID = 'topic-default-icon';
 export const DEFAULT_STATUS_ICON_ID = 'status-default-icon';
 
 export const BASE_EMOJI_KEYWORD_LANG = 'en';
@@ -236,7 +223,6 @@ export const DARK_THEME_PATTERN_COLOR = '#0A0A0A8C';
 export const PEER_COLOR_BG_OPACITY = '1a';
 export const PEER_COLOR_BG_ACTIVE_OPACITY = '2b';
 export const PEER_COLOR_GRADIENT_STEP = 5; // px
-export const MAX_UPLOAD_FILEPART_SIZE = 524288;
 export const MAX_UNIQUE_REACTIONS = 11;
 
 export const IGNORE_UNHANDLED_ERRORS = new Set([

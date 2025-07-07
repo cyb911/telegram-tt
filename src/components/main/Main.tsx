@@ -38,7 +38,6 @@ import useTimeout from '../../hooks/schedulers/useTimeout';
 import useForceUpdate from '../../hooks/useForceUpdate';
 import useLang from '../../hooks/useLang';
 import useLastCallback from '../../hooks/useLastCallback';
-import usePreventPinchZoomGesture from '../../hooks/usePreventPinchZoomGesture';
 import useShowTransition from '../../hooks/useShowTransition';
 import useSyncEffect from '../../hooks/useSyncEffect';
 import useBackgroundMode from '../../hooks/window/useBackgroundMode';
@@ -438,7 +437,6 @@ const Main = ({
   // Online status and browser tab indicators
   useBackgroundMode(handleBlur, handleFocus, Boolean(IS_ELECTRON));
   useBeforeUnload(handleBlur);
-  usePreventPinchZoomGesture(isMediaViewerOpen || isStoryViewerOpen);
 
   return (
     <div ref={containerRef} id="Main" className={className}>
