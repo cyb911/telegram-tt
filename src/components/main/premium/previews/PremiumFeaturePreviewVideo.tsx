@@ -6,7 +6,6 @@ import type { ApiThumbnail } from '../../../../api/types';
 import buildClassName from '../../../../util/buildClassName';
 
 import useCanvasBlur from '../../../../hooks/useCanvasBlur';
-import useMedia from '../../../../hooks/useMedia';
 import useMediaTransitionDeprecated from '../../../../hooks/useMediaTransitionDeprecated';
 
 import OptimizedVideo from '../../../ui/OptimizedVideo';
@@ -16,7 +15,6 @@ import styles from './PremiumFeaturePreviewVideo.module.scss';
 import DeviceFrame from '../../../../assets/premium/DeviceFrame.svg';
 
 type OwnProps = {
-  videoId: string;
   isReverseAnimation: boolean;
   isDown: boolean;
   videoThumbnail: ApiThumbnail;
@@ -26,7 +24,6 @@ type OwnProps = {
 };
 
 const PremiumFeaturePreviewVideo: FC<OwnProps> = ({
-  videoId,
   isReverseAnimation,
   isDown,
   videoThumbnail,
@@ -34,8 +31,7 @@ const PremiumFeaturePreviewVideo: FC<OwnProps> = ({
   isActive,
   fileUrl,
 }) => {
-  const mediaData = useMedia(`document${videoId}`);
-  console.info(mediaData);
+  const mediaData = fileUrl;
   const thumbnailRef = useCanvasBlur(videoThumbnail.dataUri);
   const transitionClassNames = useMediaTransitionDeprecated(mediaData);
 
@@ -54,7 +50,7 @@ const PremiumFeaturePreviewVideo: FC<OwnProps> = ({
         <OptimizedVideo
           canPlay={isActive}
           className={buildClassName(styles.video, transitionClassNames)}
-          src={fileUrl}
+          src={mediaData}
           disablePictureInPicture
           playsInline
           muted

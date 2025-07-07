@@ -295,7 +295,6 @@ const PremiumFeatureModal: FC<OwnProps> = ({
               <div className={styles.frame}>
                 <PremiumFeaturePreviewVideo
                   isActive={currentSlideIndex === index}
-                  videoId={promo.videos[i].id!}
                   videoThumbnail={promo.videos[i].thumbnail!}
                   isDown={PREMIUM_BOTTOM_VIDEOS.includes(section)}
                   index={index}
