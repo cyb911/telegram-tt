@@ -120,8 +120,6 @@ const Main = ({
     loadAnimatedEmojis,
     loadBirthdayNumbersStickers,
     loadRestrictedEmojiStickers,
-    loadNotificationSettings,
-    loadNotificationExceptions,
     updateIsOnline,
     onTabFocusChange,
     loadTopInlineBots,
@@ -157,14 +155,11 @@ const Main = ({
     loadPeerColors,
     loadSavedReactionTags,
     loadTimezones,
-    loadQuickReplies,
     loadStarStatus,
     loadAvailableEffects,
-    loadTopBotApps,
     loadPaidReactionPrivacy,
     loadPasswordInfo,
     loadBotFreezeAppeal,
-    loadAllChats,
     loadAllStories,
     loadAllHiddenStories,
   } = getActions();
@@ -217,21 +212,17 @@ const Main = ({
   // Initial API calls
   useEffect(() => {
     if (isMasterTab && isSynced && isAppConfigLoaded && !isAccountFrozen) {
-      loadAllChats({ listType: 'saved' });
       loadAllStories();
       loadAllHiddenStories();
       loadRecentReactions();
       loadDefaultTagReactions();
       loadAttachBots();
-      loadNotificationSettings();
-      loadNotificationExceptions();
       loadTopInlineBots();
       loadTopReactions();
       loadStarStatus();
       loadEmojiKeywords({ language: BASE_EMOJI_KEYWORD_LANG });
       loadFeaturedEmojiStickers();
       loadSavedReactionTags();
-      loadTopBotApps();
       loadPaidReactionPrivacy();
       loadDefaultTopicIcons();
       loadAnimatedEmojis();
@@ -243,7 +234,6 @@ const Main = ({
       loadAvailableEffects();
       loadBirthdayNumbersStickers();
       loadRestrictedEmojiStickers();
-      loadQuickReplies();
       loadTimezones();
     }
   }, [isMasterTab, isSynced, isAppConfigLoaded, isAccountFrozen]);
