@@ -1,5 +1,5 @@
-import { onFullyIdle } from '../lib/teact/teact';
-import { addCallback } from '../lib/teact/teactn';
+import { onFullyIdle } from '@teact';
+import { addCallback } from '@teact/teactn.tsx';
 import { addActionHandler, getGlobal } from '../global';
 
 import type {
@@ -11,7 +11,6 @@ import type { CallbackManager } from './callbacks';
 import {
   ALL_FOLDER_ID, ARCHIVED_FOLDER_ID, DEBUG, SAVED_FOLDER_ID, SERVICE_NOTIFICATIONS_USER_ID,
 } from '../config';
-import { getIsChatMuted } from '../global/helpers/notifications';
 import {
   selectChatLastMessage,
   selectNotifyDefaults,
@@ -428,16 +427,12 @@ function updateChats(
     let newFolderIds: number[];
     if (chat) {
       const currentSummary = prepared.chatSummariesById.get(chatId);
-      const isRemovedFromAll = !newGeneralIds.includes(chatId);
-      const isRemovedFromSaved = !newSavedFolderListIds?.includes(chatId);
       const newSummary = buildChatSummary(
         global,
         chat,
         newNotifyDefaults,
         newNotifyExceptions,
         newUsersById[chatId],
-        isRemovedFromAll,
-        isRemovedFromSaved,
       );
 
       if (!areFoldersChanged && currentSummary && arePropsShallowEqual(newSummary, currentSummary)) {
@@ -476,14 +471,12 @@ function updateChats(
   return Array.from(affectedFolderIds);
 }
 
-function buildChatSummary<T extends GlobalState>(
-  global: T,
+function buildChatSummary(
+  global: GlobalState,
   chat: ApiChat,
-  notifyDefaults?: Record<ApiNotifyPeerType, ApiPeerNotifySettings>,
-  notifyExceptions?: Record<string, ApiPeerNotifySettings>,
-  user?: ApiUser,
-  isRemovedFromAll?: boolean,
-  isRemovedFromSaved?: boolean,
+  user?: Record<'users' | 'groups' | 'channels', ApiPeerNotifySettings>,
+  isRemovedFromAll?: Record<string, ApiPeerNotifySettings>,
+  isRemovedFromSaved?: ApiUser,
 ): ChatSummary {
   const {
     id, type, isRestricted, isNotJoined, migratedTo, folderId,
@@ -500,8 +493,6 @@ function buildChatSummary<T extends GlobalState>(
       return acc;
     }, { unreadCount: 0, unreadMentionsCount: 0 })
     : { unreadCount: chatUnreadCount, unreadMentionsCount: chatUnreadMentionsCount };
-
-  const userInfo = type === 'chatTypePrivate' && user;
   const lastMessage = selectChatLastMessage(global, chat.id);
   const shouldHideServiceChat = chat.id === SERVICE_NOTIFICATIONS_USER_ID && (
     !lastMessage || lastMessage.content.action?.type === 'historyClear'
@@ -518,12 +509,12 @@ function buildChatSummary<T extends GlobalState>(
     isListedInAll: Boolean(!isRestricted && !isNotJoined && !migratedTo && !shouldHideServiceChat && !isRemovedFromAll),
     isListedInSaved: !isRemovedFromSaved,
     isArchived: folderId === ARCHIVED_FOLDER_ID,
-    isMuted: getIsChatMuted(chat, notifyDefaults, notifyExceptions?.[chat.id]),
+    isMuted: false,
     isUnread: Boolean(unreadCount || unreadMentionsCount || hasUnreadMark),
     unreadCount,
     unreadMentionsCount,
-    isUserBot: userInfo ? userInfo.type === 'userTypeBot' : undefined,
-    isUserContact: userInfo ? userInfo.isContact : undefined,
+    isUserBot: undefined,
+    isUserContact: undefined,
     orderInAll,
     orderInSaved,
   };
