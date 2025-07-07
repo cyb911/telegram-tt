@@ -15,7 +15,6 @@ import { ElectronEvent } from '../../types/electron';
 import { BASE_EMOJI_KEYWORD_LANG, DEBUG, INACTIVE_MARKER } from '../../config';
 import {
   selectCanAnimateInterface,
-  selectCurrentMessageList,
   selectIsCurrentUserPremium,
   selectIsForwardModalOpen,
   selectIsMediaViewerOpen,
@@ -105,11 +104,8 @@ const CALL_BUNDLE_LOADING_DELAY_MS = 5000; // 5 sec
 let DEBUG_isLogged = false;
 
 const Main = ({
-  isMobile,
   isMiddleColumnOpen,
   isRightColumnOpen,
-  isMediaViewerOpen,
-  isStoryViewerOpen,
   shouldSkipHistoryAnimations,
   isServiceChatReady,
   withInterfaceAnimations,
@@ -461,10 +457,8 @@ export default memo(withGlobal<OwnProps>(
       limitReachedModal,
     } = selectTabState(global);
 
-    const { chatId } = selectCurrentMessageList(global) || {};
-
     return {
-      isMiddleColumnOpen: Boolean(chatId),
+      isMiddleColumnOpen: true,
       isRightColumnOpen: selectIsRightColumnShown(global, isMobile),
       isMediaViewerOpen: selectIsMediaViewerOpen(global),
       isStoryViewerOpen: selectIsStoryViewerOpen(global),
