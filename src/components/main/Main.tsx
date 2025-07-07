@@ -28,12 +28,9 @@ import {
 import { IS_ELECTRON } from '../../util/browser/windowEnvironment';
 import buildClassName from '../../util/buildClassName';
 import { waitForTransitionEnd } from '../../util/cssAnimationEndListeners';
-import { Bundles, loadBundle } from '../../util/moduleLoader';
 import { parseLocationHash } from '../../util/routing';
 import updateIcon from '../../util/updateIcon';
 
-import useInterval from '../../hooks/schedulers/useInterval';
-import useTimeout from '../../hooks/schedulers/useTimeout';
 import useForceUpdate from '../../hooks/useForceUpdate';
 import useLang from '../../hooks/useLang';
 import useLastCallback from '../../hooks/useLastCallback';
@@ -97,9 +94,6 @@ type StateProps = {
   isAccountFrozen?: boolean;
   isAppConfigLoaded?: boolean;
 };
-
-const APP_OUTDATED_TIMEOUT_MS = 5 * 60 * 1000; // 5 min
-const CALL_BUNDLE_LOADING_DELAY_MS = 5000; // 5 sec
 
 let DEBUG_isLogged = false;
 
@@ -183,14 +177,7 @@ const Main = ({
 
   const lang = useLang();
 
-  // Preload Calls bundle to initialize sounds for iOS
-  useTimeout(() => {
-    void loadBundle(Bundles.Calls);
-  }, CALL_BUNDLE_LOADING_DELAY_MS);
-
   const containerRef = useRef<HTMLDivElement>();
-
-  useInterval(checkAppVersion, isMasterTab ? APP_OUTDATED_TIMEOUT_MS : undefined, true);
 
   useEffect(() => {
     if (!IS_ELECTRON) {
