@@ -1,9 +1,9 @@
-import type { FC } from '../../../lib/teact/teact';
-import type React from '../../../lib/teact/teact';
+import type { FC } from '@teact';
 import {
   memo, useEffect, useMemo, useRef, useState,
-} from '../../../lib/teact/teact';
-import { toggleExtraClass } from '../../../lib/teact/teact-dom';
+} from '@teact';
+import { toggleExtraClass } from '@teact/teact-dom.ts';
+import type React from '../../../lib/teact/teact';
 
 import type {
   ApiLimitTypeForPromo,
