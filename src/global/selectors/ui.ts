@@ -1,4 +1,4 @@
-import type { PerformanceTypeKey, ThemeKey } from '../../types';
+import type { PerformanceTypeKey } from '../../types';
 import type { GlobalState, TabArgs } from '../types';
 import { NewChatMembersProgress, RightColumnContent } from '../../types';
 
@@ -71,10 +71,6 @@ export function selectIsRightColumnShown<T extends GlobalState>(
 
 export function selectTheme<T extends GlobalState>(global: T) {
   return selectSharedSettings(global).theme;
-}
-
-export function selectThemeValues<T extends GlobalState>(global: T, themeKey: ThemeKey) {
-  return global.settings.themes[themeKey];
 }
 
 export function selectIsReactionPickerOpen<T extends GlobalState>(

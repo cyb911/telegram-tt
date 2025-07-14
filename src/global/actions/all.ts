@@ -15,8 +15,6 @@ import './ui/initial';
 import './ui/bots';
 import './ui/messages';
 import './ui/globalSearch';
-import './ui/middleSearch';
-import './ui/stickerSearch';
 import './ui/users';
 import './ui/settings';
 import './ui/misc';

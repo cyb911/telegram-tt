@@ -3,14 +3,12 @@ import './intervals';
 import type { ActionReturnType, GlobalState } from './types';
 
 import { isCacheApiSupported } from '../util/cacheApi';
-import { getCurrentTabId, reestablishMasterToSelf } from '../util/establishMultitabRole';
+import { getCurrentTabId } from '../util/establishMultitabRole';
 import { initGlobal } from '../util/init';
 import { cloneDeep } from '../util/iteratees';
 import { isLocalMessageId } from '../util/keys/messageKey';
-import { Bundles, loadBundle } from '../util/moduleLoader';
 import { parseLocationHash } from '../util/routing';
 import { updatePeerColors } from '../util/theme';
-import { initializeChatMediaSearchResults } from './reducers/middleSearch';
 import { updateTabState } from './reducers/tabs';
 import { initCache } from './cache';
 import {
@@ -59,7 +57,6 @@ addActionHandler('init', (global, actions, payload): ActionReturnType => {
         global = replaceThreadParam(global, chatId, threadId, 'lastViewportIds', undefined);
         return;
       }
-      global = initializeChatMediaSearchResults(global, chatId, threadId, tabId);
       global = replaceTabThreadParam(
         global,
         chatId,

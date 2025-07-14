@@ -7,7 +7,6 @@ import type {
 } from '../../api/types';
 import type {
   PaymentStep,
-  ShippingOption,
   StarsSubscriptions,
   StarsTransactionType,
 } from '../../types';
@@ -48,34 +47,11 @@ export function updateStarsPayment<T extends GlobalState>(
   }, tabId);
 }
 
-export function updateShippingOptions<T extends GlobalState>(
-  global: T,
-  shippingOptions: ShippingOption[],
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-
-): T {
-  return updatePayment(global, { shippingOptions }, tabId);
-}
-
-export function setRequestInfoId<T extends GlobalState>(
-  global: T, id: string,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-): T {
-  return updatePayment(global, { requestId: id }, tabId);
-}
-
 export function setPaymentStep<T extends GlobalState>(
   global: T, step: PaymentStep,
   ...[tabId = getCurrentTabId()]: TabArgs<T>
 ): T {
   return updatePayment(global, { step }, tabId);
-}
-
-export function setStripeCardInfo<T extends GlobalState>(
-  global: T, cardInfo: { type: string; id: string },
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-): T {
-  return updatePayment(global, { stripeCredentials: { ...cardInfo } }, tabId);
 }
 
 export function setSmartGlocalCardInfo<T extends GlobalState>(

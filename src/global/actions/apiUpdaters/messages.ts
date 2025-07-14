@@ -9,7 +9,6 @@ import type {
 } from '../../types';
 import { MAIN_THREAD_ID } from '../../../api/types';
 
-import { SERVICE_NOTIFICATIONS_USER_ID } from '../../../config';
 import { areDeepEqual } from '../../../util/areDeepEqual';
 import { isUserId } from '../../../util/entities/ids';
 import { getCurrentTabId } from '../../../util/establishMultitabRole';
@@ -36,15 +35,12 @@ import {
   clearMessageTranslation,
   deleteChatMessages,
   deleteChatScheduledMessages,
-  deletePeerPhoto,
   deleteQuickReply,
   deleteQuickReplyMessages,
   deleteTopic,
-  removeChatFromChatLists,
   replaceThreadParam,
   updateChat,
   updateChatLastMessageId,
-  updateChatMediaLoadingState,
   updateChatMessage,
   updateListedIds,
   updateMessageTranslations,
@@ -123,9 +119,6 @@ addActionHandler('apiUpdate', (global, actions, update): ActionReturnType => {
         if (isLocal && wasDrafted) {
           global = updateChatLastMessage(global, chatId, newMessage);
         }
-
-        const threadId = selectThreadIdFromMessage(global, newMessage);
-        global = updateChatMediaLoadingState(global, newMessage, chatId, threadId, tabId);
 
         if (selectIsMessageInCurrentMessageList(global, chatId, message as ApiMessage, tabId)) {
           if (isLocal && message.isOutgoing && !(message.content?.action) && !storyReplyInfo?.storyId
@@ -496,37 +489,6 @@ addActionHandler('apiUpdate', (global, actions, update): ActionReturnType => {
       break;
     }
 
-    case 'updateScheduledMessageSendSucceeded': {
-      const {
-        chatId, localId, message, poll,
-      } = update;
-      const scheduledIds = selectScheduledIds(global, chatId, MAIN_THREAD_ID) || [];
-      global = replaceThreadParam(global, chatId, MAIN_THREAD_ID, 'scheduledIds', [...scheduledIds, message.id]);
-
-      const threadId = selectThreadIdFromMessage(global, message);
-      if (threadId !== MAIN_THREAD_ID) {
-        const threadScheduledIds = selectScheduledIds(global, chatId, threadId) || [];
-        global = replaceThreadParam(global, chatId, threadId, 'scheduledIds', [...threadScheduledIds, message.id]);
-      }
-
-      const currentMessage = selectScheduledMessage(global, chatId, localId);
-
-      global = deleteChatScheduledMessages(global, chatId, [localId]);
-      global = updateScheduledMessage(global, chatId, message.id, {
-        ...currentMessage,
-        ...message,
-        previousLocalId: localId,
-        isDeleting: undefined,
-      });
-
-      if (poll) {
-        global = updatePoll(global, poll.id, poll);
-      }
-
-      setGlobal(global);
-      break;
-    }
-
     case 'updatePinnedIds': {
       const { chatId, isPinned, messageIds } = update;
 
@@ -650,47 +612,6 @@ addActionHandler('apiUpdate', (global, actions, update): ActionReturnType => {
       }
 
       deleteScheduledMessages(chatId, ids, actions, global);
-      break;
-    }
-
-    case 'deleteHistory': {
-      const { chatId } = update;
-      const chatMessages = global.messages.byChatId[chatId];
-      if (chatId === SERVICE_NOTIFICATIONS_USER_ID) {
-        global = {
-          ...global,
-          serviceNotifications: global.serviceNotifications.map((notification) => ({
-            ...notification,
-            isDeleted: true,
-          })),
-        };
-        setGlobal(global);
-      }
-
-      if (chatMessages) {
-        const ids = Object.keys(chatMessages.byId).map(Number);
-        global = getGlobal();
-        deleteMessages(global, chatId, ids, actions);
-      } else {
-        actions.requestChatUpdate({ chatId });
-      }
-
-      global = getGlobal();
-      global = removeChatFromChatLists(global, chatId);
-      setGlobal(global);
-
-      break;
-    }
-
-    case 'deleteSavedHistory': {
-      const { chatId } = update;
-      const currentUserId = global.currentUserId!;
-      global = removeChatFromChatLists(global, chatId, 'saved');
-      setGlobal(global);
-
-      global = getGlobal();
-      deleteThread(global, currentUserId, chatId, actions);
-
       break;
     }
 

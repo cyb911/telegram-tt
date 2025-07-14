@@ -48,7 +48,6 @@ import {
   selectThreadInfo,
   selectViewportIds,
 } from '../selectors';
-import { removeIdFromSearchResults } from './middleSearch';
 import { updateTabState } from './tabs';
 import { clearMessageTranslation } from './translations';
 
@@ -405,10 +404,6 @@ export function deleteChatMessages<T extends GlobalState>(
         if (messageIds.includes(context.originMessageId!)) {
           global = cancelMessageMediaDownload(global, [mediaHash], tabId);
         }
-      });
-
-      mediaIdsToRemove.forEach((mediaId) => {
-        global = removeIdFromSearchResults(global, chatId, threadId, mediaId, tabId);
       });
 
       const viewportIds = selectViewportIds(global, chatId, threadId, tabId);
