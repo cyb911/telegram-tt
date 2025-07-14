@@ -9,10 +9,8 @@ import type {
   ApiOldLangString,
   ApiPeerColors,
   ApiPeerNotifySettings,
-  ApiPrivacyKey,
   ApiSession,
   ApiTimezone,
-  ApiUrlAuthResult,
   ApiWallpaper,
   ApiWebSession,
   LangPackStringValue,
@@ -22,12 +20,10 @@ import { numberToHexColor } from '../../../util/colors';
 import {
   buildCollectionByCallback, omit, omitUndefined, pick,
 } from '../../../util/iteratees';
-import { addUserToLocalDb } from '../helpers/localDb';
 import { omitVirtualClassFields } from './helpers';
 import { buildApiDocument, buildMessageTextContent } from './messageContent';
 import { buildApiPeerId, getApiChatIdFromMtpPeer } from './peers';
 import { buildApiReaction } from './reactions';
-import { buildApiUser } from './users';
 
 export function buildApiWallpaper(wallpaper: GramJs.TypeWallPaper): ApiWallpaper | undefined {
   if (wallpaper instanceof GramJs.WallPaperNoFile) {
@@ -73,39 +69,6 @@ export function buildApiWebSession(session: GramJs.WebAuthorization): ApiWebSess
       'platform', 'browser', 'dateCreated', 'dateActive', 'ip', 'region', 'domain',
     ]),
   };
-}
-
-export function buildPrivacyKey(key: GramJs.TypePrivacyKey): ApiPrivacyKey | undefined {
-  switch (key.className) {
-    case 'PrivacyKeyPhoneNumber':
-      return 'phoneNumber';
-    case 'PrivacyKeyAddedByPhone':
-      return 'addByPhone';
-    case 'PrivacyKeyStatusTimestamp':
-      return 'lastSeen';
-    case 'PrivacyKeyProfilePhoto':
-      return 'profilePhoto';
-    case 'PrivacyKeyPhoneCall':
-      return 'phoneCall';
-    case 'PrivacyKeyPhoneP2P':
-      return 'phoneP2P';
-    case 'PrivacyKeyForwards':
-      return 'forwards';
-    case 'PrivacyKeyVoiceMessages':
-      return 'voiceMessages';
-    case 'PrivacyKeyChatInvite':
-      return 'chatInvite';
-    case 'PrivacyKeyAbout':
-      return 'bio';
-    case 'PrivacyKeyBirthday':
-      return 'birthday';
-    case 'PrivacyKeyStarGiftsAutoSave':
-      return 'gifts';
-    case 'PrivacyKeyNoPaidMessages':
-      return 'noPaidMessages';
-  }
-
-  return undefined;
 }
 
 export function buildApiPeerNotifySettings(
@@ -176,37 +139,6 @@ export function buildJson(json: GramJs.TypeJSONValue): any {
     acc[el.key] = buildJson(el.value);
     return acc;
   }, {});
-}
-
-export function buildApiUrlAuthResult(result: GramJs.TypeUrlAuthResult): ApiUrlAuthResult | undefined {
-  if (result instanceof GramJs.UrlAuthResultRequest) {
-    const { bot, domain, requestWriteAccess } = result;
-    const user = buildApiUser(bot);
-    if (!user) return undefined;
-
-    addUserToLocalDb(bot);
-
-    return {
-      type: 'request',
-      domain,
-      shouldRequestWriteAccess: requestWriteAccess,
-      bot: user,
-    };
-  }
-
-  if (result instanceof GramJs.UrlAuthResultAccepted) {
-    return {
-      type: 'accepted',
-      url: result.url,
-    };
-  }
-
-  if (result instanceof GramJs.UrlAuthResultDefault) {
-    return {
-      type: 'default',
-    };
-  }
-  return undefined;
 }
 
 export function buildApiConfig(config: GramJs.Config): ApiConfig {

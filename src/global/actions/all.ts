@@ -6,7 +6,6 @@ import './api/sync';
 import './api/accounts';
 import './api/users';
 import './api/settings';
-import './api/twoFaSettings';
 import './api/payments';
 import './api/stars';
 import './api/reactions';
