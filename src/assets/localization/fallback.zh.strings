@@ -585,8 +585,6 @@
 "FileSizeGB" = "{count} GB";
 "LimitReached" = "已达上限";
 "IncreaseLimit" = "提升上限";
-"LimitFree" = "免费";
-"LimitPremium" = "高级";
 "SubscribeToPremium" = "立即订阅，仅需0.1U/月";
 "TelegramPremiumUserDialogTitle" = "**{user}** 是 Telegram 高级用户。";
 "TelegramPremiumSubscribedTitle" = "一切就绪！";
@@ -1149,7 +1147,6 @@
 "FilterMuted" = "Muted";
 "FilterRead" = "Read";
 "FilterArchived" = "Archived";
-"GroupsAndChannelsLimitTitle" = "Groups and Channels";
 "PinChatsLimitTitle" = "Pinned Chats";
 "PublicLinksLimitTitle" = "Public Links";
 "SavedGifsLimitTitle" = "Saved GIFs";
@@ -1158,7 +1155,6 @@
 "CaptionsLimitTitle" = "Captions";
 "FoldersLimitTitle" = "Folders";
 "ChatPerFolderLimitTitle" = "Chats per Folder";
-"GroupsAndChannelsLimitSubtitle" = "Join up to {count} channels and large groups";
 "PinChatsLimitSubtitle" = "Pin up to {count} chats in your main chat list";
 "PublicLinksLimitSubtitle" = "Reserve up to {count} t.me/username links";
 "SavedGifsLimitSubtitle" = "Save up to {count} GIFs in your Favorite GIFs";
@@ -2039,3 +2035,10 @@
 "PremiumStoriesViewsDescription" = "查看谁查看过您的动态 - 即使在动态过期后仍能查看。";
 "PremiumStoriesExpiration" = "过期选项";
 "PremiumStoriesExpirationDescription" = "可自定义您的动态的过期时间，比如 6 小时或48小时。";
+"PremiumStoriesSaveToGallery" = "动态保存到相册";
+"PremiumStoriesSaveToGalleryDescription" = "保存其他用户未开启保护到相册。";
+"GroupsAndChannelsLimitTitle" = "群组和频道";
+"GroupsAndChannelsLimitSubtitle" = "可以加入1000个群组和频道";
+"LimitFree" = "免费";
+"LimitPremium" = "高级";
+
