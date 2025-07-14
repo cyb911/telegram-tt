@@ -13,7 +13,7 @@ import type {
 } from '../../../api/types';
 import type { GlobalState } from '../../../global/types';
 
-import { PREMIUM_BOTTOM_VIDEOS, PREMIUM_FEATURE_SECTIONS, PREMIUM_LIMITS_ORDER } from '../../../config';
+import { DEFAULT_LIMITS, PREMIUM_BOTTOM_VIDEOS, PREMIUM_FEATURE_SECTIONS, PREMIUM_LIMITS_ORDER } from '../../../config';
 import { requestMutation } from '../../../lib/fasterdom/fasterdom';
 import animateHorizontalScroll from '../../../util/animateHorizontalScroll';
 import buildClassName from '../../../util/buildClassName';
@@ -247,8 +247,8 @@ const PremiumFeatureModal: FC<OwnProps> = ({
                 </h2>
                 <div className={buildClassName(styles.limitsContent, 'custom-scroll')} onScroll={handleLimitsScroll}>
                   {PREMIUM_LIMITS_ORDER.map((limit, i) => {
-                    const defaultLimit = limits?.[limit][0].toString();
-                    const premiumLimit = limits?.[limit][1].toString();
+                    const defaultLimit = DEFAULT_LIMITS?.[limit][0].toString();
+                    const premiumLimit = DEFAULT_LIMITS?.[limit][1].toString();
                     return (
                       <PremiumLimitPreview
                         title={oldLang(LIMITS_TITLES[limit])}

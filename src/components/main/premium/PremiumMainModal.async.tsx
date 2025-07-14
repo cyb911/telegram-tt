@@ -1,4 +1,4 @@
-import type { FC } from '../../../lib/teact/teact';
+import type { FC } from '@teact';
 
 import type { OwnProps } from './PremiumMainModal';
 

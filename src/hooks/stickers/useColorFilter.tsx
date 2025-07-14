@@ -1,4 +1,4 @@
-import { useEffect } from '../../lib/teact/teact';
+import { useEffect } from '@teact';
 
 import { SVG_NAMESPACE } from '../../config';
 import { addSvgDefinition, removeSvgDefinition } from '../../util/svgController';

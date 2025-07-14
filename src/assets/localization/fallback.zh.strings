@@ -2041,4 +2041,8 @@
 "GroupsAndChannelsLimitSubtitle" = "可以加入1000个群组和频道";
 "LimitFree" = "免费";
 "LimitPremium" = "高级";
+"LngPremiumStoriesSubtitleCaption" = "更长的文字说明";
+"PremiumStoriesCaptionDescription" = "您的动态可添加 10 倍长的说明文字 - 最多2048 字符。";
+"LngPremiumStoriesSubtitleLinks" = "链接和格式";
+"PremiumStoriesFormattingDescription" = "可在动态的说明文字中添加链接和更多的格式。";
 

@@ -1,4 +1,4 @@
-import { memo, useLayoutEffect, useRef } from '../../../../lib/teact/teact';
+import { memo, useLayoutEffect, useRef } from '@teact';
 import { withGlobal } from '../../../../global';
 
 import type { ApiUser } from '../../../../api/types';
@@ -28,8 +28,8 @@ const STORY_FEATURE_TITLES = {
   stories_views: 'PremiumStoriesViews',
   stories_timer: 'PremiumStoriesExpiration',
   stories_save: 'PremiumStoriesSaveToGallery',
-  stories_caption: 'lng_premium_stories_subtitle_caption',
-  stories_link: 'lng_premium_stories_subtitle_links',
+  stories_caption: 'LngPremiumStoriesSubtitleCaption',
+  stories_link: 'LngPremiumStoriesSubtitleLinks',
 };
 
 const STORY_FEATURE_DESCRIPTIONS = {
@@ -112,7 +112,6 @@ const PremiumFeaturePreviewVideo = ({
             />
           );
         })}
-        <div className={styles.mobile}>{lang('lng_premium_stories_about_mobile')}</div>
       </div>
     </div>
   );
