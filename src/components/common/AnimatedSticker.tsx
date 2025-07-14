@@ -1,4 +1,4 @@
-import type { ElementRef, FC } from '../../lib/teact/teact';
+import type { ElementRef, FC } from '@teact';
 import {
   getIsHeavyAnimating,
   memo,
@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
   useUnmountCleanup,
-} from '../../lib/teact/teact';
+} from '@teact';
 
 import type RLottieInstance from '../../lib/rlottie/RLottie';
 

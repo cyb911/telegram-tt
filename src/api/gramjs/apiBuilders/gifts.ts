@@ -13,8 +13,8 @@ import type {
 } from '../../types';
 
 import { numberToHexColor } from '../../../util/colors';
-import { buildApiChatFromPreview } from '../apiBuilders/chats';
 import { addDocumentToLocalDb } from '../helpers/localDb';
+import { buildApiChatFromPreview } from './chats.ts';
 import { buildApiFormattedText } from './common';
 import { getApiChatIdFromMtpPeer } from './peers';
 import { buildStickerFromDocument } from './symbols';

@@ -1,6 +1,5 @@
 import type {
-  ApiInputInvoice, ApiInputInvoicePremiumGiftStars, ApiInputInvoiceStarGift, ApiInputInvoiceStarGiftResale,
-  ApiRequestInputInvoice,
+  ApiInputInvoice, ApiInputInvoicePremiumGiftStars,
 } from '../../../api/types';
 import type {
   ActionReturnType, GlobalState, TabArgs,
@@ -24,11 +23,9 @@ import {
   openStarsTransactionFromReceipt,
   setPaymentStep,
   setReceipt,
-  setRequestInfoId,
   setSmartGlocalCardInfo,
   updateChatFullInfo,
   updatePayment,
-  updateShippingOptions,
   updateStarsPayment,
 } from '../../reducers';
 import { updateTabState } from '../../reducers/tabs';
@@ -36,7 +33,6 @@ import {
   selectChat,
   selectChatFullInfo,
   selectIsCurrentUserFrozen,
-  selectPaymentInputInvoice,
   selectPaymentRequestId,
   selectSmartGlocalCredentials,
   selectStarsPayment,
@@ -45,53 +41,6 @@ import {
 } from '../../selectors';
 
 const LOCAL_BOOST_COOLDOWN = 86400; // 24 hours
-
-addActionHandler('validateRequestedInfo', (global, actions, payload): ActionReturnType => {
-  const { requestInfo, saveInfo, tabId = getCurrentTabId() } = payload;
-
-  const inputInvoice = selectPaymentInputInvoice(global, tabId);
-  if (!inputInvoice) {
-    return;
-  }
-
-  const requestInputInvoice = getRequestInputInvoice(global, inputInvoice);
-  if (!requestInputInvoice) {
-    return;
-  }
-
-  validateRequestedInfo(global, requestInputInvoice, requestInfo, saveInfo, tabId);
-});
-
-addActionHandler('sendStarGift', (global, actions, payload): ActionReturnType => {
-  const {
-    gift, peerId, message, shouldHideName, shouldUpgrade, tabId = getCurrentTabId(),
-  } = payload;
-
-  const inputInvoice: ApiInputInvoiceStarGift = {
-    type: 'stargift',
-    peerId,
-    giftId: gift.id,
-    message,
-    shouldHideName,
-    shouldUpgrade: shouldUpgrade || undefined,
-  };
-
-  payInputStarInvoice(global, inputInvoice, gift.stars, tabId);
-});
-
-addActionHandler('buyStarGift', (global, actions, payload): ActionReturnType => {
-  const {
-    slug, peerId, stars, tabId = getCurrentTabId(),
-  } = payload;
-
-  const inputInvoice: ApiInputInvoiceStarGiftResale = {
-    type: 'stargiftResale',
-    slug,
-    peerId,
-  };
-
-  payInputStarInvoice(global, inputInvoice, stars, tabId);
-});
 
 addActionHandler('sendPremiumGiftByStars', (global, actions, payload): ActionReturnType => {
   const {
@@ -310,39 +259,6 @@ addActionHandler('openPremiumModal', async (global, actions, payload): Promise<v
   actions.closeReactionPicker({ tabId });
 });
 
-addActionHandler('openGiveawayModal', async (global, actions, payload): Promise<void> => {
-  const {
-    chatId, prepaidGiveaway,
-    tabId = getCurrentTabId(),
-  } = payload;
-
-  const chat = selectChat(global, chatId);
-  if (!chat) return;
-
-  const result = await callApi('getPremiumGiftCodeOptions', {
-    chat,
-  });
-
-  const starOptions = await callApi('fetchStarsGiveawayOptions');
-
-  if (!result || !starOptions) {
-    return;
-  }
-
-  global = getGlobal();
-
-  global = updateTabState(global, {
-    giveawayModal: {
-      chatId,
-      gifts: result,
-      isOpen: true,
-      prepaidGiveaway,
-      starOptions,
-    },
-  }, tabId);
-  setGlobal(global);
-});
-
 addActionHandler('openGiftModal', async (global, actions, payload): Promise<void> => {
   const {
     forUserId, tabId = getCurrentTabId(),
@@ -406,30 +322,6 @@ addActionHandler('validatePaymentPassword', async (global, actions, payload): Pr
 
   setGlobal(global);
 });
-
-async function validateRequestedInfo<T extends GlobalState>(
-  global: T, inputInvoice: ApiRequestInputInvoice, requestInfo: any, shouldSave?: boolean,
-  ...[tabId = getCurrentTabId()]: TabArgs<T>
-) {
-  const result = await callApi('validateRequestedInfo', {
-    inputInvoice, requestInfo, shouldSave,
-  });
-  if (!result) {
-    return;
-  }
-
-  const { id, shippingOptions } = result;
-  global = getGlobal();
-
-  global = setRequestInfoId(global, id, tabId);
-  if (shippingOptions?.length) {
-    global = updateShippingOptions(global, shippingOptions, tabId);
-    global = setPaymentStep(global, PaymentStep.Shipping, tabId);
-  } else {
-    global = setPaymentStep(global, PaymentStep.Checkout, tabId);
-  }
-  setGlobal(global);
-}
 
 addActionHandler('openBoostModal', async (global, actions, payload): Promise<void> => {
   const { chatId, tabId = getCurrentTabId() } = payload;
