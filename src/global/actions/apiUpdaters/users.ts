@@ -93,37 +93,6 @@ addActionHandler('apiUpdate', (global, actions, update): ActionReturnType => {
       return updateUserFullInfo(global, id, fullInfo);
     }
 
-    case 'updateBotMenuButton': {
-      const { botId, button } = update;
-
-      const targetUserFullInfo = selectUserFullInfo(global, botId);
-      if (!targetUserFullInfo?.botInfo) {
-        return undefined;
-      }
-
-      return updateUserFullInfo(global, botId, {
-        botInfo: {
-          ...targetUserFullInfo.botInfo,
-          menuButton: button,
-        },
-      });
-    }
-
-    case 'updateBotCommands': {
-      const { botId, commands } = update;
-      const targetUserFullInfo = selectUserFullInfo(global, botId);
-      if (!targetUserFullInfo?.botInfo) {
-        return undefined;
-      }
-
-      return updateUserFullInfo(global, botId, {
-        botInfo: {
-          ...targetUserFullInfo.botInfo,
-          commands,
-        },
-      });
-    }
-
     case 'updatePeerSettings': {
       const { id, settings } = update;
 
