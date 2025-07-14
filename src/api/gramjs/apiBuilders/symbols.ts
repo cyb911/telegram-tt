@@ -1,7 +1,7 @@
 import { Api as GramJs } from '../../../lib/gramjs';
 
 import type {
-  ApiEmojiInteraction, ApiSticker, ApiStickerSet, ApiStickerSetInfo, GramJsEmojiInteraction,
+  ApiSticker, ApiStickerSet, ApiStickerSetInfo,
 } from '../../types';
 
 import { LOTTIE_STICKER_MIME_TYPE, VIDEO_STICKER_MIME_TYPE } from '../../../config';
@@ -178,12 +178,6 @@ export function buildStickerSetCovered(coveredStickerSet: GramJs.TypeStickerSetC
   return {
     ...stickerSet,
     covers: stickers,
-  };
-}
-
-export function buildApiEmojiInteraction(json: GramJsEmojiInteraction): ApiEmojiInteraction {
-  return {
-    timestamps: json.a.map(({ t }) => t),
   };
 }
 

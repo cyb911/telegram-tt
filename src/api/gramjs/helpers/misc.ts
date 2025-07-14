@@ -39,7 +39,6 @@ const ERROR_KEYS: Record<string, RegularLangKey> = {
 };
 
 export type MessageRepairContext = Pick<GramJs.TypeMessage, 'peerId' | 'id'>;
-export type MediaRepairContext = MessageRepairContext;
 
 export type WrappedError<T extends Error = Error> = {
   messageKey: RegularLangFnParameters;
@@ -53,12 +52,6 @@ export function resolveMessageApiChatId(mtpMessage: GramJs.TypeMessage) {
   }
 
   return getApiChatIdFromMtpPeer(mtpMessage.peerId);
-}
-
-export function isChatFolder(
-  filter?: GramJs.TypeDialogFilter,
-): filter is GramJs.DialogFilter | GramJs.DialogFilterChatlist {
-  return filter instanceof GramJs.DialogFilter || filter instanceof GramJs.DialogFilterChatlist;
 }
 
 export function serializeBytes(value: Buffer) {

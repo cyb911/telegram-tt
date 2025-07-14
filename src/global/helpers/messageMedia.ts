@@ -58,14 +58,6 @@ export function getMessageDocument(message: MediaContainer) {
   return message.content.document;
 }
 
-export function isDocumentPhoto(document: ApiDocument) {
-  return document.innerMediaType === 'photo';
-}
-
-export function isDocumentVideo(document: ApiDocument) {
-  return document.innerMediaType === 'video';
-}
-
 export function isMessageDocumentSticker(message: MediaContainer) {
   const document = getMessageDocument(message);
   return document ? document.mimeType === 'image/webp' : undefined;

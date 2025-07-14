@@ -30,7 +30,6 @@ import { ApiMessageEntityTypes, MAIN_THREAD_ID } from '../../types';
 
 import {
   DELETED_COMMENTS_CHANNEL_ID,
-  SERVICE_NOTIFICATIONS_USER_ID,
   SPONSORED_MESSAGE_CACHE_MS,
   SUPPORTED_AUDIO_CONTENT_TYPES,
   SUPPORTED_PHOTO_CONTENT_TYPES,
@@ -41,7 +40,6 @@ import { addTimestampEntities } from '../../../util/dates/timestamp';
 import { omitUndefined, pick } from '../../../util/iteratees';
 import { getServerTime, getServerTimeOffset } from '../../../util/serverTime';
 import { interpolateArray } from '../../../util/waveform';
-import { buildPeer } from '../gramjsBuilders';
 import {
   addPhotoToLocalDb,
   type MediaRepairContext,
@@ -123,42 +121,6 @@ export function buildApiMessage(mtpMessage: GramJs.TypeMessage): ApiMessage | un
   return buildApiMessageWithChatId(chatId, mtpMessage);
 }
 
-export function buildApiMessageFromShort(mtpMessage: GramJs.UpdateShortMessage): ApiMessage {
-  const chatId = buildApiPeerId(mtpMessage.userId, 'user');
-
-  return buildApiMessageWithChatId(chatId, {
-    ...mtpMessage,
-    fromId: buildPeer(mtpMessage.out ? currentUserId : buildApiPeerId(mtpMessage.userId, 'user')),
-    peerId: buildPeer(mtpMessage.out ? buildApiPeerId(mtpMessage.userId, 'user') : currentUserId),
-  });
-}
-
-export function buildApiMessageFromShortChat(mtpMessage: GramJs.UpdateShortChatMessage): ApiMessage {
-  const chatId = buildApiPeerId(mtpMessage.chatId, 'chat');
-
-  return buildApiMessageWithChatId(chatId, {
-    ...mtpMessage,
-    fromId: buildPeer(buildApiPeerId(mtpMessage.fromId, 'user')),
-    peerId: buildPeer(buildApiPeerId(mtpMessage.chatId, 'chat')),
-  });
-}
-
-export function buildApiMessageFromNotification(
-  notification: GramJs.UpdateServiceNotification,
-  currentDate: number,
-): ApiMessage {
-  const localId = getNextLocalMessageId(currentDate);
-  const content = buildMessageContent(notification);
-
-  return {
-    id: localId,
-    chatId: SERVICE_NOTIFICATIONS_USER_ID,
-    date: notification.inboxDate || currentDate,
-    content,
-    isInvertedMedia: notification.invertMedia,
-    isOutgoing: false,
-  };
-}
 
 type TypeMessageWithContent = OmitVirtualFields<GramJs.Message> & OmitVirtualFields<GramJs.MessageService>;
 export type UniversalMessage = (
@@ -251,33 +213,6 @@ export function buildApiMessageWithChatId(
     isVideoProcessingPending,
     reportDeliveryUntilDate: mtpMessage.reportDeliveryUntilDate,
     paidMessageStars: mtpMessage.paidMessageStars?.toJSNumber(),
-  };
-}
-
-export function buildMessageDraft(draft: GramJs.TypeDraftMessage): ApiDraft | undefined {
-  if (draft instanceof GramJs.DraftMessageEmpty) {
-    return undefined;
-  }
-
-  const {
-    message, entities, replyTo, date, effect,
-  } = draft;
-
-  const replyInfo = replyTo instanceof GramJs.InputReplyToMessage ? {
-    type: 'message',
-    replyToMsgId: replyTo.replyToMsgId,
-    replyToTopId: replyTo.topMsgId,
-    replyToPeerId: replyTo.replyToPeerId && getApiChatIdFromMtpPeer(replyTo.replyToPeerId),
-    monoforumPeerId: replyTo.monoforumPeerId && getApiChatIdFromMtpPeer(replyTo.monoforumPeerId),
-    quoteText: replyTo.quoteText ? buildMessageTextContent(replyTo.quoteText, replyTo.quoteEntities) : undefined,
-    quoteOffset: replyTo.quoteOffset,
-  } satisfies ApiInputMessageReplyInfo : undefined;
-
-  return {
-    text: message ? buildMessageTextContent(message, entities) : undefined,
-    replyInfo,
-    date,
-    effectId: effect?.toString(),
   };
 }
 

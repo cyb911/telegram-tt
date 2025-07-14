@@ -62,63 +62,6 @@ addActionHandler('validateRequestedInfo', (global, actions, payload): ActionRetu
   validateRequestedInfo(global, requestInputInvoice, requestInfo, saveInfo, tabId);
 });
 
-addActionHandler('openInvoice', async (global, actions, payload): Promise<void> => {
-  const { tabId = getCurrentTabId(), ...inputInvoice } = payload;
-
-  const requestInputInvoice = getRequestInputInvoice(global, inputInvoice);
-  if (!requestInputInvoice) {
-    return;
-  }
-
-  global = updateTabState(global, {
-    isPaymentFormLoading: true,
-  }, tabId);
-  setGlobal(global);
-
-  const theme = extractCurrentThemeParams();
-  const form = await callApi('getPaymentForm', requestInputInvoice, theme);
-
-  if (!form) {
-    return;
-  }
-
-  global = getGlobal();
-
-  global = updateTabState(global, {
-    isPaymentFormLoading: false,
-  }, tabId);
-
-  if ('error' in form) {
-    setGlobal(global);
-
-    handlePaymentFormError(form.error, tabId);
-    return;
-  }
-
-  if (form.type === 'regular') {
-    global = updatePayment(global, {
-      inputInvoice: payload,
-      form,
-      isPaymentModalOpen: true,
-      isExtendedMedia: (payload as any).isExtendedMedia,
-      status: undefined,
-    }, tabId);
-    global = setPaymentStep(global, PaymentStep.Checkout, tabId);
-  }
-
-  if (form.type === 'stars') {
-    global = updateTabState(global, {
-      starsPayment: {
-        inputInvoice,
-        form,
-        status: 'pending',
-      },
-    }, tabId);
-  }
-
-  setGlobal(global);
-});
-
 addActionHandler('sendStarGift', (global, actions, payload): ActionReturnType => {
   const {
     gift, peerId, message, shouldHideName, shouldUpgrade, tabId = getCurrentTabId(),
